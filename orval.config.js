@@ -1,6 +1,6 @@
 // orval.config.js para Almacen
 module.exports = {
-  petstore: {
+  almacen: {
     input: './src/api/openapi/openapi.json',
     output: {
       mode: 'single',
