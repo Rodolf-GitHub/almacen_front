@@ -1,0 +1,2814 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Almacen API",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "paths": {
+    "/api/usuarios/login": {
+      "post": {
+        "operationId": "usuario_api_login_usuario",
+        "summary": "Login Usuario",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Usuarios"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginSchema"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/usuarios/logout": {
+      "post": {
+        "operationId": "usuario_api_logout_usuario",
+        "summary": "Logout Usuario",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Usuarios"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/usuarios/listar_todos": {
+      "get": {
+        "operationId": "usuario_api_list_usuarios",
+        "summary": "List Usuarios",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busqueda",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Busqueda"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedUsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Usuarios"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/usuarios/obtener/{usuario_id}": {
+      "get": {
+        "operationId": "usuario_api_get_usuario",
+        "summary": "Get Usuario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuario_id",
+            "schema": {
+              "title": "Usuario Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Usuarios"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/usuarios/crear": {
+      "post": {
+        "operationId": "usuario_api_create_usuario",
+        "summary": "Create Usuario",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Usuarios"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/usuarios/actualizar/{usuario_id}": {
+      "patch": {
+        "operationId": "usuario_api_update_usuario",
+        "summary": "Update Usuario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuario_id",
+            "schema": {
+              "title": "Usuario Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Usuarios"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioUpdateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/usuarios/eliminar/{usuario_id}": {
+      "delete": {
+        "operationId": "usuario_api_delete_usuario",
+        "summary": "Delete Usuario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "usuario_id",
+            "schema": {
+              "title": "Usuario Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Usuarios"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/proveedores/listar_todos": {
+      "get": {
+        "operationId": "proveedor_api_list_proveedores",
+        "summary": "List Proveedores",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busqueda",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Busqueda"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedProveedorSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Proveedores"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/proveedores/obtener/{proveedor_id}": {
+      "get": {
+        "operationId": "proveedor_api_get_proveedor",
+        "summary": "Get Proveedor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "proveedor_id",
+            "schema": {
+              "title": "Proveedor Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProveedorSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Proveedores"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/proveedores/crear": {
+      "post": {
+        "operationId": "proveedor_api_create_proveedor",
+        "summary": "Create Proveedor",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProveedorSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Proveedores"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProveedorCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/proveedores/actualizar/{proveedor_id}": {
+      "patch": {
+        "operationId": "proveedor_api_update_proveedor",
+        "summary": "Update Proveedor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "proveedor_id",
+            "schema": {
+              "title": "Proveedor Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProveedorSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Proveedores"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProveedorUpdateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/proveedores/eliminar/{proveedor_id}": {
+      "delete": {
+        "operationId": "proveedor_api_delete_proveedor",
+        "summary": "Delete Proveedor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "proveedor_id",
+            "schema": {
+              "title": "Proveedor Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Proveedores"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/proveedores/usuarios/listar_todos": {
+      "get": {
+        "operationId": "proveedor_api_list_proveedor_usuarios",
+        "summary": "List Proveedor Usuarios",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedProveedorUsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Proveedores"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/proveedores/usuarios/crear": {
+      "post": {
+        "operationId": "proveedor_api_create_proveedor_usuario",
+        "summary": "Create Proveedor Usuario",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProveedorUsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Proveedores"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProveedorUsuarioCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/proveedores/usuarios/actualizar/{relacion_id}": {
+      "patch": {
+        "operationId": "proveedor_api_update_proveedor_usuario",
+        "summary": "Update Proveedor Usuario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "relacion_id",
+            "schema": {
+              "title": "Relacion Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProveedorUsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Proveedores"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProveedorUsuarioUpdateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/proveedores/usuarios/eliminar/{relacion_id}": {
+      "delete": {
+        "operationId": "proveedor_api_delete_proveedor_usuario",
+        "summary": "Delete Proveedor Usuario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "relacion_id",
+            "schema": {
+              "title": "Relacion Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Proveedores"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/productos/listar_todos": {
+      "get": {
+        "operationId": "producto_api_list_productos",
+        "summary": "List Productos",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busqueda",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Busqueda"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedProductoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Productos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/productos/obtener/{producto_id}": {
+      "get": {
+        "operationId": "producto_api_get_producto",
+        "summary": "Get Producto",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "producto_id",
+            "schema": {
+              "title": "Producto Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Productos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/productos/crear": {
+      "post": {
+        "operationId": "producto_api_create_producto",
+        "summary": "Create Producto",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Productos"],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "imagen": {
+                    "format": "binary",
+                    "title": "Imagen",
+                    "type": "string"
+                  },
+                  "data": {
+                    "$ref": "#/components/schemas/ProductoCreateSchema"
+                  }
+                },
+                "title": "MultiPartBodyParams",
+                "type": "object",
+                "required": ["data"]
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/productos/actualizar/{producto_id}": {
+      "patch": {
+        "operationId": "producto_api_update_producto",
+        "summary": "Update Producto",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "producto_id",
+            "schema": {
+              "title": "Producto Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Productos"],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "imagen": {
+                    "format": "binary",
+                    "title": "Imagen",
+                    "type": "string"
+                  },
+                  "data": {
+                    "$ref": "#/components/schemas/ProductoUpdateSchema"
+                  }
+                },
+                "title": "MultiPartBodyParams",
+                "type": "object",
+                "required": ["data"]
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/productos/eliminar/{producto_id}": {
+      "delete": {
+        "operationId": "producto_api_delete_producto",
+        "summary": "Delete Producto",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "producto_id",
+            "schema": {
+              "title": "Producto Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Productos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/productos/inventario/listar_todos": {
+      "get": {
+        "operationId": "producto_api_list_inventario",
+        "summary": "List Inventario",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedProductoSucursalSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Productos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/productos/inventario/crear": {
+      "post": {
+        "operationId": "producto_api_create_inventario",
+        "summary": "Create Inventario",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoSucursalSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Productos"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductoSucursalCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/productos/inventario/actualizar/{inventario_id}": {
+      "patch": {
+        "operationId": "producto_api_update_inventario",
+        "summary": "Update Inventario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "inventario_id",
+            "schema": {
+              "title": "Inventario Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoSucursalSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Productos"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductoSucursalUpdateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/productos/inventario/eliminar/{inventario_id}": {
+      "delete": {
+        "operationId": "producto_api_delete_inventario",
+        "summary": "Delete Inventario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "inventario_id",
+            "schema": {
+              "title": "Inventario Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Productos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/sucursales/listar_todos": {
+      "get": {
+        "operationId": "sucursal_api_list_sucursales",
+        "summary": "List Sucursales",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busqueda",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Busqueda"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedSucursalSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Sucursales"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/sucursales/obtener/{sucursal_id}": {
+      "get": {
+        "operationId": "sucursal_api_get_sucursal",
+        "summary": "Get Sucursal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sucursal_id",
+            "schema": {
+              "title": "Sucursal Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SucursalSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Sucursales"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/sucursales/crear": {
+      "post": {
+        "operationId": "sucursal_api_create_sucursal",
+        "summary": "Create Sucursal",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SucursalSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Sucursales"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SucursalCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/sucursales/actualizar/{sucursal_id}": {
+      "patch": {
+        "operationId": "sucursal_api_update_sucursal",
+        "summary": "Update Sucursal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sucursal_id",
+            "schema": {
+              "title": "Sucursal Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SucursalSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Sucursales"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SucursalUpdateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/sucursales/eliminar/{sucursal_id}": {
+      "delete": {
+        "operationId": "sucursal_api_delete_sucursal",
+        "summary": "Delete Sucursal",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sucursal_id",
+            "schema": {
+              "title": "Sucursal Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Sucursales"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/sucursales/usuarios/listar_todos": {
+      "get": {
+        "operationId": "sucursal_api_list_sucursal_usuarios",
+        "summary": "List Sucursal Usuarios",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedSucursalUsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Sucursales"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/sucursales/usuarios/crear": {
+      "post": {
+        "operationId": "sucursal_api_create_sucursal_usuario",
+        "summary": "Create Sucursal Usuario",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SucursalUsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Sucursales"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SucursalUsuarioCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/sucursales/usuarios/actualizar/{relacion_id}": {
+      "patch": {
+        "operationId": "sucursal_api_update_sucursal_usuario",
+        "summary": "Update Sucursal Usuario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "relacion_id",
+            "schema": {
+              "title": "Relacion Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SucursalUsuarioSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Sucursales"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SucursalUsuarioUpdateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/sucursales/usuarios/eliminar/{relacion_id}": {
+      "delete": {
+        "operationId": "sucursal_api_delete_sucursal_usuario",
+        "summary": "Delete Sucursal Usuario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "relacion_id",
+            "schema": {
+              "title": "Relacion Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Sucursales"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/listar_todos": {
+      "get": {
+        "operationId": "pedido_api_list_pedidos",
+        "summary": "List Pedidos",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busqueda",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Busqueda"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedPedidoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/obtener/{pedido_id}": {
+      "get": {
+        "operationId": "pedido_api_get_pedido",
+        "summary": "Get Pedido",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pedido_id",
+            "schema": {
+              "title": "Pedido Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/crear": {
+      "post": {
+        "operationId": "pedido_api_create_pedido",
+        "summary": "Create Pedido",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PedidoCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/actualizar/{pedido_id}": {
+      "patch": {
+        "operationId": "pedido_api_update_pedido",
+        "summary": "Update Pedido",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pedido_id",
+            "schema": {
+              "title": "Pedido Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PedidoUpdateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/eliminar/{pedido_id}": {
+      "delete": {
+        "operationId": "pedido_api_delete_pedido",
+        "summary": "Delete Pedido",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pedido_id",
+            "schema": {
+              "title": "Pedido Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Pedidos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/detalles/listar_todos": {
+      "get": {
+        "operationId": "pedido_api_list_detalles",
+        "summary": "List Detalles",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedDetallePedidoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/detalles/crear": {
+      "post": {
+        "operationId": "pedido_api_create_detalle",
+        "summary": "Create Detalle",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetallePedidoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetallePedidoCreateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/detalles/actualizar/{detalle_id}": {
+      "patch": {
+        "operationId": "pedido_api_update_detalle",
+        "summary": "Update Detalle",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "detalle_id",
+            "schema": {
+              "title": "Detalle Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetallePedidoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetallePedidoUpdateSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/detalles/eliminar/{detalle_id}": {
+      "delete": {
+        "operationId": "pedido_api_delete_detalle",
+        "summary": "Delete Detalle",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "detalle_id",
+            "schema": {
+              "title": "Detalle Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Pedidos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoginResponseSchema": {
+        "properties": {
+          "success": {
+            "title": "Success",
+            "type": "boolean"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          },
+          "usuario": {
+            "$ref": "#/components/schemas/UsuarioSchema"
+          }
+        },
+        "required": ["success", "token", "usuario"],
+        "title": "LoginResponseSchema",
+        "type": "object"
+      },
+      "UsuarioSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "nombre_usuario": {
+            "maxLength": 50,
+            "title": "Nombre Usuario",
+            "type": "string"
+          },
+          "rol": {
+            "default": "cliente",
+            "maxLength": 20,
+            "title": "Rol",
+            "type": "string"
+          }
+        },
+        "required": ["created_at", "updated_at", "nombre_usuario"],
+        "title": "UsuarioSchema",
+        "type": "object"
+      },
+      "LoginSchema": {
+        "properties": {
+          "nombre_usuario": {
+            "title": "Nombre Usuario",
+            "type": "string"
+          },
+          "contrasena": {
+            "title": "Contrasena",
+            "type": "string"
+          }
+        },
+        "required": ["nombre_usuario", "contrasena"],
+        "title": "LoginSchema",
+        "type": "object"
+      },
+      "Input": {
+        "properties": {
+          "limit": {
+            "default": 100,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "title": "Input",
+        "type": "object"
+      },
+      "PagedUsuarioSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/UsuarioSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedUsuarioSchema",
+        "type": "object"
+      },
+      "UsuarioCreateSchema": {
+        "properties": {
+          "nombre_usuario": {
+            "title": "Nombre Usuario",
+            "type": "string"
+          },
+          "contrasena_hasheada": {
+            "title": "Contrasena Hasheada",
+            "type": "string"
+          }
+        },
+        "required": ["nombre_usuario", "contrasena_hasheada"],
+        "title": "UsuarioCreateSchema",
+        "type": "object"
+      },
+      "UsuarioUpdateSchema": {
+        "properties": {
+          "nombre_usuario": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nombre Usuario"
+          },
+          "contrasena_hasheada": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contrasena Hasheada"
+          }
+        },
+        "title": "UsuarioUpdateSchema",
+        "type": "object"
+      },
+      "PagedProveedorSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ProveedorSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedProveedorSchema",
+        "type": "object"
+      },
+      "ProveedorSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "nombre": {
+            "maxLength": 100,
+            "title": "Nombre",
+            "type": "string"
+          }
+        },
+        "required": ["created_at", "updated_at", "nombre"],
+        "title": "ProveedorSchema",
+        "type": "object"
+      },
+      "ProveedorCreateSchema": {
+        "properties": {
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          }
+        },
+        "required": ["nombre"],
+        "title": "ProveedorCreateSchema",
+        "type": "object"
+      },
+      "ProveedorUpdateSchema": {
+        "properties": {
+          "nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nombre"
+          }
+        },
+        "title": "ProveedorUpdateSchema",
+        "type": "object"
+      },
+      "PagedProveedorUsuarioSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ProveedorUsuarioSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedProveedorUsuarioSchema",
+        "type": "object"
+      },
+      "ProveedorUsuarioSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "proveedor": {
+            "title": "Proveedor",
+            "type": "integer"
+          },
+          "usuario": {
+            "title": "Usuario",
+            "type": "integer"
+          },
+          "rol": {
+            "default": "cliente",
+            "maxLength": 20,
+            "title": "Rol",
+            "type": "string"
+          }
+        },
+        "required": ["created_at", "updated_at", "proveedor", "usuario"],
+        "title": "ProveedorUsuarioSchema",
+        "type": "object"
+      },
+      "ProveedorUsuarioCreateSchema": {
+        "properties": {
+          "proveedor_id": {
+            "title": "Proveedor Id",
+            "type": "integer"
+          },
+          "usuario_id": {
+            "title": "Usuario Id",
+            "type": "integer"
+          },
+          "rol": {
+            "default": "cliente",
+            "title": "Rol",
+            "type": "string"
+          }
+        },
+        "required": ["proveedor_id", "usuario_id"],
+        "title": "ProveedorUsuarioCreateSchema",
+        "type": "object"
+      },
+      "ProveedorUsuarioUpdateSchema": {
+        "properties": {
+          "rol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rol"
+          }
+        },
+        "title": "ProveedorUsuarioUpdateSchema",
+        "type": "object"
+      },
+      "PagedProductoSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ProductoSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedProductoSchema",
+        "type": "object"
+      },
+      "ProductoSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "nombre": {
+            "maxLength": 100,
+            "title": "Nombre",
+            "type": "string"
+          },
+          "imagen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Imagen"
+          },
+          "descripcion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descripcion"
+          },
+          "precio": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Precio",
+            "type": "string"
+          },
+          "proveedor": {
+            "title": "Proveedor",
+            "type": "integer"
+          },
+          "categoria": {
+            "anyOf": [
+              {
+                "maxLength": 50,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria"
+          }
+        },
+        "required": ["created_at", "updated_at", "nombre", "precio", "proveedor"],
+        "title": "ProductoSchema",
+        "type": "object"
+      },
+      "ProductoCreateSchema": {
+        "properties": {
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "descripcion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descripcion"
+          },
+          "precio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              }
+            ],
+            "title": "Precio"
+          },
+          "proveedor_id": {
+            "title": "Proveedor Id",
+            "type": "integer"
+          },
+          "categoria": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria"
+          }
+        },
+        "required": ["nombre", "precio", "proveedor_id"],
+        "title": "ProductoCreateSchema",
+        "type": "object"
+      },
+      "ProductoUpdateSchema": {
+        "properties": {
+          "nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nombre"
+          },
+          "descripcion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descripcion"
+          },
+          "precio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Precio"
+          },
+          "proveedor_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proveedor Id"
+          },
+          "categoria": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria"
+          }
+        },
+        "title": "ProductoUpdateSchema",
+        "type": "object"
+      },
+      "PagedProductoSucursalSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ProductoSucursalSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedProductoSucursalSchema",
+        "type": "object"
+      },
+      "ProductoSucursalSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "producto": {
+            "title": "Producto",
+            "type": "integer"
+          },
+          "sucursal": {
+            "title": "Sucursal",
+            "type": "integer"
+          },
+          "cantidad": {
+            "default": 0,
+            "title": "Cantidad",
+            "type": "integer"
+          }
+        },
+        "required": ["created_at", "updated_at", "producto", "sucursal"],
+        "title": "ProductoSucursalSchema",
+        "type": "object"
+      },
+      "ProductoSucursalCreateSchema": {
+        "properties": {
+          "producto_id": {
+            "title": "Producto Id",
+            "type": "integer"
+          },
+          "sucursal_id": {
+            "title": "Sucursal Id",
+            "type": "integer"
+          },
+          "cantidad": {
+            "title": "Cantidad",
+            "type": "integer"
+          }
+        },
+        "required": ["producto_id", "sucursal_id", "cantidad"],
+        "title": "ProductoSucursalCreateSchema",
+        "type": "object"
+      },
+      "ProductoSucursalUpdateSchema": {
+        "properties": {
+          "cantidad": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cantidad"
+          }
+        },
+        "title": "ProductoSucursalUpdateSchema",
+        "type": "object"
+      },
+      "PagedSucursalSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SucursalSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedSucursalSchema",
+        "type": "object"
+      },
+      "SucursalSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "nombre": {
+            "maxLength": 100,
+            "title": "Nombre",
+            "type": "string"
+          },
+          "direccion": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direccion"
+          },
+          "tipo": {
+            "maxLength": 20,
+            "title": "Tipo",
+            "type": "string"
+          }
+        },
+        "required": ["created_at", "updated_at", "nombre", "tipo"],
+        "title": "SucursalSchema",
+        "type": "object"
+      },
+      "SucursalCreateSchema": {
+        "properties": {
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          },
+          "direccion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direccion"
+          },
+          "tipo": {
+            "title": "Tipo",
+            "type": "string"
+          }
+        },
+        "required": ["nombre", "tipo"],
+        "title": "SucursalCreateSchema",
+        "type": "object"
+      },
+      "SucursalUpdateSchema": {
+        "properties": {
+          "nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nombre"
+          },
+          "direccion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direccion"
+          },
+          "tipo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tipo"
+          }
+        },
+        "title": "SucursalUpdateSchema",
+        "type": "object"
+      },
+      "PagedSucursalUsuarioSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SucursalUsuarioSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedSucursalUsuarioSchema",
+        "type": "object"
+      },
+      "SucursalUsuarioSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "sucursal": {
+            "title": "Sucursal",
+            "type": "integer"
+          },
+          "usuario": {
+            "title": "Usuario",
+            "type": "integer"
+          },
+          "rol": {
+            "default": "empleado",
+            "maxLength": 20,
+            "title": "Rol",
+            "type": "string"
+          }
+        },
+        "required": ["created_at", "updated_at", "sucursal", "usuario"],
+        "title": "SucursalUsuarioSchema",
+        "type": "object"
+      },
+      "SucursalUsuarioCreateSchema": {
+        "properties": {
+          "sucursal_id": {
+            "title": "Sucursal Id",
+            "type": "integer"
+          },
+          "usuario_id": {
+            "title": "Usuario Id",
+            "type": "integer"
+          },
+          "rol": {
+            "default": "empleado",
+            "title": "Rol",
+            "type": "string"
+          }
+        },
+        "required": ["sucursal_id", "usuario_id"],
+        "title": "SucursalUsuarioCreateSchema",
+        "type": "object"
+      },
+      "SucursalUsuarioUpdateSchema": {
+        "properties": {
+          "rol": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rol"
+          }
+        },
+        "title": "SucursalUsuarioUpdateSchema",
+        "type": "object"
+      },
+      "PagedPedidoSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PedidoSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedPedidoSchema",
+        "type": "object"
+      },
+      "PedidoSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "sucursal_origen": {
+            "title": "Sucursal Origen",
+            "type": "integer"
+          },
+          "sucursal_destino": {
+            "title": "Sucursal Destino",
+            "type": "integer"
+          },
+          "estado": {
+            "default": "pendiente",
+            "maxLength": 20,
+            "title": "Estado",
+            "type": "string"
+          },
+          "fecha_pedido": {
+            "format": "date-time",
+            "title": "Fecha Pedido",
+            "type": "string"
+          }
+        },
+        "required": [
+          "created_at",
+          "updated_at",
+          "sucursal_origen",
+          "sucursal_destino",
+          "fecha_pedido"
+        ],
+        "title": "PedidoSchema",
+        "type": "object"
+      },
+      "PedidoCreateSchema": {
+        "properties": {
+          "sucursal_origen_id": {
+            "title": "Sucursal Origen Id",
+            "type": "integer"
+          },
+          "sucursal_destino_id": {
+            "title": "Sucursal Destino Id",
+            "type": "integer"
+          },
+          "estado": {
+            "default": "pendiente",
+            "title": "Estado",
+            "type": "string"
+          }
+        },
+        "required": ["sucursal_origen_id", "sucursal_destino_id"],
+        "title": "PedidoCreateSchema",
+        "type": "object"
+      },
+      "PedidoUpdateSchema": {
+        "properties": {
+          "estado": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estado"
+          }
+        },
+        "title": "PedidoUpdateSchema",
+        "type": "object"
+      },
+      "DetallePedidoSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "pedido": {
+            "title": "Pedido",
+            "type": "integer"
+          },
+          "producto": {
+            "title": "Producto",
+            "type": "integer"
+          },
+          "cantidad": {
+            "title": "Cantidad",
+            "type": "integer"
+          }
+        },
+        "required": ["created_at", "updated_at", "pedido", "producto", "cantidad"],
+        "title": "DetallePedidoSchema",
+        "type": "object"
+      },
+      "PagedDetallePedidoSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DetallePedidoSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedDetallePedidoSchema",
+        "type": "object"
+      },
+      "DetallePedidoCreateSchema": {
+        "properties": {
+          "pedido_id": {
+            "title": "Pedido Id",
+            "type": "integer"
+          },
+          "producto_id": {
+            "title": "Producto Id",
+            "type": "integer"
+          },
+          "cantidad": {
+            "title": "Cantidad",
+            "type": "integer"
+          }
+        },
+        "required": ["pedido_id", "producto_id", "cantidad"],
+        "title": "DetallePedidoCreateSchema",
+        "type": "object"
+      },
+      "DetallePedidoUpdateSchema": {
+        "properties": {
+          "cantidad": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cantidad"
+          }
+        },
+        "title": "DetallePedidoUpdateSchema",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "AuthBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "servers": []
+}
