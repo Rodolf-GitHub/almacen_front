@@ -5,71 +5,57 @@
  * OpenAPI spec version: 1.0.0
  */
 import type {
-  DetallePedidoCreateSchema,
-  DetallePedidoSchema,
-  DetallePedidoUpdateSchema,
-  LoginResponseSchema,
-  LoginSchema,
-  PagedDetallePedidoSchema,
-  PagedPedidoSchema,
-  PagedProductoSchema,
-  PagedProductoSucursalSchema,
-  PagedProveedorSchema,
-  PagedProveedorUsuarioSchema,
-  PagedSucursalSchema,
-  PagedSucursalUsuarioSchema,
-  PagedUsuarioSchema,
-  PedidoApiListDetallesParams,
-  PedidoApiListPedidosParams,
-  PedidoCreateSchema,
-  PedidoSchema,
-  PedidoUpdateSchema,
-  ProductoApiCreateProductoBody,
-  ProductoApiListInventarioParams,
-  ProductoApiListProductosParams,
-  ProductoApiUpdateProductoBody,
-  ProductoSchema,
-  ProductoSucursalCreateSchema,
-  ProductoSucursalSchema,
-  ProductoSucursalUpdateSchema,
-  ProveedorApiListProveedorUsuariosParams,
-  ProveedorApiListProveedoresParams,
-  ProveedorCreateSchema,
-  ProveedorSchema,
-  ProveedorUpdateSchema,
-  ProveedorUsuarioCreateSchema,
-  ProveedorUsuarioSchema,
-  ProveedorUsuarioUpdateSchema,
-  SucursalApiListSucursalUsuariosParams,
-  SucursalApiListSucursalesParams,
-  SucursalCreateSchema,
-  SucursalSchema,
-  SucursalUpdateSchema,
-  SucursalUsuarioCreateSchema,
-  SucursalUsuarioSchema,
-  SucursalUsuarioUpdateSchema,
-  UsuarioApiListUsuariosParams,
-  UsuarioCreateSchema,
-  UsuarioSchema,
-  UsuarioUpdateSchema
+  CambiarMiContrasena,
+  DashboardEstadisticas,
+  LoginRequest,
+  PagedPedido,
+  PagedPedidoDetalle,
+  PagedProductoList,
+  PagedProveedor,
+  PagedUsuario,
+  Pedido,
+  PedidoApiListarMisPedidosHechosParams,
+  PedidoApiListarMisPedidosRecibidosParams,
+  PedidoApiListarPedidosParams,
+  PedidoApiListarProductosPedidoParams,
+  PedidoCambiarEstado,
+  PedidoCreate,
+  PedidoDetalle,
+  PedidoDetalleCreate,
+  PedidoDetalleUpdate,
+  PedidoUpdate,
+  ProductoApiActualizarProductoBody,
+  ProductoApiCrearProductoBody,
+  ProductoApiListarProductosPorProveedorParams,
+  ProductoDetail,
+  Proveedor,
+  ProveedorApiListarProveedoresParams,
+  ProveedorCreate,
+  ProveedorUpdate,
+  TokenResponse,
+  Usuario,
+  UsuarioApiListarSucursalesParams,
+  UsuarioApiListarUsuariosParams,
+  UsuarioCreate,
+  UsuarioUpdate
 } from './schemas';
 
 /**
- * @summary Login Usuario
+ * @summary Login
  */
-export type usuarioApiLoginUsuarioResponse200 = {
-  data: LoginResponseSchema
+export type usuarioApiLoginResponse200 = {
+  data: TokenResponse
   status: 200
 }
 
-export type usuarioApiLoginUsuarioResponseSuccess = (usuarioApiLoginUsuarioResponse200) & {
+export type usuarioApiLoginResponseSuccess = (usuarioApiLoginResponse200) & {
   headers: Headers;
 };
 ;
 
-export type usuarioApiLoginUsuarioResponse = (usuarioApiLoginUsuarioResponseSuccess)
+export type usuarioApiLoginResponse = (usuarioApiLoginResponseSuccess)
 
-export const getUsuarioApiLoginUsuarioUrl = () => {
+export const getUsuarioApiLoginUrl = () => {
 
 
   
@@ -77,42 +63,42 @@ export const getUsuarioApiLoginUsuarioUrl = () => {
   return `/api/usuarios/login`
 }
 
-export const usuarioApiLoginUsuario = async (loginSchema: LoginSchema, options?: RequestInit): Promise<usuarioApiLoginUsuarioResponse> => {
+export const usuarioApiLogin = async (loginRequest: LoginRequest, options?: RequestInit): Promise<usuarioApiLoginResponse> => {
   
-  const res = await fetch(getUsuarioApiLoginUsuarioUrl(),
+  const res = await fetch(getUsuarioApiLoginUrl(),
   {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      loginSchema,)
+      loginRequest,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: usuarioApiLoginUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as usuarioApiLoginUsuarioResponse
+  const data: usuarioApiLoginResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiLoginResponse
 }
   
 
 
 /**
- * @summary Logout Usuario
+ * @summary Logout
  */
-export type usuarioApiLogoutUsuarioResponse200 = {
+export type usuarioApiLogoutResponse200 = {
   data: void
   status: 200
 }
 
-export type usuarioApiLogoutUsuarioResponseSuccess = (usuarioApiLogoutUsuarioResponse200) & {
+export type usuarioApiLogoutResponseSuccess = (usuarioApiLogoutResponse200) & {
   headers: Headers;
 };
 ;
 
-export type usuarioApiLogoutUsuarioResponse = (usuarioApiLogoutUsuarioResponseSuccess)
+export type usuarioApiLogoutResponse = (usuarioApiLogoutResponseSuccess)
 
-export const getUsuarioApiLogoutUsuarioUrl = () => {
+export const getUsuarioApiLogoutUrl = () => {
 
 
   
@@ -120,9 +106,9 @@ export const getUsuarioApiLogoutUsuarioUrl = () => {
   return `/api/usuarios/logout`
 }
 
-export const usuarioApiLogoutUsuario = async ( options?: RequestInit): Promise<usuarioApiLogoutUsuarioResponse> => {
+export const usuarioApiLogout = async ( options?: RequestInit): Promise<usuarioApiLogoutResponse> => {
   
-  const res = await fetch(getUsuarioApiLogoutUsuarioUrl(),
+  const res = await fetch(getUsuarioApiLogoutUrl(),
   {      
     ...options,
     method: 'POST'
@@ -133,28 +119,71 @@ export const usuarioApiLogoutUsuario = async ( options?: RequestInit): Promise<u
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: usuarioApiLogoutUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as usuarioApiLogoutUsuarioResponse
+  const data: usuarioApiLogoutResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiLogoutResponse
 }
   
 
 
 /**
- * @summary List Usuarios
+ * @summary Mi Perfil
  */
-export type usuarioApiListUsuariosResponse200 = {
-  data: PagedUsuarioSchema
+export type usuarioApiMiPerfilResponse200 = {
+  data: Usuario
   status: 200
 }
 
-export type usuarioApiListUsuariosResponseSuccess = (usuarioApiListUsuariosResponse200) & {
+export type usuarioApiMiPerfilResponseSuccess = (usuarioApiMiPerfilResponse200) & {
   headers: Headers;
 };
 ;
 
-export type usuarioApiListUsuariosResponse = (usuarioApiListUsuariosResponseSuccess)
+export type usuarioApiMiPerfilResponse = (usuarioApiMiPerfilResponseSuccess)
 
-export const getUsuarioApiListUsuariosUrl = (params?: UsuarioApiListUsuariosParams,) => {
+export const getUsuarioApiMiPerfilUrl = () => {
+
+
+  
+
+  return `/api/usuarios/mi_perfil`
+}
+
+export const usuarioApiMiPerfil = async ( options?: RequestInit): Promise<usuarioApiMiPerfilResponse> => {
+  
+  const res = await fetch(getUsuarioApiMiPerfilUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: usuarioApiMiPerfilResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiMiPerfilResponse
+}
+  
+
+
+/**
+ * Permisos: requiere rol admin.
+ * @summary Listar Usuarios
+ */
+export type usuarioApiListarUsuariosResponse200 = {
+  data: PagedUsuario
+  status: 200
+}
+
+export type usuarioApiListarUsuariosResponseSuccess = (usuarioApiListarUsuariosResponse200) & {
+  headers: Headers;
+};
+;
+
+export type usuarioApiListarUsuariosResponse = (usuarioApiListarUsuariosResponseSuccess)
+
+export const getUsuarioApiListarUsuariosUrl = (params?: UsuarioApiListarUsuariosParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -169,9 +198,9 @@ export const getUsuarioApiListUsuariosUrl = (params?: UsuarioApiListUsuariosPara
   return stringifiedParams.length > 0 ? `/api/usuarios/listar_todos?${stringifiedParams}` : `/api/usuarios/listar_todos`
 }
 
-export const usuarioApiListUsuarios = async (params?: UsuarioApiListUsuariosParams, options?: RequestInit): Promise<usuarioApiListUsuariosResponse> => {
+export const usuarioApiListarUsuarios = async (params?: UsuarioApiListarUsuariosParams, options?: RequestInit): Promise<usuarioApiListarUsuariosResponse> => {
   
-  const res = await fetch(getUsuarioApiListUsuariosUrl(params),
+  const res = await fetch(getUsuarioApiListarUsuariosUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -182,28 +211,77 @@ export const usuarioApiListUsuarios = async (params?: UsuarioApiListUsuariosPara
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: usuarioApiListUsuariosResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as usuarioApiListUsuariosResponse
+  const data: usuarioApiListarUsuariosResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiListarUsuariosResponse
 }
   
 
 
 /**
- * @summary Get Usuario
+ * @summary Listar Sucursales
  */
-export type usuarioApiGetUsuarioResponse200 = {
-  data: UsuarioSchema
+export type usuarioApiListarSucursalesResponse200 = {
+  data: PagedUsuario
   status: 200
 }
 
-export type usuarioApiGetUsuarioResponseSuccess = (usuarioApiGetUsuarioResponse200) & {
+export type usuarioApiListarSucursalesResponseSuccess = (usuarioApiListarSucursalesResponse200) & {
   headers: Headers;
 };
 ;
 
-export type usuarioApiGetUsuarioResponse = (usuarioApiGetUsuarioResponseSuccess)
+export type usuarioApiListarSucursalesResponse = (usuarioApiListarSucursalesResponseSuccess)
 
-export const getUsuarioApiGetUsuarioUrl = (usuarioId: number,) => {
+export const getUsuarioApiListarSucursalesUrl = (params?: UsuarioApiListarSucursalesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/usuarios/listar_sucursales?${stringifiedParams}` : `/api/usuarios/listar_sucursales`
+}
+
+export const usuarioApiListarSucursales = async (params?: UsuarioApiListarSucursalesParams, options?: RequestInit): Promise<usuarioApiListarSucursalesResponse> => {
+  
+  const res = await fetch(getUsuarioApiListarSucursalesUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: usuarioApiListarSucursalesResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiListarSucursalesResponse
+}
+  
+
+
+/**
+ * @summary Obtener Usuario
+ */
+export type usuarioApiObtenerUsuarioResponse200 = {
+  data: Usuario
+  status: 200
+}
+
+export type usuarioApiObtenerUsuarioResponseSuccess = (usuarioApiObtenerUsuarioResponse200) & {
+  headers: Headers;
+};
+;
+
+export type usuarioApiObtenerUsuarioResponse = (usuarioApiObtenerUsuarioResponseSuccess)
+
+export const getUsuarioApiObtenerUsuarioUrl = (usuarioId: number,) => {
 
 
   
@@ -211,9 +289,9 @@ export const getUsuarioApiGetUsuarioUrl = (usuarioId: number,) => {
   return `/api/usuarios/obtener/${usuarioId}`
 }
 
-export const usuarioApiGetUsuario = async (usuarioId: number, options?: RequestInit): Promise<usuarioApiGetUsuarioResponse> => {
+export const usuarioApiObtenerUsuario = async (usuarioId: number, options?: RequestInit): Promise<usuarioApiObtenerUsuarioResponse> => {
   
-  const res = await fetch(getUsuarioApiGetUsuarioUrl(usuarioId),
+  const res = await fetch(getUsuarioApiObtenerUsuarioUrl(usuarioId),
   {      
     ...options,
     method: 'GET'
@@ -224,28 +302,29 @@ export const usuarioApiGetUsuario = async (usuarioId: number, options?: RequestI
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: usuarioApiGetUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as usuarioApiGetUsuarioResponse
+  const data: usuarioApiObtenerUsuarioResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiObtenerUsuarioResponse
 }
   
 
 
 /**
- * @summary Create Usuario
+ * Permisos: requiere rol admin.
+ * @summary Crear Usuario
  */
-export type usuarioApiCreateUsuarioResponse200 = {
-  data: UsuarioSchema
+export type usuarioApiCrearUsuarioResponse200 = {
+  data: Usuario
   status: 200
 }
 
-export type usuarioApiCreateUsuarioResponseSuccess = (usuarioApiCreateUsuarioResponse200) & {
+export type usuarioApiCrearUsuarioResponseSuccess = (usuarioApiCrearUsuarioResponse200) & {
   headers: Headers;
 };
 ;
 
-export type usuarioApiCreateUsuarioResponse = (usuarioApiCreateUsuarioResponseSuccess)
+export type usuarioApiCrearUsuarioResponse = (usuarioApiCrearUsuarioResponseSuccess)
 
-export const getUsuarioApiCreateUsuarioUrl = () => {
+export const getUsuarioApiCrearUsuarioUrl = () => {
 
 
   
@@ -253,42 +332,43 @@ export const getUsuarioApiCreateUsuarioUrl = () => {
   return `/api/usuarios/crear`
 }
 
-export const usuarioApiCreateUsuario = async (usuarioCreateSchema: UsuarioCreateSchema, options?: RequestInit): Promise<usuarioApiCreateUsuarioResponse> => {
+export const usuarioApiCrearUsuario = async (usuarioCreate: UsuarioCreate, options?: RequestInit): Promise<usuarioApiCrearUsuarioResponse> => {
   
-  const res = await fetch(getUsuarioApiCreateUsuarioUrl(),
+  const res = await fetch(getUsuarioApiCrearUsuarioUrl(),
   {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      usuarioCreateSchema,)
+      usuarioCreate,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: usuarioApiCreateUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as usuarioApiCreateUsuarioResponse
+  const data: usuarioApiCrearUsuarioResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiCrearUsuarioResponse
 }
   
 
 
 /**
- * @summary Update Usuario
+ * Permisos: requiere rol admin.
+ * @summary Actualizar Usuario
  */
-export type usuarioApiUpdateUsuarioResponse200 = {
-  data: UsuarioSchema
+export type usuarioApiActualizarUsuarioResponse200 = {
+  data: Usuario
   status: 200
 }
 
-export type usuarioApiUpdateUsuarioResponseSuccess = (usuarioApiUpdateUsuarioResponse200) & {
+export type usuarioApiActualizarUsuarioResponseSuccess = (usuarioApiActualizarUsuarioResponse200) & {
   headers: Headers;
 };
 ;
 
-export type usuarioApiUpdateUsuarioResponse = (usuarioApiUpdateUsuarioResponseSuccess)
+export type usuarioApiActualizarUsuarioResponse = (usuarioApiActualizarUsuarioResponseSuccess)
 
-export const getUsuarioApiUpdateUsuarioUrl = (usuarioId: number,) => {
+export const getUsuarioApiActualizarUsuarioUrl = (usuarioId: number,) => {
 
 
   
@@ -296,43 +376,87 @@ export const getUsuarioApiUpdateUsuarioUrl = (usuarioId: number,) => {
   return `/api/usuarios/actualizar/${usuarioId}`
 }
 
-export const usuarioApiUpdateUsuario = async (usuarioId: number,
-    usuarioUpdateSchema: UsuarioUpdateSchema, options?: RequestInit): Promise<usuarioApiUpdateUsuarioResponse> => {
+export const usuarioApiActualizarUsuario = async (usuarioId: number,
+    usuarioUpdate: UsuarioUpdate, options?: RequestInit): Promise<usuarioApiActualizarUsuarioResponse> => {
   
-  const res = await fetch(getUsuarioApiUpdateUsuarioUrl(usuarioId),
+  const res = await fetch(getUsuarioApiActualizarUsuarioUrl(usuarioId),
   {      
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      usuarioUpdateSchema,)
+      usuarioUpdate,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: usuarioApiUpdateUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as usuarioApiUpdateUsuarioResponse
+  const data: usuarioApiActualizarUsuarioResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiActualizarUsuarioResponse
 }
   
 
 
 /**
- * @summary Delete Usuario
+ * @summary Cambiar Mi Contrasena
  */
-export type usuarioApiDeleteUsuarioResponse200 = {
+export type usuarioApiCambiarMiContrasenaResponse200 = {
   data: void
   status: 200
 }
 
-export type usuarioApiDeleteUsuarioResponseSuccess = (usuarioApiDeleteUsuarioResponse200) & {
+export type usuarioApiCambiarMiContrasenaResponseSuccess = (usuarioApiCambiarMiContrasenaResponse200) & {
   headers: Headers;
 };
 ;
 
-export type usuarioApiDeleteUsuarioResponse = (usuarioApiDeleteUsuarioResponseSuccess)
+export type usuarioApiCambiarMiContrasenaResponse = (usuarioApiCambiarMiContrasenaResponseSuccess)
 
-export const getUsuarioApiDeleteUsuarioUrl = (usuarioId: number,) => {
+export const getUsuarioApiCambiarMiContrasenaUrl = () => {
+
+
+  
+
+  return `/api/usuarios/cambiar_mi_contrasena`
+}
+
+export const usuarioApiCambiarMiContrasena = async (cambiarMiContrasena: CambiarMiContrasena, options?: RequestInit): Promise<usuarioApiCambiarMiContrasenaResponse> => {
+  
+  const res = await fetch(getUsuarioApiCambiarMiContrasenaUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      cambiarMiContrasena,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: usuarioApiCambiarMiContrasenaResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiCambiarMiContrasenaResponse
+}
+  
+
+
+/**
+ * Permisos: requiere rol admin.
+ * @summary Eliminar Usuario
+ */
+export type usuarioApiEliminarUsuarioResponse200 = {
+  data: void
+  status: 200
+}
+
+export type usuarioApiEliminarUsuarioResponseSuccess = (usuarioApiEliminarUsuarioResponse200) & {
+  headers: Headers;
+};
+;
+
+export type usuarioApiEliminarUsuarioResponse = (usuarioApiEliminarUsuarioResponseSuccess)
+
+export const getUsuarioApiEliminarUsuarioUrl = (usuarioId: number,) => {
 
 
   
@@ -340,9 +464,9 @@ export const getUsuarioApiDeleteUsuarioUrl = (usuarioId: number,) => {
   return `/api/usuarios/eliminar/${usuarioId}`
 }
 
-export const usuarioApiDeleteUsuario = async (usuarioId: number, options?: RequestInit): Promise<usuarioApiDeleteUsuarioResponse> => {
+export const usuarioApiEliminarUsuario = async (usuarioId: number, options?: RequestInit): Promise<usuarioApiEliminarUsuarioResponse> => {
   
-  const res = await fetch(getUsuarioApiDeleteUsuarioUrl(usuarioId),
+  const res = await fetch(getUsuarioApiEliminarUsuarioUrl(usuarioId),
   {      
     ...options,
     method: 'DELETE'
@@ -353,28 +477,28 @@ export const usuarioApiDeleteUsuario = async (usuarioId: number, options?: Reque
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: usuarioApiDeleteUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as usuarioApiDeleteUsuarioResponse
+  const data: usuarioApiEliminarUsuarioResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiEliminarUsuarioResponse
 }
   
 
 
 /**
- * @summary List Proveedores
+ * @summary Listar Proveedores
  */
-export type proveedorApiListProveedoresResponse200 = {
-  data: PagedProveedorSchema
+export type proveedorApiListarProveedoresResponse200 = {
+  data: PagedProveedor
   status: 200
 }
 
-export type proveedorApiListProveedoresResponseSuccess = (proveedorApiListProveedoresResponse200) & {
+export type proveedorApiListarProveedoresResponseSuccess = (proveedorApiListarProveedoresResponse200) & {
   headers: Headers;
 };
 ;
 
-export type proveedorApiListProveedoresResponse = (proveedorApiListProveedoresResponseSuccess)
+export type proveedorApiListarProveedoresResponse = (proveedorApiListarProveedoresResponseSuccess)
 
-export const getProveedorApiListProveedoresUrl = (params?: ProveedorApiListProveedoresParams,) => {
+export const getProveedorApiListarProveedoresUrl = (params?: ProveedorApiListarProveedoresParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -389,9 +513,9 @@ export const getProveedorApiListProveedoresUrl = (params?: ProveedorApiListProve
   return stringifiedParams.length > 0 ? `/api/proveedores/listar_todos?${stringifiedParams}` : `/api/proveedores/listar_todos`
 }
 
-export const proveedorApiListProveedores = async (params?: ProveedorApiListProveedoresParams, options?: RequestInit): Promise<proveedorApiListProveedoresResponse> => {
+export const proveedorApiListarProveedores = async (params?: ProveedorApiListarProveedoresParams, options?: RequestInit): Promise<proveedorApiListarProveedoresResponse> => {
   
-  const res = await fetch(getProveedorApiListProveedoresUrl(params),
+  const res = await fetch(getProveedorApiListarProveedoresUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -402,28 +526,28 @@ export const proveedorApiListProveedores = async (params?: ProveedorApiListProve
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: proveedorApiListProveedoresResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as proveedorApiListProveedoresResponse
+  const data: proveedorApiListarProveedoresResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as proveedorApiListarProveedoresResponse
 }
   
 
 
 /**
- * @summary Get Proveedor
+ * @summary Obtener Proveedor
  */
-export type proveedorApiGetProveedorResponse200 = {
-  data: ProveedorSchema
+export type proveedorApiObtenerProveedorResponse200 = {
+  data: Proveedor
   status: 200
 }
 
-export type proveedorApiGetProveedorResponseSuccess = (proveedorApiGetProveedorResponse200) & {
+export type proveedorApiObtenerProveedorResponseSuccess = (proveedorApiObtenerProveedorResponse200) & {
   headers: Headers;
 };
 ;
 
-export type proveedorApiGetProveedorResponse = (proveedorApiGetProveedorResponseSuccess)
+export type proveedorApiObtenerProveedorResponse = (proveedorApiObtenerProveedorResponseSuccess)
 
-export const getProveedorApiGetProveedorUrl = (proveedorId: number,) => {
+export const getProveedorApiObtenerProveedorUrl = (proveedorId: number,) => {
 
 
   
@@ -431,9 +555,9 @@ export const getProveedorApiGetProveedorUrl = (proveedorId: number,) => {
   return `/api/proveedores/obtener/${proveedorId}`
 }
 
-export const proveedorApiGetProveedor = async (proveedorId: number, options?: RequestInit): Promise<proveedorApiGetProveedorResponse> => {
+export const proveedorApiObtenerProveedor = async (proveedorId: number, options?: RequestInit): Promise<proveedorApiObtenerProveedorResponse> => {
   
-  const res = await fetch(getProveedorApiGetProveedorUrl(proveedorId),
+  const res = await fetch(getProveedorApiObtenerProveedorUrl(proveedorId),
   {      
     ...options,
     method: 'GET'
@@ -444,28 +568,28 @@ export const proveedorApiGetProveedor = async (proveedorId: number, options?: Re
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: proveedorApiGetProveedorResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as proveedorApiGetProveedorResponse
+  const data: proveedorApiObtenerProveedorResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as proveedorApiObtenerProveedorResponse
 }
   
 
 
 /**
- * @summary Create Proveedor
+ * @summary Crear Proveedor
  */
-export type proveedorApiCreateProveedorResponse200 = {
-  data: ProveedorSchema
+export type proveedorApiCrearProveedorResponse200 = {
+  data: Proveedor
   status: 200
 }
 
-export type proveedorApiCreateProveedorResponseSuccess = (proveedorApiCreateProveedorResponse200) & {
+export type proveedorApiCrearProveedorResponseSuccess = (proveedorApiCrearProveedorResponse200) & {
   headers: Headers;
 };
 ;
 
-export type proveedorApiCreateProveedorResponse = (proveedorApiCreateProveedorResponseSuccess)
+export type proveedorApiCrearProveedorResponse = (proveedorApiCrearProveedorResponseSuccess)
 
-export const getProveedorApiCreateProveedorUrl = () => {
+export const getProveedorApiCrearProveedorUrl = () => {
 
 
   
@@ -473,42 +597,42 @@ export const getProveedorApiCreateProveedorUrl = () => {
   return `/api/proveedores/crear`
 }
 
-export const proveedorApiCreateProveedor = async (proveedorCreateSchema: ProveedorCreateSchema, options?: RequestInit): Promise<proveedorApiCreateProveedorResponse> => {
+export const proveedorApiCrearProveedor = async (proveedorCreate: ProveedorCreate, options?: RequestInit): Promise<proveedorApiCrearProveedorResponse> => {
   
-  const res = await fetch(getProveedorApiCreateProveedorUrl(),
+  const res = await fetch(getProveedorApiCrearProveedorUrl(),
   {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      proveedorCreateSchema,)
+      proveedorCreate,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: proveedorApiCreateProveedorResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as proveedorApiCreateProveedorResponse
+  const data: proveedorApiCrearProveedorResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as proveedorApiCrearProveedorResponse
 }
   
 
 
 /**
- * @summary Update Proveedor
+ * @summary Actualizar Proveedor
  */
-export type proveedorApiUpdateProveedorResponse200 = {
-  data: ProveedorSchema
+export type proveedorApiActualizarProveedorResponse200 = {
+  data: Proveedor
   status: 200
 }
 
-export type proveedorApiUpdateProveedorResponseSuccess = (proveedorApiUpdateProveedorResponse200) & {
+export type proveedorApiActualizarProveedorResponseSuccess = (proveedorApiActualizarProveedorResponse200) & {
   headers: Headers;
 };
 ;
 
-export type proveedorApiUpdateProveedorResponse = (proveedorApiUpdateProveedorResponseSuccess)
+export type proveedorApiActualizarProveedorResponse = (proveedorApiActualizarProveedorResponseSuccess)
 
-export const getProveedorApiUpdateProveedorUrl = (proveedorId: number,) => {
+export const getProveedorApiActualizarProveedorUrl = (proveedorId: number,) => {
 
 
   
@@ -516,43 +640,43 @@ export const getProveedorApiUpdateProveedorUrl = (proveedorId: number,) => {
   return `/api/proveedores/actualizar/${proveedorId}`
 }
 
-export const proveedorApiUpdateProveedor = async (proveedorId: number,
-    proveedorUpdateSchema: ProveedorUpdateSchema, options?: RequestInit): Promise<proveedorApiUpdateProveedorResponse> => {
+export const proveedorApiActualizarProveedor = async (proveedorId: number,
+    proveedorUpdate: ProveedorUpdate, options?: RequestInit): Promise<proveedorApiActualizarProveedorResponse> => {
   
-  const res = await fetch(getProveedorApiUpdateProveedorUrl(proveedorId),
+  const res = await fetch(getProveedorApiActualizarProveedorUrl(proveedorId),
   {      
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      proveedorUpdateSchema,)
+      proveedorUpdate,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: proveedorApiUpdateProveedorResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as proveedorApiUpdateProveedorResponse
+  const data: proveedorApiActualizarProveedorResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as proveedorApiActualizarProveedorResponse
 }
   
 
 
 /**
- * @summary Delete Proveedor
+ * @summary Eliminar Proveedor
  */
-export type proveedorApiDeleteProveedorResponse200 = {
+export type proveedorApiEliminarProveedorResponse200 = {
   data: void
   status: 200
 }
 
-export type proveedorApiDeleteProveedorResponseSuccess = (proveedorApiDeleteProveedorResponse200) & {
+export type proveedorApiEliminarProveedorResponseSuccess = (proveedorApiEliminarProveedorResponse200) & {
   headers: Headers;
 };
 ;
 
-export type proveedorApiDeleteProveedorResponse = (proveedorApiDeleteProveedorResponseSuccess)
+export type proveedorApiEliminarProveedorResponse = (proveedorApiEliminarProveedorResponseSuccess)
 
-export const getProveedorApiDeleteProveedorUrl = (proveedorId: number,) => {
+export const getProveedorApiEliminarProveedorUrl = (proveedorId: number,) => {
 
 
   
@@ -560,9 +684,9 @@ export const getProveedorApiDeleteProveedorUrl = (proveedorId: number,) => {
   return `/api/proveedores/eliminar/${proveedorId}`
 }
 
-export const proveedorApiDeleteProveedor = async (proveedorId: number, options?: RequestInit): Promise<proveedorApiDeleteProveedorResponse> => {
+export const proveedorApiEliminarProveedor = async (proveedorId: number, options?: RequestInit): Promise<proveedorApiEliminarProveedorResponse> => {
   
-  const res = await fetch(getProveedorApiDeleteProveedorUrl(proveedorId),
+  const res = await fetch(getProveedorApiEliminarProveedorUrl(proveedorId),
   {      
     ...options,
     method: 'DELETE'
@@ -573,28 +697,29 @@ export const proveedorApiDeleteProveedor = async (proveedorId: number, options?:
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: proveedorApiDeleteProveedorResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as proveedorApiDeleteProveedorResponse
+  const data: proveedorApiEliminarProveedorResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as proveedorApiEliminarProveedorResponse
 }
   
 
 
 /**
- * @summary List Proveedor Usuarios
+ * @summary Listar Productos Por Proveedor
  */
-export type proveedorApiListProveedorUsuariosResponse200 = {
-  data: PagedProveedorUsuarioSchema
+export type productoApiListarProductosPorProveedorResponse200 = {
+  data: PagedProductoList
   status: 200
 }
 
-export type proveedorApiListProveedorUsuariosResponseSuccess = (proveedorApiListProveedorUsuariosResponse200) & {
+export type productoApiListarProductosPorProveedorResponseSuccess = (productoApiListarProductosPorProveedorResponse200) & {
   headers: Headers;
 };
 ;
 
-export type proveedorApiListProveedorUsuariosResponse = (proveedorApiListProveedorUsuariosResponseSuccess)
+export type productoApiListarProductosPorProveedorResponse = (productoApiListarProductosPorProveedorResponseSuccess)
 
-export const getProveedorApiListProveedorUsuariosUrl = (params?: ProveedorApiListProveedorUsuariosParams,) => {
+export const getProductoApiListarProductosPorProveedorUrl = (proveedorId: number,
+    params?: ProductoApiListarProductosPorProveedorParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -606,12 +731,13 @@ export const getProveedorApiListProveedorUsuariosUrl = (params?: ProveedorApiLis
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/api/proveedores/usuarios/listar_todos?${stringifiedParams}` : `/api/proveedores/usuarios/listar_todos`
+  return stringifiedParams.length > 0 ? `/api/productos/listar_por_proveedor/${proveedorId}?${stringifiedParams}` : `/api/productos/listar_por_proveedor/${proveedorId}`
 }
 
-export const proveedorApiListProveedorUsuarios = async (params?: ProveedorApiListProveedorUsuariosParams, options?: RequestInit): Promise<proveedorApiListProveedorUsuariosResponse> => {
+export const productoApiListarProductosPorProveedor = async (proveedorId: number,
+    params?: ProductoApiListarProductosPorProveedorParams, options?: RequestInit): Promise<productoApiListarProductosPorProveedorResponse> => {
   
-  const res = await fetch(getProveedorApiListProveedorUsuariosUrl(params),
+  const res = await fetch(getProductoApiListarProductosPorProveedorUrl(proveedorId,params),
   {      
     ...options,
     method: 'GET'
@@ -622,206 +748,28 @@ export const proveedorApiListProveedorUsuarios = async (params?: ProveedorApiLis
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: proveedorApiListProveedorUsuariosResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as proveedorApiListProveedorUsuariosResponse
+  const data: productoApiListarProductosPorProveedorResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as productoApiListarProductosPorProveedorResponse
 }
   
 
 
 /**
- * @summary Create Proveedor Usuario
+ * @summary Obtener Producto
  */
-export type proveedorApiCreateProveedorUsuarioResponse200 = {
-  data: ProveedorUsuarioSchema
+export type productoApiObtenerProductoResponse200 = {
+  data: ProductoDetail
   status: 200
 }
 
-export type proveedorApiCreateProveedorUsuarioResponseSuccess = (proveedorApiCreateProveedorUsuarioResponse200) & {
+export type productoApiObtenerProductoResponseSuccess = (productoApiObtenerProductoResponse200) & {
   headers: Headers;
 };
 ;
 
-export type proveedorApiCreateProveedorUsuarioResponse = (proveedorApiCreateProveedorUsuarioResponseSuccess)
+export type productoApiObtenerProductoResponse = (productoApiObtenerProductoResponseSuccess)
 
-export const getProveedorApiCreateProveedorUsuarioUrl = () => {
-
-
-  
-
-  return `/api/proveedores/usuarios/crear`
-}
-
-export const proveedorApiCreateProveedorUsuario = async (proveedorUsuarioCreateSchema: ProveedorUsuarioCreateSchema, options?: RequestInit): Promise<proveedorApiCreateProveedorUsuarioResponse> => {
-  
-  const res = await fetch(getProveedorApiCreateProveedorUsuarioUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      proveedorUsuarioCreateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: proveedorApiCreateProveedorUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as proveedorApiCreateProveedorUsuarioResponse
-}
-  
-
-
-/**
- * @summary Update Proveedor Usuario
- */
-export type proveedorApiUpdateProveedorUsuarioResponse200 = {
-  data: ProveedorUsuarioSchema
-  status: 200
-}
-
-export type proveedorApiUpdateProveedorUsuarioResponseSuccess = (proveedorApiUpdateProveedorUsuarioResponse200) & {
-  headers: Headers;
-};
-;
-
-export type proveedorApiUpdateProveedorUsuarioResponse = (proveedorApiUpdateProveedorUsuarioResponseSuccess)
-
-export const getProveedorApiUpdateProveedorUsuarioUrl = (relacionId: number,) => {
-
-
-  
-
-  return `/api/proveedores/usuarios/actualizar/${relacionId}`
-}
-
-export const proveedorApiUpdateProveedorUsuario = async (relacionId: number,
-    proveedorUsuarioUpdateSchema: ProveedorUsuarioUpdateSchema, options?: RequestInit): Promise<proveedorApiUpdateProveedorUsuarioResponse> => {
-  
-  const res = await fetch(getProveedorApiUpdateProveedorUsuarioUrl(relacionId),
-  {      
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      proveedorUsuarioUpdateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: proveedorApiUpdateProveedorUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as proveedorApiUpdateProveedorUsuarioResponse
-}
-  
-
-
-/**
- * @summary Delete Proveedor Usuario
- */
-export type proveedorApiDeleteProveedorUsuarioResponse200 = {
-  data: void
-  status: 200
-}
-
-export type proveedorApiDeleteProveedorUsuarioResponseSuccess = (proveedorApiDeleteProveedorUsuarioResponse200) & {
-  headers: Headers;
-};
-;
-
-export type proveedorApiDeleteProveedorUsuarioResponse = (proveedorApiDeleteProveedorUsuarioResponseSuccess)
-
-export const getProveedorApiDeleteProveedorUsuarioUrl = (relacionId: number,) => {
-
-
-  
-
-  return `/api/proveedores/usuarios/eliminar/${relacionId}`
-}
-
-export const proveedorApiDeleteProveedorUsuario = async (relacionId: number, options?: RequestInit): Promise<proveedorApiDeleteProveedorUsuarioResponse> => {
-  
-  const res = await fetch(getProveedorApiDeleteProveedorUsuarioUrl(relacionId),
-  {      
-    ...options,
-    method: 'DELETE'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: proveedorApiDeleteProveedorUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as proveedorApiDeleteProveedorUsuarioResponse
-}
-  
-
-
-/**
- * @summary List Productos
- */
-export type productoApiListProductosResponse200 = {
-  data: PagedProductoSchema
-  status: 200
-}
-
-export type productoApiListProductosResponseSuccess = (productoApiListProductosResponse200) & {
-  headers: Headers;
-};
-;
-
-export type productoApiListProductosResponse = (productoApiListProductosResponseSuccess)
-
-export const getProductoApiListProductosUrl = (params?: ProductoApiListProductosParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/productos/listar_todos?${stringifiedParams}` : `/api/productos/listar_todos`
-}
-
-export const productoApiListProductos = async (params?: ProductoApiListProductosParams, options?: RequestInit): Promise<productoApiListProductosResponse> => {
-  
-  const res = await fetch(getProductoApiListProductosUrl(params),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: productoApiListProductosResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as productoApiListProductosResponse
-}
-  
-
-
-/**
- * @summary Get Producto
- */
-export type productoApiGetProductoResponse200 = {
-  data: ProductoSchema
-  status: 200
-}
-
-export type productoApiGetProductoResponseSuccess = (productoApiGetProductoResponse200) & {
-  headers: Headers;
-};
-;
-
-export type productoApiGetProductoResponse = (productoApiGetProductoResponseSuccess)
-
-export const getProductoApiGetProductoUrl = (productoId: number,) => {
+export const getProductoApiObtenerProductoUrl = (productoId: number,) => {
 
 
   
@@ -829,9 +777,9 @@ export const getProductoApiGetProductoUrl = (productoId: number,) => {
   return `/api/productos/obtener/${productoId}`
 }
 
-export const productoApiGetProducto = async (productoId: number, options?: RequestInit): Promise<productoApiGetProductoResponse> => {
+export const productoApiObtenerProducto = async (productoId: number, options?: RequestInit): Promise<productoApiObtenerProductoResponse> => {
   
-  const res = await fetch(getProductoApiGetProductoUrl(productoId),
+  const res = await fetch(getProductoApiObtenerProductoUrl(productoId),
   {      
     ...options,
     method: 'GET'
@@ -842,28 +790,28 @@ export const productoApiGetProducto = async (productoId: number, options?: Reque
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: productoApiGetProductoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as productoApiGetProductoResponse
+  const data: productoApiObtenerProductoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as productoApiObtenerProductoResponse
 }
   
 
 
 /**
- * @summary Create Producto
+ * @summary Crear Producto
  */
-export type productoApiCreateProductoResponse200 = {
-  data: ProductoSchema
+export type productoApiCrearProductoResponse200 = {
+  data: ProductoDetail
   status: 200
 }
 
-export type productoApiCreateProductoResponseSuccess = (productoApiCreateProductoResponse200) & {
+export type productoApiCrearProductoResponseSuccess = (productoApiCrearProductoResponse200) & {
   headers: Headers;
 };
 ;
 
-export type productoApiCreateProductoResponse = (productoApiCreateProductoResponseSuccess)
+export type productoApiCrearProductoResponse = (productoApiCrearProductoResponseSuccess)
 
-export const getProductoApiCreateProductoUrl = () => {
+export const getProductoApiCrearProductoUrl = () => {
 
 
   
@@ -871,14 +819,14 @@ export const getProductoApiCreateProductoUrl = () => {
   return `/api/productos/crear`
 }
 
-export const productoApiCreateProducto = async (productoApiCreateProductoBody: ProductoApiCreateProductoBody, options?: RequestInit): Promise<productoApiCreateProductoResponse> => {
+export const productoApiCrearProducto = async (productoApiCrearProductoBody: ProductoApiCrearProductoBody, options?: RequestInit): Promise<productoApiCrearProductoResponse> => {
     const formData = new FormData();
-if(productoApiCreateProductoBody.imagen !== undefined) {
- formData.append(`imagen`, productoApiCreateProductoBody.imagen);
+if(productoApiCrearProductoBody.imagen !== undefined) {
+ formData.append(`imagen`, productoApiCrearProductoBody.imagen);
  }
-formData.append(`data`, JSON.stringify(productoApiCreateProductoBody.data));
+formData.append(`data`, JSON.stringify(productoApiCrearProductoBody.data));
 
-  const res = await fetch(getProductoApiCreateProductoUrl(),
+  const res = await fetch(getProductoApiCrearProductoUrl(),
   {      
     ...options,
     method: 'POST'
@@ -890,28 +838,28 @@ formData.append(`data`, JSON.stringify(productoApiCreateProductoBody.data));
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: productoApiCreateProductoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as productoApiCreateProductoResponse
+  const data: productoApiCrearProductoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as productoApiCrearProductoResponse
 }
   
 
 
 /**
- * @summary Update Producto
+ * @summary Actualizar Producto
  */
-export type productoApiUpdateProductoResponse200 = {
-  data: ProductoSchema
+export type productoApiActualizarProductoResponse200 = {
+  data: ProductoDetail
   status: 200
 }
 
-export type productoApiUpdateProductoResponseSuccess = (productoApiUpdateProductoResponse200) & {
+export type productoApiActualizarProductoResponseSuccess = (productoApiActualizarProductoResponse200) & {
   headers: Headers;
 };
 ;
 
-export type productoApiUpdateProductoResponse = (productoApiUpdateProductoResponseSuccess)
+export type productoApiActualizarProductoResponse = (productoApiActualizarProductoResponseSuccess)
 
-export const getProductoApiUpdateProductoUrl = (productoId: number,) => {
+export const getProductoApiActualizarProductoUrl = (productoId: number,) => {
 
 
   
@@ -919,15 +867,15 @@ export const getProductoApiUpdateProductoUrl = (productoId: number,) => {
   return `/api/productos/actualizar/${productoId}`
 }
 
-export const productoApiUpdateProducto = async (productoId: number,
-    productoApiUpdateProductoBody: ProductoApiUpdateProductoBody, options?: RequestInit): Promise<productoApiUpdateProductoResponse> => {
+export const productoApiActualizarProducto = async (productoId: number,
+    productoApiActualizarProductoBody: ProductoApiActualizarProductoBody, options?: RequestInit): Promise<productoApiActualizarProductoResponse> => {
     const formData = new FormData();
-if(productoApiUpdateProductoBody.imagen !== undefined) {
- formData.append(`imagen`, productoApiUpdateProductoBody.imagen);
+if(productoApiActualizarProductoBody.imagen !== undefined) {
+ formData.append(`imagen`, productoApiActualizarProductoBody.imagen);
  }
-formData.append(`data`, JSON.stringify(productoApiUpdateProductoBody.data));
+formData.append(`data`, JSON.stringify(productoApiActualizarProductoBody.data));
 
-  const res = await fetch(getProductoApiUpdateProductoUrl(productoId),
+  const res = await fetch(getProductoApiActualizarProductoUrl(productoId),
   {      
     ...options,
     method: 'PATCH'
@@ -939,28 +887,28 @@ formData.append(`data`, JSON.stringify(productoApiUpdateProductoBody.data));
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: productoApiUpdateProductoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as productoApiUpdateProductoResponse
+  const data: productoApiActualizarProductoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as productoApiActualizarProductoResponse
 }
   
 
 
 /**
- * @summary Delete Producto
+ * @summary Eliminar Producto
  */
-export type productoApiDeleteProductoResponse200 = {
+export type productoApiEliminarProductoResponse200 = {
   data: void
   status: 200
 }
 
-export type productoApiDeleteProductoResponseSuccess = (productoApiDeleteProductoResponse200) & {
+export type productoApiEliminarProductoResponseSuccess = (productoApiEliminarProductoResponse200) & {
   headers: Headers;
 };
 ;
 
-export type productoApiDeleteProductoResponse = (productoApiDeleteProductoResponseSuccess)
+export type productoApiEliminarProductoResponse = (productoApiEliminarProductoResponseSuccess)
 
-export const getProductoApiDeleteProductoUrl = (productoId: number,) => {
+export const getProductoApiEliminarProductoUrl = (productoId: number,) => {
 
 
   
@@ -968,9 +916,9 @@ export const getProductoApiDeleteProductoUrl = (productoId: number,) => {
   return `/api/productos/eliminar/${productoId}`
 }
 
-export const productoApiDeleteProducto = async (productoId: number, options?: RequestInit): Promise<productoApiDeleteProductoResponse> => {
+export const productoApiEliminarProducto = async (productoId: number, options?: RequestInit): Promise<productoApiEliminarProductoResponse> => {
   
-  const res = await fetch(getProductoApiDeleteProductoUrl(productoId),
+  const res = await fetch(getProductoApiEliminarProductoUrl(productoId),
   {      
     ...options,
     method: 'DELETE'
@@ -981,604 +929,29 @@ export const productoApiDeleteProducto = async (productoId: number, options?: Re
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: productoApiDeleteProductoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as productoApiDeleteProductoResponse
+  const data: productoApiEliminarProductoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as productoApiEliminarProductoResponse
 }
   
 
 
 /**
- * @summary List Inventario
+ * Permisos: requiere rol admin.
+ * @summary Listar Pedidos
  */
-export type productoApiListInventarioResponse200 = {
-  data: PagedProductoSucursalSchema
+export type pedidoApiListarPedidosResponse200 = {
+  data: PagedPedido
   status: 200
 }
 
-export type productoApiListInventarioResponseSuccess = (productoApiListInventarioResponse200) & {
+export type pedidoApiListarPedidosResponseSuccess = (pedidoApiListarPedidosResponse200) & {
   headers: Headers;
 };
 ;
 
-export type productoApiListInventarioResponse = (productoApiListInventarioResponseSuccess)
+export type pedidoApiListarPedidosResponse = (pedidoApiListarPedidosResponseSuccess)
 
-export const getProductoApiListInventarioUrl = (params?: ProductoApiListInventarioParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/productos/inventario/listar_todos?${stringifiedParams}` : `/api/productos/inventario/listar_todos`
-}
-
-export const productoApiListInventario = async (params?: ProductoApiListInventarioParams, options?: RequestInit): Promise<productoApiListInventarioResponse> => {
-  
-  const res = await fetch(getProductoApiListInventarioUrl(params),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: productoApiListInventarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as productoApiListInventarioResponse
-}
-  
-
-
-/**
- * @summary Create Inventario
- */
-export type productoApiCreateInventarioResponse200 = {
-  data: ProductoSucursalSchema
-  status: 200
-}
-
-export type productoApiCreateInventarioResponseSuccess = (productoApiCreateInventarioResponse200) & {
-  headers: Headers;
-};
-;
-
-export type productoApiCreateInventarioResponse = (productoApiCreateInventarioResponseSuccess)
-
-export const getProductoApiCreateInventarioUrl = () => {
-
-
-  
-
-  return `/api/productos/inventario/crear`
-}
-
-export const productoApiCreateInventario = async (productoSucursalCreateSchema: ProductoSucursalCreateSchema, options?: RequestInit): Promise<productoApiCreateInventarioResponse> => {
-  
-  const res = await fetch(getProductoApiCreateInventarioUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      productoSucursalCreateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: productoApiCreateInventarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as productoApiCreateInventarioResponse
-}
-  
-
-
-/**
- * @summary Update Inventario
- */
-export type productoApiUpdateInventarioResponse200 = {
-  data: ProductoSucursalSchema
-  status: 200
-}
-
-export type productoApiUpdateInventarioResponseSuccess = (productoApiUpdateInventarioResponse200) & {
-  headers: Headers;
-};
-;
-
-export type productoApiUpdateInventarioResponse = (productoApiUpdateInventarioResponseSuccess)
-
-export const getProductoApiUpdateInventarioUrl = (inventarioId: number,) => {
-
-
-  
-
-  return `/api/productos/inventario/actualizar/${inventarioId}`
-}
-
-export const productoApiUpdateInventario = async (inventarioId: number,
-    productoSucursalUpdateSchema: ProductoSucursalUpdateSchema, options?: RequestInit): Promise<productoApiUpdateInventarioResponse> => {
-  
-  const res = await fetch(getProductoApiUpdateInventarioUrl(inventarioId),
-  {      
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      productoSucursalUpdateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: productoApiUpdateInventarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as productoApiUpdateInventarioResponse
-}
-  
-
-
-/**
- * @summary Delete Inventario
- */
-export type productoApiDeleteInventarioResponse200 = {
-  data: void
-  status: 200
-}
-
-export type productoApiDeleteInventarioResponseSuccess = (productoApiDeleteInventarioResponse200) & {
-  headers: Headers;
-};
-;
-
-export type productoApiDeleteInventarioResponse = (productoApiDeleteInventarioResponseSuccess)
-
-export const getProductoApiDeleteInventarioUrl = (inventarioId: number,) => {
-
-
-  
-
-  return `/api/productos/inventario/eliminar/${inventarioId}`
-}
-
-export const productoApiDeleteInventario = async (inventarioId: number, options?: RequestInit): Promise<productoApiDeleteInventarioResponse> => {
-  
-  const res = await fetch(getProductoApiDeleteInventarioUrl(inventarioId),
-  {      
-    ...options,
-    method: 'DELETE'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: productoApiDeleteInventarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as productoApiDeleteInventarioResponse
-}
-  
-
-
-/**
- * @summary List Sucursales
- */
-export type sucursalApiListSucursalesResponse200 = {
-  data: PagedSucursalSchema
-  status: 200
-}
-
-export type sucursalApiListSucursalesResponseSuccess = (sucursalApiListSucursalesResponse200) & {
-  headers: Headers;
-};
-;
-
-export type sucursalApiListSucursalesResponse = (sucursalApiListSucursalesResponseSuccess)
-
-export const getSucursalApiListSucursalesUrl = (params?: SucursalApiListSucursalesParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/sucursales/listar_todos?${stringifiedParams}` : `/api/sucursales/listar_todos`
-}
-
-export const sucursalApiListSucursales = async (params?: SucursalApiListSucursalesParams, options?: RequestInit): Promise<sucursalApiListSucursalesResponse> => {
-  
-  const res = await fetch(getSucursalApiListSucursalesUrl(params),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: sucursalApiListSucursalesResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as sucursalApiListSucursalesResponse
-}
-  
-
-
-/**
- * @summary Get Sucursal
- */
-export type sucursalApiGetSucursalResponse200 = {
-  data: SucursalSchema
-  status: 200
-}
-
-export type sucursalApiGetSucursalResponseSuccess = (sucursalApiGetSucursalResponse200) & {
-  headers: Headers;
-};
-;
-
-export type sucursalApiGetSucursalResponse = (sucursalApiGetSucursalResponseSuccess)
-
-export const getSucursalApiGetSucursalUrl = (sucursalId: number,) => {
-
-
-  
-
-  return `/api/sucursales/obtener/${sucursalId}`
-}
-
-export const sucursalApiGetSucursal = async (sucursalId: number, options?: RequestInit): Promise<sucursalApiGetSucursalResponse> => {
-  
-  const res = await fetch(getSucursalApiGetSucursalUrl(sucursalId),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: sucursalApiGetSucursalResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as sucursalApiGetSucursalResponse
-}
-  
-
-
-/**
- * @summary Create Sucursal
- */
-export type sucursalApiCreateSucursalResponse200 = {
-  data: SucursalSchema
-  status: 200
-}
-
-export type sucursalApiCreateSucursalResponseSuccess = (sucursalApiCreateSucursalResponse200) & {
-  headers: Headers;
-};
-;
-
-export type sucursalApiCreateSucursalResponse = (sucursalApiCreateSucursalResponseSuccess)
-
-export const getSucursalApiCreateSucursalUrl = () => {
-
-
-  
-
-  return `/api/sucursales/crear`
-}
-
-export const sucursalApiCreateSucursal = async (sucursalCreateSchema: SucursalCreateSchema, options?: RequestInit): Promise<sucursalApiCreateSucursalResponse> => {
-  
-  const res = await fetch(getSucursalApiCreateSucursalUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      sucursalCreateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: sucursalApiCreateSucursalResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as sucursalApiCreateSucursalResponse
-}
-  
-
-
-/**
- * @summary Update Sucursal
- */
-export type sucursalApiUpdateSucursalResponse200 = {
-  data: SucursalSchema
-  status: 200
-}
-
-export type sucursalApiUpdateSucursalResponseSuccess = (sucursalApiUpdateSucursalResponse200) & {
-  headers: Headers;
-};
-;
-
-export type sucursalApiUpdateSucursalResponse = (sucursalApiUpdateSucursalResponseSuccess)
-
-export const getSucursalApiUpdateSucursalUrl = (sucursalId: number,) => {
-
-
-  
-
-  return `/api/sucursales/actualizar/${sucursalId}`
-}
-
-export const sucursalApiUpdateSucursal = async (sucursalId: number,
-    sucursalUpdateSchema: SucursalUpdateSchema, options?: RequestInit): Promise<sucursalApiUpdateSucursalResponse> => {
-  
-  const res = await fetch(getSucursalApiUpdateSucursalUrl(sucursalId),
-  {      
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      sucursalUpdateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: sucursalApiUpdateSucursalResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as sucursalApiUpdateSucursalResponse
-}
-  
-
-
-/**
- * @summary Delete Sucursal
- */
-export type sucursalApiDeleteSucursalResponse200 = {
-  data: void
-  status: 200
-}
-
-export type sucursalApiDeleteSucursalResponseSuccess = (sucursalApiDeleteSucursalResponse200) & {
-  headers: Headers;
-};
-;
-
-export type sucursalApiDeleteSucursalResponse = (sucursalApiDeleteSucursalResponseSuccess)
-
-export const getSucursalApiDeleteSucursalUrl = (sucursalId: number,) => {
-
-
-  
-
-  return `/api/sucursales/eliminar/${sucursalId}`
-}
-
-export const sucursalApiDeleteSucursal = async (sucursalId: number, options?: RequestInit): Promise<sucursalApiDeleteSucursalResponse> => {
-  
-  const res = await fetch(getSucursalApiDeleteSucursalUrl(sucursalId),
-  {      
-    ...options,
-    method: 'DELETE'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: sucursalApiDeleteSucursalResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as sucursalApiDeleteSucursalResponse
-}
-  
-
-
-/**
- * @summary List Sucursal Usuarios
- */
-export type sucursalApiListSucursalUsuariosResponse200 = {
-  data: PagedSucursalUsuarioSchema
-  status: 200
-}
-
-export type sucursalApiListSucursalUsuariosResponseSuccess = (sucursalApiListSucursalUsuariosResponse200) & {
-  headers: Headers;
-};
-;
-
-export type sucursalApiListSucursalUsuariosResponse = (sucursalApiListSucursalUsuariosResponseSuccess)
-
-export const getSucursalApiListSucursalUsuariosUrl = (params?: SucursalApiListSucursalUsuariosParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/sucursales/usuarios/listar_todos?${stringifiedParams}` : `/api/sucursales/usuarios/listar_todos`
-}
-
-export const sucursalApiListSucursalUsuarios = async (params?: SucursalApiListSucursalUsuariosParams, options?: RequestInit): Promise<sucursalApiListSucursalUsuariosResponse> => {
-  
-  const res = await fetch(getSucursalApiListSucursalUsuariosUrl(params),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: sucursalApiListSucursalUsuariosResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as sucursalApiListSucursalUsuariosResponse
-}
-  
-
-
-/**
- * @summary Create Sucursal Usuario
- */
-export type sucursalApiCreateSucursalUsuarioResponse200 = {
-  data: SucursalUsuarioSchema
-  status: 200
-}
-
-export type sucursalApiCreateSucursalUsuarioResponseSuccess = (sucursalApiCreateSucursalUsuarioResponse200) & {
-  headers: Headers;
-};
-;
-
-export type sucursalApiCreateSucursalUsuarioResponse = (sucursalApiCreateSucursalUsuarioResponseSuccess)
-
-export const getSucursalApiCreateSucursalUsuarioUrl = () => {
-
-
-  
-
-  return `/api/sucursales/usuarios/crear`
-}
-
-export const sucursalApiCreateSucursalUsuario = async (sucursalUsuarioCreateSchema: SucursalUsuarioCreateSchema, options?: RequestInit): Promise<sucursalApiCreateSucursalUsuarioResponse> => {
-  
-  const res = await fetch(getSucursalApiCreateSucursalUsuarioUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      sucursalUsuarioCreateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: sucursalApiCreateSucursalUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as sucursalApiCreateSucursalUsuarioResponse
-}
-  
-
-
-/**
- * @summary Update Sucursal Usuario
- */
-export type sucursalApiUpdateSucursalUsuarioResponse200 = {
-  data: SucursalUsuarioSchema
-  status: 200
-}
-
-export type sucursalApiUpdateSucursalUsuarioResponseSuccess = (sucursalApiUpdateSucursalUsuarioResponse200) & {
-  headers: Headers;
-};
-;
-
-export type sucursalApiUpdateSucursalUsuarioResponse = (sucursalApiUpdateSucursalUsuarioResponseSuccess)
-
-export const getSucursalApiUpdateSucursalUsuarioUrl = (relacionId: number,) => {
-
-
-  
-
-  return `/api/sucursales/usuarios/actualizar/${relacionId}`
-}
-
-export const sucursalApiUpdateSucursalUsuario = async (relacionId: number,
-    sucursalUsuarioUpdateSchema: SucursalUsuarioUpdateSchema, options?: RequestInit): Promise<sucursalApiUpdateSucursalUsuarioResponse> => {
-  
-  const res = await fetch(getSucursalApiUpdateSucursalUsuarioUrl(relacionId),
-  {      
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      sucursalUsuarioUpdateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: sucursalApiUpdateSucursalUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as sucursalApiUpdateSucursalUsuarioResponse
-}
-  
-
-
-/**
- * @summary Delete Sucursal Usuario
- */
-export type sucursalApiDeleteSucursalUsuarioResponse200 = {
-  data: void
-  status: 200
-}
-
-export type sucursalApiDeleteSucursalUsuarioResponseSuccess = (sucursalApiDeleteSucursalUsuarioResponse200) & {
-  headers: Headers;
-};
-;
-
-export type sucursalApiDeleteSucursalUsuarioResponse = (sucursalApiDeleteSucursalUsuarioResponseSuccess)
-
-export const getSucursalApiDeleteSucursalUsuarioUrl = (relacionId: number,) => {
-
-
-  
-
-  return `/api/sucursales/usuarios/eliminar/${relacionId}`
-}
-
-export const sucursalApiDeleteSucursalUsuario = async (relacionId: number, options?: RequestInit): Promise<sucursalApiDeleteSucursalUsuarioResponse> => {
-  
-  const res = await fetch(getSucursalApiDeleteSucursalUsuarioUrl(relacionId),
-  {      
-    ...options,
-    method: 'DELETE'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: sucursalApiDeleteSucursalUsuarioResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as sucursalApiDeleteSucursalUsuarioResponse
-}
-  
-
-
-/**
- * @summary List Pedidos
- */
-export type pedidoApiListPedidosResponse200 = {
-  data: PagedPedidoSchema
-  status: 200
-}
-
-export type pedidoApiListPedidosResponseSuccess = (pedidoApiListPedidosResponse200) & {
-  headers: Headers;
-};
-;
-
-export type pedidoApiListPedidosResponse = (pedidoApiListPedidosResponseSuccess)
-
-export const getPedidoApiListPedidosUrl = (params?: PedidoApiListPedidosParams,) => {
+export const getPedidoApiListarPedidosUrl = (params?: PedidoApiListarPedidosParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -1593,9 +966,9 @@ export const getPedidoApiListPedidosUrl = (params?: PedidoApiListPedidosParams,)
   return stringifiedParams.length > 0 ? `/api/pedidos/listar_todos?${stringifiedParams}` : `/api/pedidos/listar_todos`
 }
 
-export const pedidoApiListPedidos = async (params?: PedidoApiListPedidosParams, options?: RequestInit): Promise<pedidoApiListPedidosResponse> => {
+export const pedidoApiListarPedidos = async (params?: PedidoApiListarPedidosParams, options?: RequestInit): Promise<pedidoApiListarPedidosResponse> => {
   
-  const res = await fetch(getPedidoApiListPedidosUrl(params),
+  const res = await fetch(getPedidoApiListarPedidosUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -1606,199 +979,28 @@ export const pedidoApiListPedidos = async (params?: PedidoApiListPedidosParams, 
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: pedidoApiListPedidosResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiListPedidosResponse
+  const data: pedidoApiListarPedidosResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiListarPedidosResponse
 }
   
 
 
 /**
- * @summary Get Pedido
+ * @summary Listar Mis Pedidos Hechos
  */
-export type pedidoApiGetPedidoResponse200 = {
-  data: PedidoSchema
+export type pedidoApiListarMisPedidosHechosResponse200 = {
+  data: PagedPedido
   status: 200
 }
 
-export type pedidoApiGetPedidoResponseSuccess = (pedidoApiGetPedidoResponse200) & {
+export type pedidoApiListarMisPedidosHechosResponseSuccess = (pedidoApiListarMisPedidosHechosResponse200) & {
   headers: Headers;
 };
 ;
 
-export type pedidoApiGetPedidoResponse = (pedidoApiGetPedidoResponseSuccess)
+export type pedidoApiListarMisPedidosHechosResponse = (pedidoApiListarMisPedidosHechosResponseSuccess)
 
-export const getPedidoApiGetPedidoUrl = (pedidoId: number,) => {
-
-
-  
-
-  return `/api/pedidos/obtener/${pedidoId}`
-}
-
-export const pedidoApiGetPedido = async (pedidoId: number, options?: RequestInit): Promise<pedidoApiGetPedidoResponse> => {
-  
-  const res = await fetch(getPedidoApiGetPedidoUrl(pedidoId),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: pedidoApiGetPedidoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiGetPedidoResponse
-}
-  
-
-
-/**
- * @summary Create Pedido
- */
-export type pedidoApiCreatePedidoResponse200 = {
-  data: PedidoSchema
-  status: 200
-}
-
-export type pedidoApiCreatePedidoResponseSuccess = (pedidoApiCreatePedidoResponse200) & {
-  headers: Headers;
-};
-;
-
-export type pedidoApiCreatePedidoResponse = (pedidoApiCreatePedidoResponseSuccess)
-
-export const getPedidoApiCreatePedidoUrl = () => {
-
-
-  
-
-  return `/api/pedidos/crear`
-}
-
-export const pedidoApiCreatePedido = async (pedidoCreateSchema: PedidoCreateSchema, options?: RequestInit): Promise<pedidoApiCreatePedidoResponse> => {
-  
-  const res = await fetch(getPedidoApiCreatePedidoUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      pedidoCreateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: pedidoApiCreatePedidoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiCreatePedidoResponse
-}
-  
-
-
-/**
- * @summary Update Pedido
- */
-export type pedidoApiUpdatePedidoResponse200 = {
-  data: PedidoSchema
-  status: 200
-}
-
-export type pedidoApiUpdatePedidoResponseSuccess = (pedidoApiUpdatePedidoResponse200) & {
-  headers: Headers;
-};
-;
-
-export type pedidoApiUpdatePedidoResponse = (pedidoApiUpdatePedidoResponseSuccess)
-
-export const getPedidoApiUpdatePedidoUrl = (pedidoId: number,) => {
-
-
-  
-
-  return `/api/pedidos/actualizar/${pedidoId}`
-}
-
-export const pedidoApiUpdatePedido = async (pedidoId: number,
-    pedidoUpdateSchema: PedidoUpdateSchema, options?: RequestInit): Promise<pedidoApiUpdatePedidoResponse> => {
-  
-  const res = await fetch(getPedidoApiUpdatePedidoUrl(pedidoId),
-  {      
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      pedidoUpdateSchema,)
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: pedidoApiUpdatePedidoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiUpdatePedidoResponse
-}
-  
-
-
-/**
- * @summary Delete Pedido
- */
-export type pedidoApiDeletePedidoResponse200 = {
-  data: void
-  status: 200
-}
-
-export type pedidoApiDeletePedidoResponseSuccess = (pedidoApiDeletePedidoResponse200) & {
-  headers: Headers;
-};
-;
-
-export type pedidoApiDeletePedidoResponse = (pedidoApiDeletePedidoResponseSuccess)
-
-export const getPedidoApiDeletePedidoUrl = (pedidoId: number,) => {
-
-
-  
-
-  return `/api/pedidos/eliminar/${pedidoId}`
-}
-
-export const pedidoApiDeletePedido = async (pedidoId: number, options?: RequestInit): Promise<pedidoApiDeletePedidoResponse> => {
-  
-  const res = await fetch(getPedidoApiDeletePedidoUrl(pedidoId),
-  {      
-    ...options,
-    method: 'DELETE'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: pedidoApiDeletePedidoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiDeletePedidoResponse
-}
-  
-
-
-/**
- * @summary List Detalles
- */
-export type pedidoApiListDetallesResponse200 = {
-  data: PagedDetallePedidoSchema
-  status: 200
-}
-
-export type pedidoApiListDetallesResponseSuccess = (pedidoApiListDetallesResponse200) & {
-  headers: Headers;
-};
-;
-
-export type pedidoApiListDetallesResponse = (pedidoApiListDetallesResponseSuccess)
-
-export const getPedidoApiListDetallesUrl = (params?: PedidoApiListDetallesParams,) => {
+export const getPedidoApiListarMisPedidosHechosUrl = (params?: PedidoApiListarMisPedidosHechosParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -1810,12 +1012,12 @@ export const getPedidoApiListDetallesUrl = (params?: PedidoApiListDetallesParams
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/api/pedidos/detalles/listar_todos?${stringifiedParams}` : `/api/pedidos/detalles/listar_todos`
+  return stringifiedParams.length > 0 ? `/api/pedidos/mis_pedidos_hechos?${stringifiedParams}` : `/api/pedidos/mis_pedidos_hechos`
 }
 
-export const pedidoApiListDetalles = async (params?: PedidoApiListDetallesParams, options?: RequestInit): Promise<pedidoApiListDetallesResponse> => {
+export const pedidoApiListarMisPedidosHechos = async (params?: PedidoApiListarMisPedidosHechosParams, options?: RequestInit): Promise<pedidoApiListarMisPedidosHechosResponse> => {
   
-  const res = await fetch(getPedidoApiListDetallesUrl(params),
+  const res = await fetch(getPedidoApiListarMisPedidosHechosUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -1826,125 +1028,260 @@ export const pedidoApiListDetalles = async (params?: PedidoApiListDetallesParams
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: pedidoApiListDetallesResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiListDetallesResponse
+  const data: pedidoApiListarMisPedidosHechosResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiListarMisPedidosHechosResponse
 }
   
 
 
 /**
- * @summary Create Detalle
+ * @summary Listar Mis Pedidos Recibidos
  */
-export type pedidoApiCreateDetalleResponse200 = {
-  data: DetallePedidoSchema
+export type pedidoApiListarMisPedidosRecibidosResponse200 = {
+  data: PagedPedido
   status: 200
 }
 
-export type pedidoApiCreateDetalleResponseSuccess = (pedidoApiCreateDetalleResponse200) & {
+export type pedidoApiListarMisPedidosRecibidosResponseSuccess = (pedidoApiListarMisPedidosRecibidosResponse200) & {
   headers: Headers;
 };
 ;
 
-export type pedidoApiCreateDetalleResponse = (pedidoApiCreateDetalleResponseSuccess)
+export type pedidoApiListarMisPedidosRecibidosResponse = (pedidoApiListarMisPedidosRecibidosResponseSuccess)
 
-export const getPedidoApiCreateDetalleUrl = () => {
+export const getPedidoApiListarMisPedidosRecibidosUrl = (params?: PedidoApiListarMisPedidosRecibidosParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
 
-  
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/pedidos/detalles/crear`
+  return stringifiedParams.length > 0 ? `/api/pedidos/mis_pedidos_recibidos?${stringifiedParams}` : `/api/pedidos/mis_pedidos_recibidos`
 }
 
-export const pedidoApiCreateDetalle = async (detallePedidoCreateSchema: DetallePedidoCreateSchema, options?: RequestInit): Promise<pedidoApiCreateDetalleResponse> => {
+export const pedidoApiListarMisPedidosRecibidos = async (params?: PedidoApiListarMisPedidosRecibidosParams, options?: RequestInit): Promise<pedidoApiListarMisPedidosRecibidosResponse> => {
   
-  const res = await fetch(getPedidoApiCreateDetalleUrl(),
+  const res = await fetch(getPedidoApiListarMisPedidosRecibidosUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiListarMisPedidosRecibidosResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiListarMisPedidosRecibidosResponse
+}
+  
+
+
+/**
+ * @summary Obtener Pedido
+ */
+export type pedidoApiObtenerPedidoResponse200 = {
+  data: Pedido
+  status: 200
+}
+
+export type pedidoApiObtenerPedidoResponseSuccess = (pedidoApiObtenerPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiObtenerPedidoResponse = (pedidoApiObtenerPedidoResponseSuccess)
+
+export const getPedidoApiObtenerPedidoUrl = (pedidoId: number,) => {
+
+
+  
+
+  return `/api/pedidos/obtener/${pedidoId}`
+}
+
+export const pedidoApiObtenerPedido = async (pedidoId: number, options?: RequestInit): Promise<pedidoApiObtenerPedidoResponse> => {
+  
+  const res = await fetch(getPedidoApiObtenerPedidoUrl(pedidoId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiObtenerPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiObtenerPedidoResponse
+}
+  
+
+
+/**
+ * @summary Crear Pedido
+ */
+export type pedidoApiCrearPedidoResponse200 = {
+  data: Pedido
+  status: 200
+}
+
+export type pedidoApiCrearPedidoResponseSuccess = (pedidoApiCrearPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiCrearPedidoResponse = (pedidoApiCrearPedidoResponseSuccess)
+
+export const getPedidoApiCrearPedidoUrl = () => {
+
+
+  
+
+  return `/api/pedidos/crear`
+}
+
+export const pedidoApiCrearPedido = async (pedidoCreate: PedidoCreate, options?: RequestInit): Promise<pedidoApiCrearPedidoResponse> => {
+  
+  const res = await fetch(getPedidoApiCrearPedidoUrl(),
   {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      detallePedidoCreateSchema,)
+      pedidoCreate,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: pedidoApiCreateDetalleResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiCreateDetalleResponse
+  const data: pedidoApiCrearPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiCrearPedidoResponse
 }
   
 
 
 /**
- * @summary Update Detalle
+ * @summary Actualizar Pedido
  */
-export type pedidoApiUpdateDetalleResponse200 = {
-  data: DetallePedidoSchema
+export type pedidoApiActualizarPedidoResponse200 = {
+  data: Pedido
   status: 200
 }
 
-export type pedidoApiUpdateDetalleResponseSuccess = (pedidoApiUpdateDetalleResponse200) & {
+export type pedidoApiActualizarPedidoResponseSuccess = (pedidoApiActualizarPedidoResponse200) & {
   headers: Headers;
 };
 ;
 
-export type pedidoApiUpdateDetalleResponse = (pedidoApiUpdateDetalleResponseSuccess)
+export type pedidoApiActualizarPedidoResponse = (pedidoApiActualizarPedidoResponseSuccess)
 
-export const getPedidoApiUpdateDetalleUrl = (detalleId: number,) => {
+export const getPedidoApiActualizarPedidoUrl = (pedidoId: number,) => {
 
 
   
 
-  return `/api/pedidos/detalles/actualizar/${detalleId}`
+  return `/api/pedidos/actualizar/${pedidoId}`
 }
 
-export const pedidoApiUpdateDetalle = async (detalleId: number,
-    detallePedidoUpdateSchema: DetallePedidoUpdateSchema, options?: RequestInit): Promise<pedidoApiUpdateDetalleResponse> => {
+export const pedidoApiActualizarPedido = async (pedidoId: number,
+    pedidoUpdate: PedidoUpdate, options?: RequestInit): Promise<pedidoApiActualizarPedidoResponse> => {
   
-  const res = await fetch(getPedidoApiUpdateDetalleUrl(detalleId),
+  const res = await fetch(getPedidoApiActualizarPedidoUrl(pedidoId),
   {      
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      detallePedidoUpdateSchema,)
+      pedidoUpdate,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: pedidoApiUpdateDetalleResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiUpdateDetalleResponse
+  const data: pedidoApiActualizarPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiActualizarPedidoResponse
 }
   
 
 
 /**
- * @summary Delete Detalle
+ * @summary Cambiar Estado Pedido
  */
-export type pedidoApiDeleteDetalleResponse200 = {
-  data: void
+export type pedidoApiCambiarEstadoPedidoResponse200 = {
+  data: Pedido
   status: 200
 }
 
-export type pedidoApiDeleteDetalleResponseSuccess = (pedidoApiDeleteDetalleResponse200) & {
+export type pedidoApiCambiarEstadoPedidoResponseSuccess = (pedidoApiCambiarEstadoPedidoResponse200) & {
   headers: Headers;
 };
 ;
 
-export type pedidoApiDeleteDetalleResponse = (pedidoApiDeleteDetalleResponseSuccess)
+export type pedidoApiCambiarEstadoPedidoResponse = (pedidoApiCambiarEstadoPedidoResponseSuccess)
 
-export const getPedidoApiDeleteDetalleUrl = (detalleId: number,) => {
+export const getPedidoApiCambiarEstadoPedidoUrl = (pedidoId: number,) => {
 
 
   
 
-  return `/api/pedidos/detalles/eliminar/${detalleId}`
+  return `/api/pedidos/cambiar_estado/${pedidoId}`
 }
 
-export const pedidoApiDeleteDetalle = async (detalleId: number, options?: RequestInit): Promise<pedidoApiDeleteDetalleResponse> => {
+export const pedidoApiCambiarEstadoPedido = async (pedidoId: number,
+    pedidoCambiarEstado: PedidoCambiarEstado, options?: RequestInit): Promise<pedidoApiCambiarEstadoPedidoResponse> => {
   
-  const res = await fetch(getPedidoApiDeleteDetalleUrl(detalleId),
+  const res = await fetch(getPedidoApiCambiarEstadoPedidoUrl(pedidoId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      pedidoCambiarEstado,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiCambiarEstadoPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiCambiarEstadoPedidoResponse
+}
+  
+
+
+/**
+ * @summary Eliminar Pedido
+ */
+export type pedidoApiEliminarPedidoResponse200 = {
+  data: void
+  status: 200
+}
+
+export type pedidoApiEliminarPedidoResponseSuccess = (pedidoApiEliminarPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiEliminarPedidoResponse = (pedidoApiEliminarPedidoResponseSuccess)
+
+export const getPedidoApiEliminarPedidoUrl = (pedidoId: number,) => {
+
+
+  
+
+  return `/api/pedidos/eliminar/${pedidoId}`
+}
+
+export const pedidoApiEliminarPedido = async (pedidoId: number, options?: RequestInit): Promise<pedidoApiEliminarPedidoResponse> => {
+  
+  const res = await fetch(getPedidoApiEliminarPedidoUrl(pedidoId),
   {      
     ...options,
     method: 'DELETE'
@@ -1955,6 +1292,228 @@ export const pedidoApiDeleteDetalle = async (detalleId: number, options?: Reques
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: pedidoApiDeleteDetalleResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiDeleteDetalleResponse
+  const data: pedidoApiEliminarPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiEliminarPedidoResponse
+}
+  
+
+
+/**
+ * @summary Listar Productos Pedido
+ */
+export type pedidoApiListarProductosPedidoResponse200 = {
+  data: PagedPedidoDetalle
+  status: 200
+}
+
+export type pedidoApiListarProductosPedidoResponseSuccess = (pedidoApiListarProductosPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiListarProductosPedidoResponse = (pedidoApiListarProductosPedidoResponseSuccess)
+
+export const getPedidoApiListarProductosPedidoUrl = (pedidoId: number,
+    params?: PedidoApiListarProductosPedidoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/pedidos/productos_pedido/por_pedido/${pedidoId}?${stringifiedParams}` : `/api/pedidos/productos_pedido/por_pedido/${pedidoId}`
+}
+
+export const pedidoApiListarProductosPedido = async (pedidoId: number,
+    params?: PedidoApiListarProductosPedidoParams, options?: RequestInit): Promise<pedidoApiListarProductosPedidoResponse> => {
+  
+  const res = await fetch(getPedidoApiListarProductosPedidoUrl(pedidoId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiListarProductosPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiListarProductosPedidoResponse
+}
+  
+
+
+/**
+ * @summary Crear Producto Pedido
+ */
+export type pedidoApiCrearProductoPedidoResponse200 = {
+  data: PedidoDetalle
+  status: 200
+}
+
+export type pedidoApiCrearProductoPedidoResponseSuccess = (pedidoApiCrearProductoPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiCrearProductoPedidoResponse = (pedidoApiCrearProductoPedidoResponseSuccess)
+
+export const getPedidoApiCrearProductoPedidoUrl = () => {
+
+
+  
+
+  return `/api/pedidos/productos_pedido/crear`
+}
+
+export const pedidoApiCrearProductoPedido = async (pedidoDetalleCreate: PedidoDetalleCreate, options?: RequestInit): Promise<pedidoApiCrearProductoPedidoResponse> => {
+  
+  const res = await fetch(getPedidoApiCrearProductoPedidoUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      pedidoDetalleCreate,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiCrearProductoPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiCrearProductoPedidoResponse
+}
+  
+
+
+/**
+ * @summary Actualizar Producto Pedido
+ */
+export type pedidoApiActualizarProductoPedidoResponse200 = {
+  data: PedidoDetalle
+  status: 200
+}
+
+export type pedidoApiActualizarProductoPedidoResponseSuccess = (pedidoApiActualizarProductoPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiActualizarProductoPedidoResponse = (pedidoApiActualizarProductoPedidoResponseSuccess)
+
+export const getPedidoApiActualizarProductoPedidoUrl = (productoPedidoId: number,) => {
+
+
+  
+
+  return `/api/pedidos/productos_pedido/actualizar/${productoPedidoId}`
+}
+
+export const pedidoApiActualizarProductoPedido = async (productoPedidoId: number,
+    pedidoDetalleUpdate: PedidoDetalleUpdate, options?: RequestInit): Promise<pedidoApiActualizarProductoPedidoResponse> => {
+  
+  const res = await fetch(getPedidoApiActualizarProductoPedidoUrl(productoPedidoId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      pedidoDetalleUpdate,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiActualizarProductoPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiActualizarProductoPedidoResponse
+}
+  
+
+
+/**
+ * @summary Eliminar Producto Pedido
+ */
+export type pedidoApiEliminarProductoPedidoResponse200 = {
+  data: void
+  status: 200
+}
+
+export type pedidoApiEliminarProductoPedidoResponseSuccess = (pedidoApiEliminarProductoPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiEliminarProductoPedidoResponse = (pedidoApiEliminarProductoPedidoResponseSuccess)
+
+export const getPedidoApiEliminarProductoPedidoUrl = (productoPedidoId: number,) => {
+
+
+  
+
+  return `/api/pedidos/productos_pedido/eliminar/${productoPedidoId}`
+}
+
+export const pedidoApiEliminarProductoPedido = async (productoPedidoId: number, options?: RequestInit): Promise<pedidoApiEliminarProductoPedidoResponse> => {
+  
+  const res = await fetch(getPedidoApiEliminarProductoPedidoUrl(productoPedidoId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiEliminarProductoPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiEliminarProductoPedidoResponse
+}
+  
+
+
+/**
+ * @summary Obtener Estadisticas
+ */
+export type dashboardApiObtenerEstadisticasResponse200 = {
+  data: DashboardEstadisticas
+  status: 200
+}
+
+export type dashboardApiObtenerEstadisticasResponseSuccess = (dashboardApiObtenerEstadisticasResponse200) & {
+  headers: Headers;
+};
+;
+
+export type dashboardApiObtenerEstadisticasResponse = (dashboardApiObtenerEstadisticasResponseSuccess)
+
+export const getDashboardApiObtenerEstadisticasUrl = () => {
+
+
+  
+
+  return `/api/dashboard/estadisticas`
+}
+
+export const dashboardApiObtenerEstadisticas = async ( options?: RequestInit): Promise<dashboardApiObtenerEstadisticasResponse> => {
+  
+  const res = await fetch(getDashboardApiObtenerEstadisticasUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: dashboardApiObtenerEstadisticasResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as dashboardApiObtenerEstadisticasResponse
 }

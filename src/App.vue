@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import {
   Menu,
   ShoppingCart,
@@ -15,12 +15,20 @@ import {
 } from 'lucide-vue-next'
 
 const router = useRouter()
+const route = useRoute()
 
 const sidebarOpen = ref(false)
 const userMenuOpen = ref(false)
 
 const userName = ref(localStorage.getItem('user_name') || 'Usuario')
 const userRole = ref(localStorage.getItem('user_role') || 'usuario')
+
+const isAuthRoute = computed(() => route.name !== 'login')
+
+const syncUserFromStorage = () => {
+  userName.value = localStorage.getItem('user_name') || 'Usuario'
+  userRole.value = localStorage.getItem('user_role') || 'usuario'
+}
 
 const isAdminRole = () => userRole.value === 'admin'
 
@@ -40,12 +48,24 @@ const closeSidebarOnMobile = () => {
 
 const handleLogout = () => {
   localStorage.removeItem('auth_token')
-  router.push('/')
+  localStorage.removeItem('user_name')
+  localStorage.removeItem('user_role')
+  router.push('/login')
 }
+
+watch(
+  () => route.fullPath,
+  () => {
+    syncUserFromStorage()
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
-  <div class="colors min-h-screen bg-[var(--bg-100)]">
+  <RouterView v-if="!isAuthRoute" />
+
+  <div v-else class="colors min-h-screen bg-[var(--bg-100)]">
     <nav
       class="fixed top-0 z-50 w-full border-b border-[var(--bg-300)] bg-gradient-to-r from-[var(--primary-100)] to-[var(--primary-200)] shadow-md"
     >
