@@ -70,7 +70,9 @@ const submit = () => {
           />
         </div>
         <div>
-          <label class="mb-1 block text-sm text-[var(--text-200)]">Rol</label>
+          <label class="mb-1 block text-sm text-[var(--text-200)]">
+            Rol <span class="text-xs text-sky-500">(no obligatorio)</span>
+          </label>
           <select
             v-model="rol"
             class="w-full rounded-md border border-[var(--bg-300)] px-3 py-2 outline-none focus:border-[var(--primary-100)]"

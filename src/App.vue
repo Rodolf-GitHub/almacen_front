@@ -4,6 +4,10 @@ import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import {
   Menu,
   ShoppingCart,
+  ChevronDown,
+  ChevronRight,
+  FileText,
+  Inbox,
   Package,
   Truck,
   Building2,
@@ -19,11 +23,13 @@ const route = useRoute()
 
 const sidebarOpen = ref(false)
 const userMenuOpen = ref(false)
+const pedidosMenuOpen = ref(false)
 
 const userName = ref(localStorage.getItem('user_name') || 'Usuario')
 const userRole = ref(localStorage.getItem('user_role') || 'usuario')
 
 const isAuthRoute = computed(() => route.name !== 'login')
+const isPedidosRoute = computed(() => route.path.startsWith('/pedidos'))
 
 const syncUserFromStorage = () => {
   userName.value = localStorage.getItem('user_name') || 'Usuario'
@@ -38,6 +44,10 @@ const toggleSidebar = () => {
 
 const toggleUserMenu = () => {
   userMenuOpen.value = !userMenuOpen.value
+}
+
+const togglePedidosMenu = () => {
+  pedidosMenuOpen.value = !pedidosMenuOpen.value
 }
 
 const closeSidebarOnMobile = () => {
@@ -57,6 +67,9 @@ watch(
   () => route.fullPath,
   () => {
     syncUserFromStorage()
+    if (isPedidosRoute.value) {
+      pedidosMenuOpen.value = true
+    }
   },
   { immediate: true },
 )
@@ -145,24 +158,82 @@ watch(
       <div class="h-full overflow-y-auto bg-gradient-to-b from-white to-[var(--bg-100)] px-3 pb-4">
         <ul class="space-y-2 font-medium">
           <li>
-            <RouterLink
-              to="/pedidos"
-              class="group flex items-start gap-3 rounded-lg p-3 text-[var(--text-100)] transition-all hover:bg-[var(--primary-100)] hover:text-white"
-              active-class="bg-[var(--primary-100)] text-white shadow-md"
-              @click="closeSidebarOnMobile"
+            <div
+              class="flex items-stretch rounded-lg text-[var(--text-100)] transition-all"
+              :class="
+                isPedidosRoute
+                  ? 'bg-[var(--primary-100)] text-white shadow-md'
+                  : 'hover:bg-[var(--primary-100)] hover:text-white'
+              "
             >
-              <span
-                class="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--primary-100)]/15 text-[var(--primary-100)] group-hover:bg-white/20 group-hover:text-white"
+              <RouterLink
+                to="/pedidos/realizados"
+                class="group flex min-w-0 flex-1 items-start gap-3 p-3"
+                @click="closeSidebarOnMobile"
               >
-                <ShoppingCart class="h-5 w-5" :stroke-width="2" />
-              </span>
-              <span class="flex flex-col">
-                <span class="text-sm font-semibold">Pedidos</span>
-                <span class="text-xs text-[var(--text-200)] group-hover:text-white/80"
-                  >Gestión de órdenes</span
+                <span
+                  class="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--primary-100)]/15 text-[var(--primary-100)] group-hover:bg-white/20 group-hover:text-white"
                 >
-              </span>
-            </RouterLink>
+                  <ShoppingCart class="h-5 w-5" :stroke-width="2" />
+                </span>
+                <span class="flex min-w-0 flex-col">
+                  <span class="text-sm font-semibold">Pedidos</span>
+                  <span class="text-xs text-[var(--text-200)] group-hover:text-white/80"
+                    >Gestión de órdenes</span
+                  >
+                </span>
+              </RouterLink>
+
+              <button
+                type="button"
+                class="inline-flex w-11 items-center justify-center rounded-r-lg transition-colors hover:bg-black/10"
+                :aria-label="
+                  pedidosMenuOpen ? 'Cerrar submenú de pedidos' : 'Abrir submenú de pedidos'
+                "
+                @click.stop="togglePedidosMenu"
+              >
+                <ChevronDown
+                  v-if="pedidosMenuOpen"
+                  class="h-4 w-4 transition-transform duration-200"
+                  :stroke-width="2"
+                />
+                <ChevronRight
+                  v-else
+                  class="h-4 w-4 transition-transform duration-200"
+                  :stroke-width="2"
+                />
+              </button>
+            </div>
+
+            <Transition
+              enter-active-class="transition-all duration-200 ease-out"
+              enter-from-class="max-h-0 opacity-0"
+              enter-to-class="max-h-40 opacity-100"
+              leave-active-class="transition-all duration-150 ease-in"
+              leave-from-class="max-h-40 opacity-100"
+              leave-to-class="max-h-0 opacity-0"
+            >
+              <div v-if="pedidosMenuOpen" class="mt-1 space-y-1 overflow-hidden pl-12">
+                <RouterLink
+                  to="/pedidos/realizados"
+                  class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
+                  active-class="bg-[var(--bg-200)] font-semibold text-[var(--primary-100)]"
+                  @click="closeSidebarOnMobile"
+                >
+                  <FileText class="h-4 w-4" :stroke-width="2" />
+                  <span>Pedidos realizados</span>
+                </RouterLink>
+                <RouterLink
+                  to="/pedidos/recibidos"
+                  class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
+                  active-class="bg-[var(--bg-200)] font-semibold text-[var(--primary-100)]"
+                  @click="closeSidebarOnMobile"
+                >
+                  <Inbox class="h-4 w-4" :stroke-width="2" />
+                  <span>Pedidos recibidos</span>
+                </RouterLink>
+              </div>
+            </Transition>
           </li>
 
           <li>

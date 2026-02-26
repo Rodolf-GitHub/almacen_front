@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../views/HomePage.vue'
 import LoginPage from '../views/LoginPage.vue'
 import PedidosPage from '../apps/pedidos/pages/PedidosPage.vue'
+import PedidosRecibidosPage from '../apps/pedidos/pages/PedidosRecibidosPage.vue'
 import ProductosPage from '../apps/productos/pages/ProductosPage.vue'
 import ProveedoresPage from '../apps/proveedores/pages/ProveedoresPage.vue'
 import SucursalesPage from '../apps/sucursales/pages/SucursalesPage.vue'
@@ -12,7 +13,24 @@ const router = createRouter({
   routes: [
     { path: '/login', name: 'login', component: LoginPage, meta: { requiresAuth: false } },
     { path: '/', name: 'home', component: HomePage, meta: { requiresAuth: true } },
-    { path: '/pedidos', name: 'pedidos', component: PedidosPage, meta: { requiresAuth: true } },
+    {
+      path: '/pedidos',
+      name: 'pedidos',
+      redirect: { name: 'pedidos-realizados' },
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/pedidos/realizados',
+      name: 'pedidos-realizados',
+      component: PedidosPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/pedidos/recibidos',
+      name: 'pedidos-recibidos',
+      component: PedidosRecibidosPage,
+      meta: { requiresAuth: true },
+    },
     {
       path: '/productos',
       name: 'productos',

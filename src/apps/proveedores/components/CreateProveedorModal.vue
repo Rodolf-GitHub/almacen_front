@@ -78,6 +78,7 @@ const submit = () => {
         <label class="mb-1 flex items-center gap-2 text-sm text-sky-800">
           <Phone :size="16" />
           Teléfono
+          <span class="text-xs text-sky-500">(no obligatorio)</span>
         </label>
         <input
           v-model="telefono"

@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { Filter } from 'lucide-vue-next'
-import { pedidoApiCrearPedido, pedidoApiListarMisPedidosHechos } from '../../../api/generated'
+import { pedidoApiListarMisPedidosRecibidos } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
-import type { Pedido, PedidoCreate } from '../../../api/schemas'
-import CreatePedidoModal from '../components/CreatePedidoModal.vue'
+import type { Pedido } from '../../../api/schemas'
 import SearchBar from '../../../components/SearchBar.vue'
 import TableLayout from '../../../components/TableLayout.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
 
-const openCreateModal = ref(false)
 const pedidos = ref<Pedido[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
@@ -23,7 +21,7 @@ const loadPedidos = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await pedidoApiListarMisPedidosHechos(
+    const response = await pedidoApiListarMisPedidosRecibidos(
       {
         busqueda: busqueda.value || undefined,
         limit: pageSize,
@@ -34,23 +32,10 @@ const loadPedidos = async () => {
     pedidos.value = response.data.items ?? []
     totalItems.value = response.data.count ?? 0
   } catch (error) {
-    errorMessage.value = 'No se pudieron cargar los pedidos.'
+    errorMessage.value = 'No se pudieron cargar los pedidos recibidos.'
     console.error(error)
   } finally {
     isLoading.value = false
-  }
-}
-
-const handleSaved = async (payload: PedidoCreate) => {
-  errorMessage.value = ''
-
-  try {
-    await pedidoApiCrearPedido(payload, buildRequestOptions())
-    openCreateModal.value = false
-    await loadPedidos()
-  } catch (error) {
-    errorMessage.value = 'No se pudo crear el pedido.'
-    console.error(error)
   }
 }
 
@@ -81,27 +66,21 @@ onMounted(async () => {
   <section class="space-y-4">
     <header class="flex items-center justify-between gap-2">
       <div>
-        <h1 class="text-2xl font-bold text-[var(--text-100)]">Pedidos realizados</h1>
-        <p class="text-sm text-[var(--text-200)]">Gestiona los pedidos que has creado.</p>
+        <h1 class="text-2xl font-bold text-[var(--text-100)]">Pedidos recibidos</h1>
+        <p class="text-sm text-[var(--text-200)]">Consulta los pedidos que recibes como destino.</p>
       </div>
-      <button
-        class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
-        @click="openCreateModal = true"
-      >
-        Crear pedido
-      </button>
     </header>
 
     <div class="flex items-center gap-2 rounded-lg border border-sky-200 bg-sky-50 p-2">
       <Filter :size="16" class="text-sky-700" />
-      <p class="text-sm text-sky-800">Listado paginado de pedidos realizados</p>
+      <p class="text-sm text-sky-800">Listado paginado de pedidos recibidos</p>
     </div>
 
     <div class="w-full">
       <SearchBar
         v-model="busqueda"
         class="w-full"
-        placeholder="Buscar pedido por destino o estado..."
+        placeholder="Buscar pedido por creador o estado..."
         :show-actions="false"
         :auto-search-delay="1000"
         @search="handleSearch"
@@ -109,11 +88,11 @@ onMounted(async () => {
     </div>
 
     <TableLayout
-      :headers="['Destino', 'Creación', 'Estado']"
+      :headers="['Creado por', 'Creación', 'Estado']"
       :loading="isLoading"
-      loading-text="Cargando pedidos..."
+      loading-text="Cargando pedidos recibidos..."
       :empty="pedidos.length === 0"
-      empty-text="Sin pedidos cargados."
+      empty-text="Sin pedidos recibidos."
     >
       <tr
         v-for="pedido in pedidos"
@@ -121,10 +100,7 @@ onMounted(async () => {
         class="odd:bg-white even:bg-sky-50/35 hover:bg-sky-100/40"
       >
         <td class="px-2 py-2 text-sky-900 sm:px-3">
-          {{
-            pedido.usuario_destino_nombre ||
-            (pedido.usuario_destino ? `#${pedido.usuario_destino}` : '-')
-          }}
+          {{ pedido.creado_por_nombre || `#${pedido.creado_por}` }}
         </td>
         <td class="px-2 py-2 text-sky-900 sm:px-3">{{ pedido.fecha_creacion }}</td>
         <td class="px-2 py-2 text-sky-900 sm:px-3">{{ pedido.estado || '-' }}</td>
@@ -141,12 +117,6 @@ onMounted(async () => {
     />
 
     <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
-
-    <CreatePedidoModal
-      :open="openCreateModal"
-      @close="openCreateModal = false"
-      @saved="handleSaved"
-    />
   </section>
 </template>
 

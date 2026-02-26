@@ -164,6 +164,7 @@ const submit = () => {
           <label class="mb-1 flex items-center gap-2 text-sm text-sky-800">
             <DollarSign :size="16" />
             Precio compra
+            <span class="text-xs text-sky-500">(no obligatorio)</span>
           </label>
           <input
             v-model.number="precioCompra"
@@ -176,6 +177,7 @@ const submit = () => {
           <label class="mb-1 flex items-center gap-2 text-sm text-sky-800">
             <DollarSign :size="16" />
             Precio venta
+            <span class="text-xs text-sky-500">(no obligatorio)</span>
           </label>
           <input
             v-model.number="precioVenta"
@@ -207,6 +209,7 @@ const submit = () => {
         <label class="mb-1 flex items-center gap-2 text-sm text-sky-800">
           <ImageIcon :size="16" />
           Imagen
+          <span class="text-xs text-sky-500">(no obligatorio)</span>
         </label>
         <input
           type="file"
@@ -237,6 +240,7 @@ const submit = () => {
         <label class="mb-1 flex items-center gap-2 text-sm text-sky-800">
           <FileText :size="16" />
           Descripción
+          <span class="text-xs text-sky-500">(no obligatorio)</span>
         </label>
         <input
           v-model="descripcion"
