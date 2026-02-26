@@ -36,7 +36,7 @@ const syncUserFromStorage = () => {
   userRole.value = localStorage.getItem('user_role') || 'usuario'
 }
 
-const isAdminRole = () => userRole.value === 'admin'
+const isGeneralAdminRole = () => userRole.value === 'admin_general'
 
 const toggleSidebar = () => {
   sidebarOpen.value = !sidebarOpen.value
@@ -299,7 +299,7 @@ watch(
             </RouterLink>
           </li>
 
-          <li v-if="isAdminRole()">
+          <li v-if="isGeneralAdminRole()">
             <RouterLink
               to="/usuarios"
               class="group flex items-start gap-3 rounded-lg p-3 text-[var(--text-100)] transition-all hover:bg-[var(--primary-100)] hover:text-white"
@@ -312,9 +312,9 @@ watch(
                 <Users class="h-5 w-5" :stroke-width="2" />
               </span>
               <span class="flex flex-col">
-                <span class="text-sm font-semibold">Usuarios</span>
+                <span class="text-sm font-semibold">Admin usuarios</span>
                 <span class="text-xs text-[var(--text-200)] group-hover:text-white/80"
-                  >Accesos y permisos</span
+                  >Creación y gestión</span
                 >
               </span>
             </RouterLink>

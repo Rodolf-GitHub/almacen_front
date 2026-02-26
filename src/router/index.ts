@@ -6,6 +6,7 @@ import PedidosRecibidosPage from '../apps/pedidos/pages/PedidosRecibidosPage.vue
 import ProductosPage from '../apps/productos/pages/ProductosPage.vue'
 import ProveedoresPage from '../apps/proveedores/pages/ProveedoresPage.vue'
 import SucursalesPage from '../apps/sucursales/pages/SucursalesPage.vue'
+import UsuariosAdminPage from '../apps/usuarios/pages/UsuariosAdminPage.vue'
 import UsuariosPage from '../apps/usuarios/pages/UsuariosPage.vue'
 
 const router = createRouter({
@@ -49,16 +50,39 @@ const router = createRouter({
       component: SucursalesPage,
       meta: { requiresAuth: true },
     },
-    { path: '/usuarios', name: 'usuarios', component: UsuariosPage, meta: { requiresAuth: true } },
+    {
+      path: '/usuarios',
+      name: 'usuarios',
+      component: UsuariosAdminPage,
+      meta: { requiresAuth: true, requiresGeneralAdmin: true },
+    },
+    {
+      path: '/usuarios/gestion',
+      name: 'usuarios-gestion',
+      component: UsuariosPage,
+      meta: { requiresAuth: true, requiresGeneralAdmin: true },
+    },
+    {
+      path: '/usuarios/crear',
+      name: 'usuarios-crear',
+      component: UsuariosPage,
+      meta: { requiresAuth: true, requiresGeneralAdmin: true },
+    },
   ],
 })
 
 router.beforeEach((to) => {
   const token = localStorage.getItem('auth_token')
+  const userRole = localStorage.getItem('user_role')
   const requiresAuth = to.meta.requiresAuth !== false
+  const requiresGeneralAdmin = to.meta.requiresGeneralAdmin === true
 
   if (requiresAuth && !token) {
     return { name: 'login' }
+  }
+
+  if (requiresGeneralAdmin && userRole !== 'admin_general') {
+    return { name: 'home' }
   }
 
   if (to.name === 'login' && token) {

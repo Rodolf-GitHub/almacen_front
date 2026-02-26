@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { usuarioApiCrearUsuario, usuarioApiListarUsuarios } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import type { Usuario, UsuarioCreate } from '../../../api/schemas'
 import CreateUsuarioModal from '../components/CreateUsuarioModal.vue'
 
+const route = useRoute()
+const router = useRouter()
 const openCreateModal = ref(false)
 const usuarios = ref<Usuario[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
+
+const syncCreateModalWithRoute = () => {
+  openCreateModal.value = route.name === 'usuarios-crear'
+}
 
 const loadUsuarios = async () => {
   isLoading.value = true
@@ -32,14 +39,43 @@ const handleSaved = async (payload: UsuarioCreate) => {
     await usuarioApiCrearUsuario(payload, buildRequestOptions())
     openCreateModal.value = false
     await loadUsuarios()
+
+    if (route.name === 'usuarios-crear') {
+      await router.push({ name: 'usuarios-gestion' })
+    }
   } catch (error) {
     errorMessage.value = 'No se pudo crear el usuario.'
     console.error(error)
   }
 }
 
+const openCreate = async () => {
+  if (route.name !== 'usuarios-crear') {
+    await router.push({ name: 'usuarios-crear' })
+    return
+  }
+
+  openCreateModal.value = true
+}
+
+const closeCreateModal = async () => {
+  openCreateModal.value = false
+
+  if (route.name === 'usuarios-crear') {
+    await router.push({ name: 'usuarios-gestion' })
+  }
+}
+
+watch(
+  () => route.name,
+  () => {
+    syncCreateModalWithRoute()
+  },
+)
+
 onMounted(async () => {
   await loadUsuarios()
+  syncCreateModalWithRoute()
 })
 </script>
 
@@ -52,7 +88,7 @@ onMounted(async () => {
       </div>
       <button
         class="rounded-md bg-[var(--primary-100)] px-4 py-2 text-sm font-medium text-white"
-        @click="openCreateModal = true"
+        @click="openCreate"
       >
         Crear usuario
       </button>
@@ -83,11 +119,7 @@ onMounted(async () => {
 
     <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 
-    <CreateUsuarioModal
-      :open="openCreateModal"
-      @close="openCreateModal = false"
-      @saved="handleSaved"
-    />
+    <CreateUsuarioModal :open="openCreateModal" @close="closeCreateModal" @saved="handleSaved" />
   </section>
 </template>
 
