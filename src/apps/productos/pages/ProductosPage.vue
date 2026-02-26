@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { Filter, Info, Pencil, Plus, Trash2, Image as ImageIcon } from 'lucide-vue-next'
 import {
   productoApiActualizarProducto,
@@ -36,6 +37,20 @@ const busqueda = ref('')
 const currentPage = ref(1)
 const totalItems = ref(0)
 const pageSize = 100
+const route = useRoute()
+
+const parseProveedorQueryId = (value: unknown): number | null => {
+  if (typeof value !== 'string') return null
+  const parsed = Number.parseInt(value, 10)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null
+}
+
+const applyProveedorFromQuery = () => {
+  const proveedorIdFromQuery = parseProveedorQueryId(route.query.proveedor)
+  if (proveedorIdFromQuery != null) {
+    proveedorFiltroId.value = proveedorIdFromQuery
+  }
+}
 
 const sanitizarProveedores = (items: unknown[]): Proveedor[] => {
   return items.filter((item): item is Proveedor => {
@@ -215,9 +230,23 @@ const handleUpdated = async (payload: { id: number; body: ProductoApiActualizarP
 }
 
 onMounted(async () => {
+  applyProveedorFromQuery()
   await loadProveedores()
   await loadProductos()
 })
+
+watch(
+  () => route.query.proveedor,
+  async () => {
+    const previousProveedorId = proveedorFiltroId.value
+    applyProveedorFromQuery()
+
+    if (proveedorFiltroId.value !== previousProveedorId) {
+      currentPage.value = 1
+      await loadProductos()
+    }
+  },
+)
 </script>
 
 <template>
@@ -277,8 +306,8 @@ onMounted(async () => {
         :key="producto.id ?? producto.nombre"
         class="odd:bg-white even:bg-sky-50/35 hover:bg-sky-100/40"
       >
-        <td class="w-[75%] px-2 py-2 sm:px-3">
-          <div class="flex items-center gap-2">
+        <td class="min-w-0 px-2 py-2 sm:px-3">
+          <div class="flex min-w-0 items-center gap-2">
             <img
               v-if="resolveImageUrl(producto.imagen)"
               :src="resolveImageUrl(producto.imagen) || ''"
@@ -291,16 +320,16 @@ onMounted(async () => {
             >
               <ImageIcon :size="16" class="text-sky-400" />
             </div>
-            <p class="truncate text-sm font-semibold text-sky-900 sm:text-base">
+            <p class="min-w-0 truncate text-sm font-semibold text-sky-900 sm:text-base">
               {{ producto.nombre }}
             </p>
           </div>
         </td>
-        <td class="w-[25%] px-2 py-2 sm:px-3">
-          <div class="flex items-center justify-start gap-1 sm:gap-1.5">
+        <td class="px-2 py-2 sm:px-3">
+          <div class="flex flex-wrap items-center justify-start gap-1 sm:gap-1.5">
             <button
               type="button"
-              class="rounded-md border border-sky-200 bg-white p-2 text-sky-700 hover:bg-sky-100"
+              class="rounded-md border border-sky-200 bg-white p-1.5 text-sky-700 hover:bg-sky-100 sm:p-2"
               title="Información"
               @click="openInfo(producto)"
             >
@@ -308,7 +337,7 @@ onMounted(async () => {
             </button>
             <button
               type="button"
-              class="rounded-md border border-sky-200 bg-white p-2 text-sky-700 hover:bg-sky-100"
+              class="rounded-md border border-sky-200 bg-white p-1.5 text-sky-700 hover:bg-sky-100 sm:p-2"
               title="Editar"
               @click="openEdit(producto)"
             >
@@ -316,7 +345,7 @@ onMounted(async () => {
             </button>
             <button
               type="button"
-              class="rounded-md border border-red-200 bg-red-50 p-2 text-red-600 hover:bg-red-100"
+              class="rounded-md border border-red-200 bg-red-50 p-1.5 text-red-600 hover:bg-red-100 sm:p-2"
               title="Eliminar"
               @click="handleDelete(producto)"
             >
