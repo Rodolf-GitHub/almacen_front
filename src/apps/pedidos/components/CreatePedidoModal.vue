@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { PedidoCreateSchema } from '../../../api/schemas'
+import { PedidoCreateEstado } from '../../../api/schemas'
+import type { PedidoCreate } from '../../../api/schemas'
 
 const props = defineProps<{ open: boolean }>()
-const emit = defineEmits<{ (e: 'close'): void; (e: 'saved', payload: PedidoCreateSchema): void }>()
+const emit = defineEmits<{ (e: 'close'): void; (e: 'saved', payload: PedidoCreate): void }>()
 
-const sucursalOrigenId = ref<number>(0)
-const sucursalDestinoId = ref<number>(0)
-const estado = ref('pendiente')
+const usuarioDestinoId = ref<number | null>(null)
+const estado = ref<PedidoCreate['estado']>(PedidoCreateEstado.pendiente)
 
 watch(
   () => props.open,
   (isOpen) => {
     if (isOpen) {
-      sucursalOrigenId.value = 0
-      sucursalDestinoId.value = 0
-      estado.value = 'pendiente'
+      usuarioDestinoId.value = null
+      estado.value = PedidoCreateEstado.pendiente
     }
   },
 )
@@ -24,8 +23,7 @@ const close = () => emit('close')
 
 const submit = () => {
   emit('saved', {
-    sucursal_origen_id: sucursalOrigenId.value,
-    sucursal_destino_id: sucursalDestinoId.value,
+    usuario_destino_id: usuarioDestinoId.value,
     estado: estado.value,
   })
   close()
@@ -41,31 +39,23 @@ const submit = () => {
       <h2 class="text-lg font-semibold text-[var(--text-100)]">Crear pedido</h2>
       <form class="mt-4 space-y-3" @submit.prevent="submit">
         <div>
-          <label class="mb-1 block text-sm text-[var(--text-200)]">Sucursal origen (ID)</label>
+          <label class="mb-1 block text-sm text-[var(--text-200)]">Usuario destino (ID)</label>
           <input
-            v-model.number="sucursalOrigenId"
+            v-model.number="usuarioDestinoId"
             type="number"
             min="1"
-            required
-            class="w-full rounded-md border border-[var(--bg-300)] px-3 py-2 outline-none focus:border-[var(--primary-100)]"
-          />
-        </div>
-        <div>
-          <label class="mb-1 block text-sm text-[var(--text-200)]">Sucursal destino (ID)</label>
-          <input
-            v-model.number="sucursalDestinoId"
-            type="number"
-            min="1"
-            required
             class="w-full rounded-md border border-[var(--bg-300)] px-3 py-2 outline-none focus:border-[var(--primary-100)]"
           />
         </div>
         <div>
           <label class="mb-1 block text-sm text-[var(--text-200)]">Estado</label>
-          <input
+          <select
             v-model="estado"
             class="w-full rounded-md border border-[var(--bg-300)] px-3 py-2 outline-none focus:border-[var(--primary-100)]"
-          />
+          >
+            <option :value="PedidoCreateEstado.pendiente">Pendiente</option>
+            <option :value="PedidoCreateEstado.completado">Completado</option>
+          </select>
         </div>
         <div class="flex justify-end gap-2 pt-2">
           <button

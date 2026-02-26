@@ -17,12 +17,13 @@ import type {
   PedidoApiListarMisPedidosHechosParams,
   PedidoApiListarMisPedidosRecibidosParams,
   PedidoApiListarPedidosParams,
-  PedidoApiListarProductosPedidoParams,
+  PedidoApiListarProductosPedidoPorProveedorParams,
   PedidoCambiarEstado,
   PedidoCreate,
   PedidoDetalle,
   PedidoDetalleCreate,
   PedidoDetalleUpdate,
+  PedidoProveedorResumen,
   PedidoUpdate,
   ProductoApiActualizarProductoBody,
   ProductoApiCrearProductoBody,
@@ -1299,22 +1300,23 @@ export const pedidoApiEliminarPedido = async (pedidoId: number, options?: Reques
 
 
 /**
- * @summary Listar Productos Pedido
+ * @summary Listar Productos Pedido Por Proveedor
  */
-export type pedidoApiListarProductosPedidoResponse200 = {
+export type pedidoApiListarProductosPedidoPorProveedorResponse200 = {
   data: PagedPedidoDetalle
   status: 200
 }
 
-export type pedidoApiListarProductosPedidoResponseSuccess = (pedidoApiListarProductosPedidoResponse200) & {
+export type pedidoApiListarProductosPedidoPorProveedorResponseSuccess = (pedidoApiListarProductosPedidoPorProveedorResponse200) & {
   headers: Headers;
 };
 ;
 
-export type pedidoApiListarProductosPedidoResponse = (pedidoApiListarProductosPedidoResponseSuccess)
+export type pedidoApiListarProductosPedidoPorProveedorResponse = (pedidoApiListarProductosPedidoPorProveedorResponseSuccess)
 
-export const getPedidoApiListarProductosPedidoUrl = (pedidoId: number,
-    params?: PedidoApiListarProductosPedidoParams,) => {
+export const getPedidoApiListarProductosPedidoPorProveedorUrl = (pedidoId: number,
+    proveedorId: number,
+    params?: PedidoApiListarProductosPedidoPorProveedorParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -1326,13 +1328,14 @@ export const getPedidoApiListarProductosPedidoUrl = (pedidoId: number,
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/api/pedidos/productos_pedido/por_pedido/${pedidoId}?${stringifiedParams}` : `/api/pedidos/productos_pedido/por_pedido/${pedidoId}`
+  return stringifiedParams.length > 0 ? `/api/pedidos/productos_pedido/por_pedido/${pedidoId}/proveedor/${proveedorId}?${stringifiedParams}` : `/api/pedidos/productos_pedido/por_pedido/${pedidoId}/proveedor/${proveedorId}`
 }
 
-export const pedidoApiListarProductosPedido = async (pedidoId: number,
-    params?: PedidoApiListarProductosPedidoParams, options?: RequestInit): Promise<pedidoApiListarProductosPedidoResponse> => {
+export const pedidoApiListarProductosPedidoPorProveedor = async (pedidoId: number,
+    proveedorId: number,
+    params?: PedidoApiListarProductosPedidoPorProveedorParams, options?: RequestInit): Promise<pedidoApiListarProductosPedidoPorProveedorResponse> => {
   
-  const res = await fetch(getPedidoApiListarProductosPedidoUrl(pedidoId,params),
+  const res = await fetch(getPedidoApiListarProductosPedidoPorProveedorUrl(pedidoId,proveedorId,params),
   {      
     ...options,
     method: 'GET'
@@ -1343,8 +1346,50 @@ export const pedidoApiListarProductosPedido = async (pedidoId: number,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: pedidoApiListarProductosPedidoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as pedidoApiListarProductosPedidoResponse
+  const data: pedidoApiListarProductosPedidoPorProveedorResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiListarProductosPedidoPorProveedorResponse
+}
+  
+
+
+/**
+ * @summary Listar Proveedores Resumen Por Pedido
+ */
+export type pedidoApiListarProveedoresResumenPorPedidoResponse200 = {
+  data: PedidoProveedorResumen[]
+  status: 200
+}
+
+export type pedidoApiListarProveedoresResumenPorPedidoResponseSuccess = (pedidoApiListarProveedoresResumenPorPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiListarProveedoresResumenPorPedidoResponse = (pedidoApiListarProveedoresResumenPorPedidoResponseSuccess)
+
+export const getPedidoApiListarProveedoresResumenPorPedidoUrl = (pedidoId: number,) => {
+
+
+  
+
+  return `/api/pedidos/proveedores_resumen/por_pedido/${pedidoId}`
+}
+
+export const pedidoApiListarProveedoresResumenPorPedido = async (pedidoId: number, options?: RequestInit): Promise<pedidoApiListarProveedoresResumenPorPedidoResponse> => {
+  
+  const res = await fetch(getPedidoApiListarProveedoresResumenPorPedidoUrl(pedidoId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiListarProveedoresResumenPorPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiListarProveedoresResumenPorPedidoResponse
 }
   
 

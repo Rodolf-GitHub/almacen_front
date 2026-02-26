@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { ProveedorCreateSchema } from '../../../api/schemas'
+import type { ProveedorCreate } from '../../../api/schemas'
 
 const props = defineProps<{ open: boolean }>()
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'saved', payload: ProveedorCreateSchema): void
+  (e: 'saved', payload: ProveedorCreate): void
 }>()
 
 const nombre = ref('')

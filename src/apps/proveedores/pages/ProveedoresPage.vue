@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { proveedorApiCreateProveedor, proveedorApiListProveedores } from '../../../api/generated'
+import { proveedorApiCrearProveedor, proveedorApiListarProveedores } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
-import type { ProveedorCreateSchema, ProveedorSchema } from '../../../api/schemas'
+import type { Proveedor, ProveedorCreate } from '../../../api/schemas'
 import CreateProveedorModal from '../components/CreateProveedorModal.vue'
 
 const openCreateModal = ref(false)
-const proveedores = ref<ProveedorSchema[]>([])
+const proveedores = ref<Proveedor[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
 
@@ -15,7 +15,7 @@ const loadProveedores = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await proveedorApiListProveedores(undefined, buildRequestOptions())
+    const response = await proveedorApiListarProveedores(undefined, buildRequestOptions())
     proveedores.value = response.data.items ?? []
   } catch (error) {
     errorMessage.value = 'No se pudieron cargar los proveedores.'
@@ -25,11 +25,11 @@ const loadProveedores = async () => {
   }
 }
 
-const handleSaved = async (payload: ProveedorCreateSchema) => {
+const handleSaved = async (payload: ProveedorCreate) => {
   errorMessage.value = ''
 
   try {
-    await proveedorApiCreateProveedor(payload, buildRequestOptions())
+    await proveedorApiCrearProveedor(payload, buildRequestOptions())
     openCreateModal.value = false
     await loadProveedores()
   } catch (error) {
@@ -75,7 +75,7 @@ onMounted(async () => {
           </tr>
           <tr v-for="proveedor in proveedores" :key="proveedor.id ?? proveedor.nombre">
             <td class="px-4 py-3 text-[var(--text-100)]">{{ proveedor.nombre }}</td>
-            <td class="px-4 py-3 text-[var(--text-100)]">{{ proveedor.created_at }}</td>
+            <td class="px-4 py-3 text-[var(--text-100)]">{{ proveedor.fecha_creacion }}</td>
           </tr>
         </tbody>
       </table>

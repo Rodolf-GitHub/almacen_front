@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { usuarioApiLoginUsuario } from '../api/generated'
+import { usuarioApiLogin } from '../api/generated'
 
 const router = useRouter()
 
@@ -15,18 +15,18 @@ const handleLogin = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await usuarioApiLoginUsuario({
-      nombre_usuario: nombreUsuario.value,
+    const response = await usuarioApiLogin({
+      nombre: nombreUsuario.value,
       contrasena: contrasena.value,
     })
 
-    if (response.status !== 200 || !response.data.success || !response.data.token) {
+    if (response.status !== 200 || !response.data.token) {
       errorMessage.value = 'Credenciales inválidas.'
       return
     }
 
     localStorage.setItem('auth_token', response.data.token)
-    localStorage.setItem('user_name', response.data.usuario.nombre_usuario)
+    localStorage.setItem('user_name', response.data.usuario.nombre)
     localStorage.setItem('user_role', response.data.usuario.rol || 'usuario')
 
     await router.push('/')

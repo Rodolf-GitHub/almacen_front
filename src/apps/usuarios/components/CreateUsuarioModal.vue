@@ -1,19 +1,24 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { UsuarioCreateSchema } from '../../../api/schemas'
+import { UsuarioCreateRol } from '../../../api/schemas'
+import type { UsuarioCreate } from '../../../api/schemas'
 
 const props = defineProps<{ open: boolean }>()
-const emit = defineEmits<{ (e: 'close'): void; (e: 'saved', payload: UsuarioCreateSchema): void }>()
+const emit = defineEmits<{ (e: 'close'): void; (e: 'saved', payload: UsuarioCreate): void }>()
 
-const nombreUsuario = ref('')
+const nombre = ref('')
 const contrasena = ref('')
+const nombreSucursal = ref('')
+const rol = ref<UsuarioCreate['rol']>(UsuarioCreateRol.admin_sucursal)
 
 watch(
   () => props.open,
   (isOpen) => {
     if (isOpen) {
-      nombreUsuario.value = ''
+      nombre.value = ''
       contrasena.value = ''
+      nombreSucursal.value = ''
+      rol.value = UsuarioCreateRol.admin_sucursal
     }
   },
 )
@@ -22,8 +27,10 @@ const close = () => emit('close')
 
 const submit = () => {
   emit('saved', {
-    nombre_usuario: nombreUsuario.value,
-    contrasena_hasheada: contrasena.value,
+    nombre: nombre.value,
+    contrasena: contrasena.value,
+    nombre_sucursal: nombreSucursal.value,
+    rol: rol.value,
   })
   close()
 }
@@ -40,7 +47,7 @@ const submit = () => {
         <div>
           <label class="mb-1 block text-sm text-[var(--text-200)]">Nombre de usuario</label>
           <input
-            v-model="nombreUsuario"
+            v-model="nombre"
             required
             class="w-full rounded-md border border-[var(--bg-300)] px-3 py-2 outline-none focus:border-[var(--primary-100)]"
           />
@@ -53,6 +60,24 @@ const submit = () => {
             required
             class="w-full rounded-md border border-[var(--bg-300)] px-3 py-2 outline-none focus:border-[var(--primary-100)]"
           />
+        </div>
+        <div>
+          <label class="mb-1 block text-sm text-[var(--text-200)]">Sucursal</label>
+          <input
+            v-model="nombreSucursal"
+            required
+            class="w-full rounded-md border border-[var(--bg-300)] px-3 py-2 outline-none focus:border-[var(--primary-100)]"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-sm text-[var(--text-200)]">Rol</label>
+          <select
+            v-model="rol"
+            class="w-full rounded-md border border-[var(--bg-300)] px-3 py-2 outline-none focus:border-[var(--primary-100)]"
+          >
+            <option :value="UsuarioCreateRol.admin_sucursal">Admin sucursal</option>
+            <option :value="UsuarioCreateRol.admin_general">Admin general</option>
+          </select>
         </div>
         <div class="flex justify-end gap-2 pt-2">
           <button

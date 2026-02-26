@@ -1180,16 +1180,25 @@
         ]
       }
     },
-    "/api/pedidos/productos_pedido/por_pedido/{pedido_id}": {
+    "/api/pedidos/productos_pedido/por_pedido/{pedido_id}/proveedor/{proveedor_id}": {
       "get": {
-        "operationId": "pedido_api_listar_productos_pedido",
-        "summary": "Listar Productos Pedido",
+        "operationId": "pedido_api_listar_productos_pedido_por_proveedor",
+        "summary": "Listar Productos Pedido Por Proveedor",
         "parameters": [
           {
             "in": "path",
             "name": "pedido_id",
             "schema": {
               "title": "Pedido Id",
+              "type": "integer"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "proveedor_id",
+            "schema": {
+              "title": "Proveedor Id",
               "type": "integer"
             },
             "required": true
@@ -1240,6 +1249,45 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PagedPedidoDetalle"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/proveedores_resumen/por_pedido/{pedido_id}": {
+      "get": {
+        "operationId": "pedido_api_listar_proveedores_resumen_por_pedido",
+        "summary": "Listar Proveedores Resumen Por Pedido",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pedido_id",
+            "schema": {
+              "title": "Pedido Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PedidoProveedorResumen"
+                  },
+                  "title": "Response",
+                  "type": "array"
                 }
               }
             }
@@ -2256,6 +2304,25 @@
         },
         "required": ["fecha_creacion", "fecha_actualizacion", "pedido", "producto", "cantidad"],
         "title": "PedidoDetalle",
+        "type": "object"
+      },
+      "PedidoProveedorResumen": {
+        "properties": {
+          "proveedor_id": {
+            "title": "Proveedor Id",
+            "type": "integer"
+          },
+          "proveedor_nombre": {
+            "title": "Proveedor Nombre",
+            "type": "string"
+          },
+          "cantidad_productos_pedidos": {
+            "title": "Cantidad Productos Pedidos",
+            "type": "integer"
+          }
+        },
+        "required": ["proveedor_id", "proveedor_nombre", "cantidad_productos_pedidos"],
+        "title": "PedidoProveedorResumen",
         "type": "object"
       },
       "PedidoDetalleCreate": {

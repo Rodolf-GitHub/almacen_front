@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { usuarioApiCreateUsuario, usuarioApiListUsuarios } from '../../../api/generated'
+import { usuarioApiCrearUsuario, usuarioApiListarUsuarios } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
-import type { UsuarioCreateSchema, UsuarioSchema } from '../../../api/schemas'
+import type { Usuario, UsuarioCreate } from '../../../api/schemas'
 import CreateUsuarioModal from '../components/CreateUsuarioModal.vue'
 
 const openCreateModal = ref(false)
-const usuarios = ref<UsuarioSchema[]>([])
+const usuarios = ref<Usuario[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
 
@@ -15,7 +15,7 @@ const loadUsuarios = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await usuarioApiListUsuarios(undefined, buildRequestOptions())
+    const response = await usuarioApiListarUsuarios(undefined, buildRequestOptions())
     usuarios.value = response.data.items ?? []
   } catch (error) {
     errorMessage.value = 'No se pudieron cargar los usuarios.'
@@ -25,11 +25,11 @@ const loadUsuarios = async () => {
   }
 }
 
-const handleSaved = async (payload: UsuarioCreateSchema) => {
+const handleSaved = async (payload: UsuarioCreate) => {
   errorMessage.value = ''
 
   try {
-    await usuarioApiCreateUsuario(payload, buildRequestOptions())
+    await usuarioApiCrearUsuario(payload, buildRequestOptions())
     openCreateModal.value = false
     await loadUsuarios()
   } catch (error) {
@@ -73,8 +73,8 @@ onMounted(async () => {
           <tr v-else-if="usuarios.length === 0">
             <td class="px-4 py-4 text-[var(--text-100)]" colspan="2">Sin usuarios cargados.</td>
           </tr>
-          <tr v-for="usuario in usuarios" :key="usuario.id ?? usuario.nombre_usuario">
-            <td class="px-4 py-3 text-[var(--text-100)]">{{ usuario.nombre_usuario }}</td>
+          <tr v-for="usuario in usuarios" :key="usuario.id ?? usuario.nombre">
+            <td class="px-4 py-3 text-[var(--text-100)]">{{ usuario.nombre }}</td>
             <td class="px-4 py-3 text-[var(--text-100)]">{{ usuario.rol || '-' }}</td>
           </tr>
         </tbody>

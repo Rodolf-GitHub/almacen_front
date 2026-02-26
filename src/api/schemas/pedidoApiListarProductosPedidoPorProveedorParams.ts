@@ -5,7 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type PedidoApiListarProductosPedidoParams = {
+export type PedidoApiListarProductosPedidoPorProveedorParams = {
 busqueda?: string | null;
 /**
  * @minimum 1

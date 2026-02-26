@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { sucursalApiCreateSucursal, sucursalApiListSucursales } from '../../../api/generated'
+import { usuarioApiListarSucursales } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
-import type { SucursalCreateSchema, SucursalSchema } from '../../../api/schemas'
-import CreateSucursalModal from '../components/CreateSucursalModal.vue'
+import type { Usuario } from '../../../api/schemas'
 
-const openCreateModal = ref(false)
-const sucursales = ref<SucursalSchema[]>([])
+const sucursales = ref<Usuario[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
 
@@ -15,26 +13,13 @@ const loadSucursales = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await sucursalApiListSucursales(undefined, buildRequestOptions())
+    const response = await usuarioApiListarSucursales(undefined, buildRequestOptions())
     sucursales.value = response.data.items ?? []
   } catch (error) {
     errorMessage.value = 'No se pudieron cargar las sucursales.'
     console.error(error)
   } finally {
     isLoading.value = false
-  }
-}
-
-const handleSaved = async (payload: SucursalCreateSchema) => {
-  errorMessage.value = ''
-
-  try {
-    await sucursalApiCreateSucursal(payload, buildRequestOptions())
-    openCreateModal.value = false
-    await loadSucursales()
-  } catch (error) {
-    errorMessage.value = 'No se pudo crear la sucursal.'
-    console.error(error)
   }
 }
 
@@ -48,14 +33,8 @@ onMounted(async () => {
     <header class="flex flex-wrap items-center justify-between gap-2">
       <div>
         <h1 class="text-2xl font-bold text-[var(--text-100)]">Sucursales</h1>
-        <p class="text-sm text-[var(--text-200)]">Administra locales y disponibilidad por sede.</p>
+        <p class="text-sm text-[var(--text-200)]">Listado de sucursales asociado a usuarios.</p>
       </div>
-      <button
-        class="rounded-md bg-[var(--primary-100)] px-4 py-2 text-sm font-medium text-white"
-        @click="openCreateModal = true"
-      >
-        Crear sucursal
-      </button>
     </header>
 
     <div class="overflow-hidden rounded-lg border border-[var(--bg-300)] bg-white">
@@ -63,8 +42,8 @@ onMounted(async () => {
         <thead class="bg-[var(--bg-200)] text-[var(--text-200)]">
           <tr>
             <th class="px-4 py-3 font-medium">Sucursal</th>
-            <th class="px-4 py-3 font-medium">Dirección</th>
-            <th class="px-4 py-3 font-medium">Tipo</th>
+            <th class="px-4 py-3 font-medium">Encargado</th>
+            <th class="px-4 py-3 font-medium">Rol</th>
           </tr>
         </thead>
         <tbody>
@@ -74,22 +53,19 @@ onMounted(async () => {
           <tr v-else-if="sucursales.length === 0">
             <td class="px-4 py-4 text-[var(--text-100)]" colspan="3">Sin sucursales cargadas.</td>
           </tr>
-          <tr v-for="sucursal in sucursales" :key="sucursal.id ?? sucursal.nombre">
+          <tr
+            v-for="sucursal in sucursales"
+            :key="sucursal.id ?? `${sucursal.nombre}-${sucursal.nombre_sucursal}`"
+          >
+            <td class="px-4 py-3 text-[var(--text-100)]">{{ sucursal.nombre_sucursal }}</td>
             <td class="px-4 py-3 text-[var(--text-100)]">{{ sucursal.nombre }}</td>
-            <td class="px-4 py-3 text-[var(--text-100)]">{{ sucursal.direccion || '-' }}</td>
-            <td class="px-4 py-3 text-[var(--text-100)]">{{ sucursal.tipo }}</td>
+            <td class="px-4 py-3 text-[var(--text-100)]">{{ sucursal.rol || '-' }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
-
-    <CreateSucursalModal
-      :open="openCreateModal"
-      @close="openCreateModal = false"
-      @saved="handleSaved"
-    />
   </section>
 </template>
 

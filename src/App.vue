@@ -222,7 +222,7 @@ watch(
               <span class="flex flex-col">
                 <span class="text-sm font-semibold">Sucursales</span>
                 <span class="text-xs text-[var(--text-200)] group-hover:text-white/80"
-                  >Stock por sucursal</span
+                  >Listado de sucursales</span
                 >
               </span>
             </RouterLink>

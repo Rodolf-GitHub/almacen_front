@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { pedidoApiCreatePedido, pedidoApiListPedidos } from '../../../api/generated'
+import { pedidoApiCrearPedido, pedidoApiListarPedidos } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
-import type { PedidoCreateSchema, PedidoSchema } from '../../../api/schemas'
+import type { Pedido, PedidoCreate } from '../../../api/schemas'
 import CreatePedidoModal from '../components/CreatePedidoModal.vue'
 
 const openCreateModal = ref(false)
-const pedidos = ref<PedidoSchema[]>([])
+const pedidos = ref<Pedido[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
 
@@ -15,7 +15,7 @@ const loadPedidos = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await pedidoApiListPedidos(undefined, buildRequestOptions())
+    const response = await pedidoApiListarPedidos(undefined, buildRequestOptions())
     pedidos.value = response.data.items ?? []
   } catch (error) {
     errorMessage.value = 'No se pudieron cargar los pedidos.'
@@ -25,11 +25,11 @@ const loadPedidos = async () => {
   }
 }
 
-const handleSaved = async (payload: PedidoCreateSchema) => {
+const handleSaved = async (payload: PedidoCreate) => {
   errorMessage.value = ''
 
   try {
-    await pedidoApiCreatePedido(payload, buildRequestOptions())
+    await pedidoApiCrearPedido(payload, buildRequestOptions())
     openCreateModal.value = false
     await loadPedidos()
   } catch (error) {
@@ -62,9 +62,9 @@ onMounted(async () => {
       <table class="min-w-full text-left text-sm">
         <thead class="bg-[var(--bg-200)] text-[var(--text-200)]">
           <tr>
-            <th class="px-4 py-3 font-medium">Origen</th>
+            <th class="px-4 py-3 font-medium">Creado por</th>
             <th class="px-4 py-3 font-medium">Destino</th>
-            <th class="px-4 py-3 font-medium">Fecha</th>
+            <th class="px-4 py-3 font-medium">Creación</th>
             <th class="px-4 py-3 font-medium">Estado</th>
           </tr>
         </thead>
@@ -77,11 +77,18 @@ onMounted(async () => {
           </tr>
           <tr
             v-for="pedido in pedidos"
-            :key="pedido.id ?? `${pedido.created_at}-${pedido.sucursal_origen}`"
+            :key="pedido.id ?? `${pedido.fecha_creacion}-${pedido.creado_por}`"
           >
-            <td class="px-4 py-3 text-[var(--text-100)]">#{{ pedido.sucursal_origen }}</td>
-            <td class="px-4 py-3 text-[var(--text-100)]">#{{ pedido.sucursal_destino }}</td>
-            <td class="px-4 py-3 text-[var(--text-100)]">{{ pedido.fecha_pedido }}</td>
+            <td class="px-4 py-3 text-[var(--text-100)]">
+              {{ pedido.creado_por_nombre || `#${pedido.creado_por}` }}
+            </td>
+            <td class="px-4 py-3 text-[var(--text-100)]">
+              {{
+                pedido.usuario_destino_nombre ||
+                (pedido.usuario_destino ? `#${pedido.usuario_destino}` : '-')
+              }}
+            </td>
+            <td class="px-4 py-3 text-[var(--text-100)]">{{ pedido.fecha_creacion }}</td>
             <td class="px-4 py-3 text-[var(--text-100)]">{{ pedido.estado || '-' }}</td>
           </tr>
         </tbody>
