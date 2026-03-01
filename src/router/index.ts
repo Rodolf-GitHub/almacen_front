@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '../views/HomePage.vue'
 import LoginPage from '../views/LoginPage.vue'
+import PedidoProveedorProductosPage from '../apps/pedidos/pages/PedidoProveedorProductosPage.vue'
+import PedidoProveedoresPage from '../apps/pedidos/pages/PedidoProveedoresPage.vue'
 import PedidosPage from '../apps/pedidos/pages/PedidosPage.vue'
 import PedidosRecibidosPage from '../apps/pedidos/pages/PedidosRecibidosPage.vue'
 import ProductosPage from '../apps/productos/pages/ProductosPage.vue'
@@ -30,6 +32,18 @@ const router = createRouter({
       path: '/pedidos/recibidos',
       name: 'pedidos-recibidos',
       component: PedidosRecibidosPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/pedidos/:pedidoId/proveedores',
+      name: 'pedido-proveedores',
+      component: PedidoProveedoresPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/pedidos/:pedidoId/proveedores/:proveedorId/productos',
+      name: 'pedido-proveedor-productos',
+      component: PedidoProveedorProductosPage,
       meta: { requiresAuth: true },
     },
     {

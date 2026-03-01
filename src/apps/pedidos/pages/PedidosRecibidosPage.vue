@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { Filter } from 'lucide-vue-next'
 import { pedidoApiListarMisPedidosRecibidos } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
@@ -15,6 +16,7 @@ const busqueda = ref('')
 const currentPage = ref(1)
 const totalItems = ref(0)
 const pageSize = 100
+const router = useRouter()
 
 const loadPedidos = async () => {
   isLoading.value = true
@@ -57,6 +59,11 @@ const goNextPage = async () => {
   await loadPedidos()
 }
 
+const goToPedidoProveedores = async (pedido: Pedido) => {
+  if (!pedido.id) return
+  await router.push({ name: 'pedido-proveedores', params: { pedidoId: pedido.id } })
+}
+
 onMounted(async () => {
   await loadPedidos()
 })
@@ -97,7 +104,8 @@ onMounted(async () => {
       <tr
         v-for="pedido in pedidos"
         :key="pedido.id ?? `${pedido.fecha_creacion}-${pedido.creado_por}`"
-        class="odd:bg-white even:bg-sky-50/35 hover:bg-sky-100/40"
+        class="cursor-pointer odd:bg-white even:bg-sky-50/35 hover:bg-sky-100/40"
+        @click="goToPedidoProveedores(pedido)"
       >
         <td class="px-2 py-2 text-sky-900 sm:px-3">
           {{ pedido.creado_por_nombre || `#${pedido.creado_por}` }}
