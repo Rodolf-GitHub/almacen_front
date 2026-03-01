@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { Building2, CircleCheck } from 'lucide-vue-next'
-import { usuarioApiListarSucursales } from '../../../api/generated'
+import { usuarioApiListarSucursalesParaPedido } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import { PedidoCreateEstado } from '../../../api/schemas'
 import type { PedidoCreate, Usuario } from '../../../api/schemas'
@@ -21,7 +21,7 @@ const loadSucursales = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await usuarioApiListarSucursales(
+    const response = await usuarioApiListarSucursalesParaPedido(
       { limit: 1000, offset: 0 },
       buildRequestOptions(),
     )
