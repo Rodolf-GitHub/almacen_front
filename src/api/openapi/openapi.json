@@ -701,6 +701,65 @@
         "tags": ["Productos"]
       }
     },
+    "/api/productos/listar_todos": {
+      "get": {
+        "operationId": "producto_api_listar_productos_todos",
+        "summary": "Listar Productos Todos",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busqueda",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Busqueda"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedProductoList"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Productos"]
+      }
+    },
     "/api/productos/obtener/{producto_id}": {
       "get": {
         "operationId": "producto_api_obtener_producto",
@@ -1418,6 +1477,44 @@
               "type": "integer"
             },
             "required": true
+          },
+          {
+            "in": "query",
+            "name": "busqueda",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Busqueda"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
           }
         ],
         "responses": {
@@ -1426,11 +1523,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/PedidoProveedorResumen"
-                  },
-                  "title": "Response",
-                  "type": "array"
+                  "$ref": "#/components/schemas/PagedPedidoProveedorResumen"
                 }
               }
             }
@@ -2578,6 +2671,24 @@
         },
         "required": ["fecha_creacion", "fecha_actualizacion", "pedido", "producto", "cantidad"],
         "title": "PedidoDetalle",
+        "type": "object"
+      },
+      "PagedPedidoProveedorResumen": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PedidoProveedorResumen"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedPedidoProveedorResumen",
         "type": "object"
       },
       "PedidoProveedorResumen": {

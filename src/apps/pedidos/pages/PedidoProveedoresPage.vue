@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeft, Building2, Copy, Package } from 'lucide-vue-next'
+import { ArrowLeft, Building2, Copy, Filter, Package } from 'lucide-vue-next'
 import {
   pedidoApiCopiarPedidoPorProveedor,
   pedidoApiListarProveedoresResumenPorPedido,
 } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import type { PedidoCopiaResumen, PedidoProveedorResumen } from '../../../api/schemas'
+import PaginationBar from '../../../components/PaginationBar.vue'
+import SearchBar from '../../../components/SearchBar.vue'
 import TableLayout from '../../../components/TableLayout.vue'
 
 const route = useRoute()
@@ -17,6 +19,10 @@ const proveedores = ref<PedidoProveedorResumen[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
+const busqueda = ref('')
+const currentPage = ref(1)
+const totalItems = ref(0)
+const pageSize = 100
 
 const pedidoId = Number.parseInt(route.params.pedidoId as string, 10)
 
@@ -32,15 +38,39 @@ const loadProveedoresResumen = async () => {
   try {
     const response = await pedidoApiListarProveedoresResumenPorPedido(
       pedidoId,
+      {
+        busqueda: busqueda.value || undefined,
+        limit: pageSize,
+        offset: (currentPage.value - 1) * pageSize,
+      },
       buildRequestOptions(),
     )
-    proveedores.value = response.data ?? []
+    proveedores.value = response.data.items ?? []
+    totalItems.value = response.data.count ?? 0
   } catch (error) {
     errorMessage.value = 'No se pudieron cargar los proveedores del pedido.'
     console.error(error)
   } finally {
     isLoading.value = false
   }
+}
+
+const handleSearch = async () => {
+  currentPage.value = 1
+  await loadProveedoresResumen()
+}
+
+const goPreviousPage = async () => {
+  if (currentPage.value <= 1) return
+  currentPage.value -= 1
+  await loadProveedoresResumen()
+}
+
+const goNextPage = async () => {
+  const totalPages = Math.max(1, Math.ceil(totalItems.value / pageSize))
+  if (currentPage.value >= totalPages) return
+  currentPage.value += 1
+  await loadProveedoresResumen()
 }
 
 const goToProveedorProductos = async (proveedor: PedidoProveedorResumen) => {
@@ -197,15 +227,31 @@ onMounted(async () => {
 
     <p v-else-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 
+    <div class="flex items-center gap-2 rounded-lg border border-sky-200 bg-sky-50 p-2">
+      <Filter :size="16" class="text-sky-700" />
+      <p class="text-sm text-sky-800">Listado paginado de proveedores asociados al pedido</p>
+    </div>
+
+    <div class="w-full">
+      <SearchBar
+        v-model="busqueda"
+        class="w-full"
+        placeholder="Buscar proveedor del pedido..."
+        :show-actions="false"
+        :auto-search-delay="1000"
+        @search="handleSearch"
+      />
+    </div>
+
     <div
-      v-else-if="proveedores.length === 0"
+      v-if="!isLoading && !errorMessage && proveedores.length === 0"
       class="rounded-lg border border-sky-200 bg-white p-4 text-sm text-sky-800"
     >
       Este pedido no tiene proveedores asociados.
     </div>
 
     <TableLayout
-      v-else
+      v-if="!isLoading && !errorMessage && proveedores.length > 0"
       :headers="['Proveedor', 'Productos pedidos', 'Acciones']"
       :loading="isLoading"
       loading-text="Cargando proveedores..."
@@ -252,6 +298,16 @@ onMounted(async () => {
         </td>
       </tr>
     </TableLayout>
+
+    <PaginationBar
+      v-if="!isLoading && !errorMessage && totalItems > 0"
+      :current-page="currentPage"
+      :total-items="totalItems"
+      :page-size="pageSize"
+      :disabled="isLoading"
+      @previous="goPreviousPage"
+      @next="goNextPage"
+    />
 
     <p v-if="successMessage" class="text-sm text-emerald-700">{{ successMessage }}</p>
   </section>
