@@ -3,16 +3,22 @@ import { onMounted, ref } from 'vue'
 import { Pencil, Trash2 } from 'lucide-vue-next'
 import {
   productoApiCategoriasActualizarCategoriaProducto,
+  productoApiCategoriasCrearCategoriaProducto,
   productoApiCategoriasEliminarCategoriaProducto,
   productoApiCategoriasListarCategoriasProducto,
 } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
-import type { CategoriaProductoSchema } from '../../../api/schemas'
-import BaseModal from '../../../components/BaseModal.vue'
+import type {
+  CategoriaProductoCreate,
+  CategoriaProductoSchema,
+  CategoriaProductoUpdate,
+} from '../../../api/schemas'
+import CreateButton from '../../../components/CreateButton.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
 import SearchBar from '../../../components/SearchBar.vue'
 import TableLayout from '../../../components/TableLayout.vue'
 import TitleCard from '../../../components/TitleCard.vue'
+import CreateCategoriaProductoModal from '../components/CreateCategoriaProductoModal.vue'
 
 const categorias = ref<CategoriaProductoSchema[]>([])
 const isLoading = ref(false)
@@ -22,9 +28,8 @@ const currentPage = ref(1)
 const totalItems = ref(0)
 const pageSize = 100
 
-const openEditModal = ref(false)
+const openCategoriaModal = ref(false)
 const selectedCategoria = ref<CategoriaProductoSchema | null>(null)
-const categoriaNombre = ref('')
 
 const loadCategorias = async () => {
   isLoading.value = true
@@ -70,28 +75,39 @@ const goNextPage = async () => {
 
 const openEdit = (categoria: CategoriaProductoSchema) => {
   selectedCategoria.value = categoria
-  categoriaNombre.value = categoria.nombre
-  openEditModal.value = true
+  openCategoriaModal.value = true
 }
 
-const handleUpdate = async () => {
-  if (!selectedCategoria.value?.id) return
+const openCreate = () => {
+  selectedCategoria.value = null
+  openCategoriaModal.value = true
+}
 
-  const nombre = categoriaNombre.value.trim()
-  if (!nombre) {
-    errorMessage.value = 'El nombre de la categoría es obligatorio.'
-    return
+const handleCreate = async (payload: CategoriaProductoCreate) => {
+  errorMessage.value = ''
+
+  try {
+    await productoApiCategoriasCrearCategoriaProducto(payload, buildRequestOptions())
+    openCategoriaModal.value = false
+    await loadCategorias()
+  } catch (error) {
+    errorMessage.value = 'No se pudo crear la categoría.'
+    console.error(error)
   }
+}
+
+const handleUpdate = async (payload: { id: number; body: CategoriaProductoUpdate }) => {
+  if (!payload.id) return
 
   errorMessage.value = ''
 
   try {
     await productoApiCategoriasActualizarCategoriaProducto(
-      selectedCategoria.value.id,
-      { nombre },
+      payload.id,
+      payload.body,
       buildRequestOptions(),
     )
-    openEditModal.value = false
+    openCategoriaModal.value = false
     selectedCategoria.value = null
     await loadCategorias()
   } catch (error) {
@@ -136,11 +152,12 @@ onMounted(async () => {
 
 <template>
   <section class="space-y-4">
-    <header>
+    <header class="space-y-3">
       <TitleCard
         title="Categorías de productos"
         description="Gestiona las categorías disponibles para clasificar productos."
       />
+      <CreateButton label="Crear categoría" @click="openCreate" />
     </header>
 
     <div class="w-full">
@@ -207,39 +224,13 @@ onMounted(async () => {
 
     <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 
-    <BaseModal
-      :open="openEditModal"
-      title="Editar categoría"
-      max-width-class="max-w-md"
-      @close="openEditModal = false"
-    >
-      <form class="space-y-3" @submit.prevent="handleUpdate">
-        <div>
-          <label class="mb-1 block text-sm text-sky-800">Nombre</label>
-          <input
-            v-model="categoriaNombre"
-            required
-            class="w-full rounded-md border border-sky-200 bg-sky-50/40 px-3 py-2 outline-none focus:border-sky-400"
-          />
-        </div>
-
-        <div class="flex justify-end gap-2 border-t border-sky-100 pt-3">
-          <button
-            type="button"
-            class="rounded-md border border-sky-200 bg-white px-4 py-2 text-sm text-sky-700 hover:bg-sky-50"
-            @click="openEditModal = false"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            class="rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
-          >
-            Guardar
-          </button>
-        </div>
-      </form>
-    </BaseModal>
+    <CreateCategoriaProductoModal
+      :open="openCategoriaModal"
+      :categoria="selectedCategoria"
+      @close="openCategoriaModal = false"
+      @created="handleCreate"
+      @updated="handleUpdate"
+    />
   </section>
 </template>
 

@@ -222,23 +222,23 @@ watch(
               leave-from-class="max-h-40 opacity-100"
               leave-to-class="max-h-0 opacity-0"
             >
-              <div v-if="pedidosMenuOpen" class="mt-1 space-y-1 overflow-hidden pl-12">
+              <div v-if="pedidosMenuOpen" class="mt-1 space-y-1.5 overflow-hidden pl-6">
                 <RouterLink
                   to="/pedidos/realizados"
-                  class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
+                  class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-[15px] font-medium text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
                   active-class="bg-[var(--bg-200)] font-semibold text-[var(--primary-100)]"
                   @click="closeSidebarOnMobile"
                 >
-                  <FileText class="h-4 w-4" :stroke-width="2" />
+                  <FileText class="h-5 w-5" :stroke-width="2" />
                   <span>Pedidos realizados</span>
                 </RouterLink>
                 <RouterLink
                   to="/pedidos/recibidos"
-                  class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
+                  class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-[15px] font-medium text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
                   active-class="bg-[var(--bg-200)] font-semibold text-[var(--primary-100)]"
                   @click="closeSidebarOnMobile"
                 >
-                  <Inbox class="h-4 w-4" :stroke-width="2" />
+                  <Inbox class="h-5 w-5" :stroke-width="2" />
                   <span>Pedidos recibidos</span>
                 </RouterLink>
               </div>
@@ -301,23 +301,23 @@ watch(
               leave-from-class="max-h-40 opacity-100"
               leave-to-class="max-h-0 opacity-0"
             >
-              <div v-if="productosMenuOpen" class="mt-1 space-y-1 overflow-hidden pl-12">
+              <div v-if="productosMenuOpen" class="mt-1 space-y-1.5 overflow-hidden pl-6">
                 <RouterLink
                   to="/productos"
-                  class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
+                  class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-[15px] font-medium text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
                   active-class="bg-[var(--bg-200)] font-semibold text-[var(--primary-100)]"
                   @click="closeSidebarOnMobile"
                 >
-                  <Package class="h-4 w-4" :stroke-width="2" />
+                  <Package class="h-5 w-5" :stroke-width="2" />
                   <span>Productos</span>
                 </RouterLink>
                 <RouterLink
                   to="/productos/categorias"
-                  class="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
+                  class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-[15px] font-medium text-[var(--text-100)] transition-all hover:bg-[var(--bg-200)]"
                   active-class="bg-[var(--bg-200)] font-semibold text-[var(--primary-100)]"
                   @click="closeSidebarOnMobile"
                 >
-                  <Boxes class="h-4 w-4" :stroke-width="2" />
+                  <Boxes class="h-5 w-5" :stroke-width="2" />
                   <span>Categorías</span>
                 </RouterLink>
               </div>
