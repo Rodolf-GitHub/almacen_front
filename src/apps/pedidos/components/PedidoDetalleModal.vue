@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { Building2, Image as ImageIcon, Tag } from 'lucide-vue-next'
 import { productoApiListarProductosPorProveedor } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import type {
@@ -85,6 +86,24 @@ const handleSearchProductos = async () => {
   await loadProductos()
 }
 
+const resolveImageUrl = (image?: string | null) => {
+  if (!image) return null
+  if (image.startsWith('http://') || image.startsWith('https://')) return image
+
+  const cleanPath = image.startsWith('/') ? image : `/${image}`
+  const backendBaseUrl =
+    (import.meta.env.VITE_MEDIA_BASE_URL as string | undefined) ||
+    (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
+    'http://127.0.0.1:8000'
+
+  return new URL(cleanPath, backendBaseUrl).toString()
+}
+
+const selectProducto = (producto: ProductoList) => {
+  if (!producto.id) return
+  productoId.value = producto.id
+}
+
 const close = () => emit('close')
 
 const submit = () => {
@@ -136,22 +155,60 @@ const submit = () => {
         />
 
         <label class="mb-1 block text-sm text-sky-800">Producto</label>
-        <select
-          v-model.number="productoId"
-          required
-          class="w-full rounded-md border border-sky-200 bg-sky-50/40 px-3 py-2 outline-none focus:border-sky-400"
+        <div
+          class="h-64 space-y-2 overflow-y-auto overscroll-contain rounded-lg border border-sky-200 bg-sky-50/40 p-2"
         >
-          <option :value="null" disabled>
-            {{ isLoadingProductos ? 'Cargando productos...' : 'Selecciona un producto' }}
-          </option>
-          <option
+          <p v-if="isLoadingProductos" class="px-2 py-2 text-sm text-sky-700">
+            Cargando productos...
+          </p>
+          <p v-else-if="productos.length === 0" class="px-2 py-2 text-sm text-sky-700">
+            No se encontraron productos para seleccionar.
+          </p>
+
+          <button
             v-for="producto in productos"
             :key="producto.id ?? producto.nombre"
-            :value="producto.id"
+            type="button"
+            class="flex w-full items-center gap-3 rounded-lg border p-2 text-left transition"
+            :class="
+              productoId === producto.id
+                ? 'border-sky-500 bg-sky-100 shadow-sm'
+                : 'border-sky-200 bg-white hover:border-sky-300 hover:bg-sky-50'
+            "
+            @click="selectProducto(producto)"
           >
-            {{ producto.nombre }}
-          </option>
-        </select>
+            <div
+              class="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-sky-200 bg-white"
+            >
+              <img
+                v-if="resolveImageUrl(producto.imagen)"
+                :src="resolveImageUrl(producto.imagen) || ''"
+                :alt="producto.nombre"
+                class="h-full w-full object-cover"
+              />
+              <ImageIcon v-else :size="18" class="text-sky-400" />
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-semibold text-sky-900">{{ producto.nombre }}</p>
+              <div class="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-sky-700">
+                <span class="inline-flex items-center gap-1 rounded-full bg-sky-100 px-2 py-0.5">
+                  <Building2 :size="12" />
+                  {{ producto.proveedor_nombre || `#${producto.proveedor}` }}
+                </span>
+                <span
+                  class="inline-flex items-center gap-1 rounded-full bg-violet-100 px-2 py-0.5 text-violet-700"
+                >
+                  <Tag :size="12" />
+                  {{
+                    producto.categoria_nombre ||
+                    (producto.categoria ? `#${producto.categoria}` : 'Sin categoría')
+                  }}
+                </span>
+              </div>
+            </div>
+          </button>
+        </div>
       </div>
 
       <div>
