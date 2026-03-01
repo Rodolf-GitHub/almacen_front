@@ -36,6 +36,7 @@ import type {
   ProveedorUpdate,
   TokenResponse,
   Usuario,
+  UsuarioApiListarSucursalesParaPedidoParams,
   UsuarioApiListarSucursalesParams,
   UsuarioApiListarUsuariosParams,
   UsuarioCreate,
@@ -264,6 +265,55 @@ export const usuarioApiListarSucursales = async (params?: UsuarioApiListarSucurs
   
   const data: usuarioApiListarSucursalesResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as usuarioApiListarSucursalesResponse
+}
+  
+
+
+/**
+ * @summary Listar Sucursales Para Pedido
+ */
+export type usuarioApiListarSucursalesParaPedidoResponse200 = {
+  data: PagedUsuario
+  status: 200
+}
+
+export type usuarioApiListarSucursalesParaPedidoResponseSuccess = (usuarioApiListarSucursalesParaPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type usuarioApiListarSucursalesParaPedidoResponse = (usuarioApiListarSucursalesParaPedidoResponseSuccess)
+
+export const getUsuarioApiListarSucursalesParaPedidoUrl = (params?: UsuarioApiListarSucursalesParaPedidoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/usuarios/listar_sucursales_para_pedido?${stringifiedParams}` : `/api/usuarios/listar_sucursales_para_pedido`
+}
+
+export const usuarioApiListarSucursalesParaPedido = async (params?: UsuarioApiListarSucursalesParaPedidoParams, options?: RequestInit): Promise<usuarioApiListarSucursalesParaPedidoResponse> => {
+  
+  const res = await fetch(getUsuarioApiListarSucursalesParaPedidoUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: usuarioApiListarSucursalesParaPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as usuarioApiListarSucursalesParaPedidoResponse
 }
   
 

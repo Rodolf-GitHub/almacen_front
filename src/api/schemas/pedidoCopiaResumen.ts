@@ -16,5 +16,5 @@ export interface PedidoCopiaResumen {
   fecha_creacion: string;
   fecha_actualizacion: string;
   cantidad_total_productos: number;
-  productos: PedidoCopiaItem[];
+  productos?: PedidoCopiaItem[];
 }

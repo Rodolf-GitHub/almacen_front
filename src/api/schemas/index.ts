@@ -44,6 +44,7 @@ export * from './proveedorUpdate';
 export * from './tokenResponse';
 export * from './usuario';
 export * from './usuarioApiListarSucursalesParams';
+export * from './usuarioApiListarSucursalesParaPedidoParams';
 export * from './usuarioApiListarUsuariosParams';
 export * from './usuarioCreate';
 export * from './usuarioCreateRol';

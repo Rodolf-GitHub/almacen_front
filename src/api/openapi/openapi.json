@@ -203,6 +203,70 @@
         "tags": ["Usuarios"]
       }
     },
+    "/api/usuarios/listar_sucursales_para_pedido": {
+      "get": {
+        "operationId": "usuario_api_listar_sucursales_para_pedido",
+        "summary": "Listar Sucursales Para Pedido",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busqueda",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Busqueda"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedUsuario"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Usuarios"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
     "/api/usuarios/obtener/{usuario_id}": {
       "get": {
         "operationId": "usuario_api_obtener_usuario",
@@ -2260,6 +2324,14 @@
       },
       "PedidoCopiaItem": {
         "properties": {
+          "proveedor_id": {
+            "title": "Proveedor Id",
+            "type": "integer"
+          },
+          "proveedor_nombre": {
+            "title": "Proveedor Nombre",
+            "type": "string"
+          },
           "producto_id": {
             "title": "Producto Id",
             "type": "integer"
@@ -2278,7 +2350,14 @@
             "type": "string"
           }
         },
-        "required": ["producto_id", "producto_nombre", "cantidad", "fecha_creacion"],
+        "required": [
+          "proveedor_id",
+          "proveedor_nombre",
+          "producto_id",
+          "producto_nombre",
+          "cantidad",
+          "fecha_creacion"
+        ],
         "title": "PedidoCopiaItem",
         "type": "object"
       },
@@ -2351,6 +2430,7 @@
             "type": "integer"
           },
           "productos": {
+            "default": [],
             "items": {
               "$ref": "#/components/schemas/PedidoCopiaItem"
             },
@@ -2363,8 +2443,7 @@
           "estado",
           "fecha_creacion",
           "fecha_actualizacion",
-          "cantidad_total_productos",
-          "productos"
+          "cantidad_total_productos"
         ],
         "title": "PedidoCopiaResumen",
         "type": "object"

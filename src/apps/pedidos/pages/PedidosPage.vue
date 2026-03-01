@@ -5,6 +5,7 @@ import {
   AlertTriangle,
   Calendar,
   CheckCircle2,
+  Copy,
   Filter,
   Package,
   RotateCcw,
@@ -14,13 +15,14 @@ import {
 } from 'lucide-vue-next'
 import {
   pedidoApiCambiarEstadoPedido,
+  pedidoApiCopiarPedidoCompleto,
   pedidoApiCrearPedido,
   pedidoApiEliminarPedido,
   pedidoApiListarMisPedidosHechos,
 } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import { PedidoCambiarEstadoEstado } from '../../../api/schemas'
-import type { Pedido, PedidoCreate } from '../../../api/schemas'
+import type { Pedido, PedidoCopiaResumen, PedidoCreate } from '../../../api/schemas'
 import CreatePedidoModal from '../components/CreatePedidoModal.vue'
 import SearchBar from '../../../components/SearchBar.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
@@ -29,6 +31,7 @@ const openCreateModal = ref(false)
 const pedidos = ref<Pedido[]>([])
 const isLoading = ref(false)
 const errorMessage = ref('')
+const successMessage = ref('')
 const busqueda = ref('')
 const currentPage = ref(1)
 const totalItems = ref(0)
@@ -60,6 +63,7 @@ const loadPedidos = async () => {
 
 const handleSaved = async (payload: PedidoCreate) => {
   errorMessage.value = ''
+  successMessage.value = ''
 
   try {
     await pedidoApiCrearPedido(payload, buildRequestOptions())
@@ -96,6 +100,7 @@ const goToPedidoProveedores = async (pedido: Pedido) => {
 
 const toggleEstadoPedido = async (pedido: Pedido) => {
   if (!pedido.id) return
+  successMessage.value = ''
 
   const estadoActual =
     pedido.estado === PedidoCambiarEstadoEstado.completado
@@ -119,6 +124,7 @@ const toggleEstadoPedido = async (pedido: Pedido) => {
 
 const handleDeletePedido = async (pedido: Pedido) => {
   if (!pedido.id) return
+  successMessage.value = ''
 
   if (!window.confirm(`¿Eliminar el pedido #${pedido.id}?`)) {
     return
@@ -135,6 +141,116 @@ const handleDeletePedido = async (pedido: Pedido) => {
   }
 }
 
+const formatFechaHora = (fecha?: string | null) => {
+  if (!fecha) return '-'
+  const date = new Date(fecha)
+  if (Number.isNaN(date.getTime())) return fecha
+
+  return `${date.toLocaleDateString('es-AR')} ${date.toLocaleTimeString('es-AR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })}`
+}
+
+const buildPedidoTexto = (resumen: PedidoCopiaResumen) => {
+  type PedidoCopiaItemConProveedor = {
+    producto_id: number
+    producto_nombre: string
+    cantidad: number
+    fecha_creacion: string
+    proveedor_id?: number | null
+    proveedor_nombre?: string | null
+  }
+
+  const lines: string[] = []
+  const items = (resumen.productos ?? []) as PedidoCopiaItemConProveedor[]
+  lines.push(`DETALLE PEDIDO #${resumen.pedido_id}`)
+  lines.push('')
+  lines.push(`Estado: ${resumen.estado}`)
+  lines.push(`Creado por: ${resumen.creado_por_nombre || '-'}`)
+  lines.push(`Destino: ${resumen.usuario_destino_nombre || '-'}`)
+  lines.push(`Creación: ${formatFechaHora(resumen.fecha_creacion)}`)
+  lines.push(`Actualización: ${formatFechaHora(resumen.fecha_actualizacion)}`)
+  lines.push(`Cantidad total de productos: ${resumen.cantidad_total_productos}`)
+  lines.push('')
+  lines.push('PRODUCTOS')
+
+  if (!items.length) {
+    lines.push('- Sin productos')
+  } else {
+    const tieneProveedorEnItems = items.some(
+      (item) => item.proveedor_id != null || !!item.proveedor_nombre,
+    )
+
+    if (!tieneProveedorEnItems) {
+      for (const producto of items) {
+        lines.push(`- ${producto.cantidad} x ${producto.producto_nombre}`)
+      }
+    } else {
+      const grupos = new Map<
+        string,
+        { proveedorNombre: string; productos: PedidoCopiaItemConProveedor[] }
+      >()
+
+      for (const producto of items) {
+        const key = String(producto.proveedor_id ?? producto.proveedor_nombre ?? 'sin_proveedor')
+        const proveedorNombre = producto.proveedor_nombre || 'Sin proveedor'
+
+        if (!grupos.has(key)) {
+          grupos.set(key, { proveedorNombre, productos: [] })
+        }
+
+        grupos.get(key)?.productos.push(producto)
+      }
+
+      for (const grupo of grupos.values()) {
+        lines.push('')
+        lines.push(`Proveedor: ${grupo.proveedorNombre}`)
+
+        for (const producto of grupo.productos) {
+          lines.push(`- ${producto.cantidad} x ${producto.producto_nombre}`)
+        }
+      }
+    }
+  }
+
+  return lines.join('\n')
+}
+
+const copyToClipboard = async (text: string) => {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text)
+    return
+  }
+
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.style.position = 'fixed'
+  textarea.style.opacity = '0'
+  document.body.appendChild(textarea)
+  textarea.focus()
+  textarea.select()
+  document.execCommand('copy')
+  document.body.removeChild(textarea)
+}
+
+const handleCopyPedido = async (pedido: Pedido) => {
+  if (!pedido.id) return
+
+  errorMessage.value = ''
+  successMessage.value = ''
+
+  try {
+    const response = await pedidoApiCopiarPedidoCompleto(pedido.id, buildRequestOptions())
+    const texto = buildPedidoTexto(response.data)
+    await copyToClipboard(texto)
+    successMessage.value = `Pedido #${pedido.id} copiado al portapapeles.`
+  } catch (error) {
+    errorMessage.value = 'No se pudo copiar el pedido.'
+    console.error(error)
+  }
+}
+
 const formatFecha = (fecha?: string | null) => {
   if (!fecha) return '—'
   return new Date(fecha).toLocaleDateString('es-AR')
@@ -145,7 +261,7 @@ const formatHora = (fecha?: string | null) => {
   return new Date(fecha).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
 }
 
-const getCantidadProductos = (pedido: Pedido) => 0
+const getCantidadProductos = (pedido: Pedido) => pedido.cantidad_productos ?? 0
 
 const getCardStateClasses = (estado?: string | null) => {
   if (estado === PedidoCambiarEstadoEstado.pendiente) {
@@ -348,6 +464,9 @@ onMounted(async () => {
               ]"
             >
               <div class="flex-1 min-w-0">
+                <p class="mb-1 text-xs font-semibold text-sky-700">
+                  Pedido #{{ pedido.id || '-' }}
+                </p>
                 <p
                   class="flex items-center gap-2 truncate text-sm font-medium text-[var(--text-200)]"
                 >
@@ -405,6 +524,15 @@ onMounted(async () => {
                 </button>
                 <button
                   type="button"
+                  class="inline-flex items-center gap-1 rounded-md border border-cyan-200 bg-cyan-50 px-2 py-1.5 text-cyan-700 hover:bg-cyan-100"
+                  title="Copiar pedido"
+                  @click="handleCopyPedido(pedido)"
+                >
+                  <Copy :size="16" />
+                  Copiar pedido
+                </button>
+                <button
+                  type="button"
                   class="inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1.5 text-emerald-700 hover:bg-emerald-100"
                   :title="
                     pedido.estado === PedidoCambiarEstadoEstado.completado
@@ -452,6 +580,7 @@ onMounted(async () => {
       @next="goNextPage"
     />
 
+    <p v-if="successMessage" class="text-sm text-emerald-700">{{ successMessage }}</p>
     <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 
     <CreatePedidoModal

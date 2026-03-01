@@ -6,6 +6,8 @@
  */
 
 export interface PedidoCopiaItem {
+  proveedor_id: number;
+  proveedor_nombre: string;
   producto_id: number;
   producto_nombre: string;
   cantidad: number;
