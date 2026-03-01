@@ -1,21 +1,25 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { usuarioApiCrearUsuario, usuarioApiListarUsuarios } from '../../../api/generated'
+import { onMounted, ref } from 'vue'
+import { Info, Pencil, Plus, Trash2 } from 'lucide-vue-next'
+import {
+  usuarioApiActualizarUsuario,
+  usuarioApiCrearUsuario,
+  usuarioApiEliminarUsuario,
+  usuarioApiListarUsuarios,
+  usuarioApiObtenerUsuario,
+} from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
-import type { Usuario, UsuarioCreate } from '../../../api/schemas'
+import type { Usuario, UsuarioCreate, UsuarioUpdate } from '../../../api/schemas'
+import BaseModal from '../../../components/BaseModal.vue'
 import CreateUsuarioModal from '../components/CreateUsuarioModal.vue'
 
-const route = useRoute()
-const router = useRouter()
 const openCreateModal = ref(false)
 const usuarios = ref<Usuario[]>([])
+const selectedUsuario = ref<Usuario | null>(null)
+const infoUsuario = ref<Usuario | null>(null)
+const openInfoModal = ref(false)
 const isLoading = ref(false)
 const errorMessage = ref('')
-
-const syncCreateModalWithRoute = () => {
-  openCreateModal.value = route.name === 'usuarios-crear'
-}
 
 const loadUsuarios = async () => {
   isLoading.value = true
@@ -32,86 +36,161 @@ const loadUsuarios = async () => {
   }
 }
 
-const handleSaved = async (payload: UsuarioCreate) => {
+const openCreate = () => {
+  selectedUsuario.value = null
+  openCreateModal.value = true
+}
+
+const openEdit = async (usuario: Usuario) => {
+  if (!usuario.id) return
+
+  errorMessage.value = ''
+
+  try {
+    const response = await usuarioApiObtenerUsuario(usuario.id, buildRequestOptions())
+    selectedUsuario.value = response.data
+    openCreateModal.value = true
+  } catch (error) {
+    errorMessage.value = 'No se pudo cargar el usuario para editar.'
+    console.error(error)
+  }
+}
+
+const openInfo = async (usuario: Usuario) => {
+  if (!usuario.id) return
+
+  errorMessage.value = ''
+
+  try {
+    const response = await usuarioApiObtenerUsuario(usuario.id, buildRequestOptions())
+    infoUsuario.value = response.data
+    openInfoModal.value = true
+  } catch (error) {
+    errorMessage.value = 'No se pudo cargar la información del usuario.'
+    console.error(error)
+  }
+}
+
+const handleDelete = async (usuario: Usuario) => {
+  if (!usuario.id) return
+
+  if (!window.confirm(`¿Eliminar el usuario "${usuario.nombre}"?`)) {
+    return
+  }
+
+  errorMessage.value = ''
+
+  try {
+    await usuarioApiEliminarUsuario(usuario.id, buildRequestOptions())
+    await loadUsuarios()
+  } catch (error) {
+    errorMessage.value = 'No se pudo eliminar el usuario.'
+    console.error(error)
+  }
+}
+
+const handleCreated = async (payload: UsuarioCreate) => {
   errorMessage.value = ''
 
   try {
     await usuarioApiCrearUsuario(payload, buildRequestOptions())
+    selectedUsuario.value = null
     openCreateModal.value = false
     await loadUsuarios()
-
-    if (route.name === 'usuarios-crear') {
-      await router.push({ name: 'usuarios-gestion' })
-    }
   } catch (error) {
     errorMessage.value = 'No se pudo crear el usuario.'
     console.error(error)
   }
 }
 
-const openCreate = async () => {
-  if (route.name !== 'usuarios-crear') {
-    await router.push({ name: 'usuarios-crear' })
-    return
-  }
+const handleUpdated = async (payload: { id: number; body: UsuarioUpdate }) => {
+  errorMessage.value = ''
 
-  openCreateModal.value = true
-}
-
-const closeCreateModal = async () => {
-  openCreateModal.value = false
-
-  if (route.name === 'usuarios-crear') {
-    await router.push({ name: 'usuarios-gestion' })
+  try {
+    await usuarioApiActualizarUsuario(payload.id, payload.body, buildRequestOptions())
+    selectedUsuario.value = null
+    openCreateModal.value = false
+    await loadUsuarios()
+  } catch (error) {
+    errorMessage.value = 'No se pudo actualizar el usuario.'
+    console.error(error)
   }
 }
-
-watch(
-  () => route.name,
-  () => {
-    syncCreateModalWithRoute()
-  },
-)
 
 onMounted(async () => {
   await loadUsuarios()
-  syncCreateModalWithRoute()
 })
 </script>
 
 <template>
   <section class="space-y-4">
-    <header class="flex flex-wrap items-center justify-between gap-2">
+    <header class="flex items-center justify-between gap-2">
       <div>
         <h1 class="text-2xl font-bold text-[var(--text-100)]">Usuarios</h1>
         <p class="text-sm text-[var(--text-200)]">Gestiona cuentas y permisos del sistema.</p>
       </div>
       <button
-        class="rounded-md bg-[var(--primary-100)] px-4 py-2 text-sm font-medium text-white"
+        class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
         @click="openCreate"
       >
+        <Plus :size="16" />
         Crear usuario
       </button>
     </header>
 
-    <div class="overflow-hidden rounded-lg border border-[var(--bg-300)] bg-white">
+    <div class="overflow-hidden rounded-xl border border-sky-200 bg-white shadow-sm">
       <table class="min-w-full text-left text-sm">
-        <thead class="bg-[var(--bg-200)] text-[var(--text-200)]">
+        <thead class="bg-sky-50 text-sky-800">
           <tr>
             <th class="px-4 py-3 font-medium">Usuario</th>
+            <th class="px-4 py-3 font-medium">Sucursal</th>
             <th class="px-4 py-3 font-medium">Rol</th>
+            <th class="px-4 py-3 font-medium">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="isLoading">
-            <td class="px-4 py-4 text-[var(--text-100)]" colspan="2">Cargando usuarios...</td>
+            <td class="px-4 py-4 text-[var(--text-100)]" colspan="4">Cargando usuarios...</td>
           </tr>
           <tr v-else-if="usuarios.length === 0">
-            <td class="px-4 py-4 text-[var(--text-100)]" colspan="2">Sin usuarios cargados.</td>
+            <td class="px-4 py-4 text-[var(--text-100)]" colspan="4">Sin usuarios cargados.</td>
           </tr>
-          <tr v-for="usuario in usuarios" :key="usuario.id ?? usuario.nombre">
+          <tr
+            v-for="usuario in usuarios"
+            :key="usuario.id ?? usuario.nombre"
+            class="odd:bg-white even:bg-sky-50/35 hover:bg-sky-100/40"
+          >
             <td class="px-4 py-3 text-[var(--text-100)]">{{ usuario.nombre }}</td>
+            <td class="px-4 py-3 text-[var(--text-100)]">{{ usuario.nombre_sucursal || '-' }}</td>
             <td class="px-4 py-3 text-[var(--text-100)]">{{ usuario.rol || '-' }}</td>
+            <td class="px-4 py-3">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <button
+                  type="button"
+                  class="rounded-md border border-sky-200 bg-white p-2 text-sky-700 hover:bg-sky-100"
+                  title="Información"
+                  @click="openInfo(usuario)"
+                >
+                  <Info :size="16" />
+                </button>
+                <button
+                  type="button"
+                  class="rounded-md border border-sky-200 bg-white p-2 text-sky-700 hover:bg-sky-100"
+                  title="Editar"
+                  @click="openEdit(usuario)"
+                >
+                  <Pencil :size="16" />
+                </button>
+                <button
+                  type="button"
+                  class="rounded-md border border-red-200 bg-red-50 p-2 text-red-600 hover:bg-red-100"
+                  title="Eliminar"
+                  @click="handleDelete(usuario)"
+                >
+                  <Trash2 :size="16" />
+                </button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -119,7 +198,38 @@ onMounted(async () => {
 
     <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
 
-    <CreateUsuarioModal :open="openCreateModal" @close="closeCreateModal" @saved="handleSaved" />
+    <CreateUsuarioModal
+      :open="openCreateModal"
+      :usuario="selectedUsuario"
+      @close="openCreateModal = false"
+      @created="handleCreated"
+      @updated="handleUpdated"
+    />
+
+    <BaseModal
+      :open="openInfoModal"
+      title="Detalle del usuario"
+      max-width-class="max-w-md"
+      @close="openInfoModal = false"
+    >
+      <div v-if="infoUsuario" class="space-y-3 text-sm text-sky-900">
+        <p><span class="font-medium text-sky-700">ID:</span> {{ infoUsuario.id || '-' }}</p>
+        <p><span class="font-medium text-sky-700">Usuario:</span> {{ infoUsuario.nombre }}</p>
+        <p>
+          <span class="font-medium text-sky-700">Sucursal:</span>
+          {{ infoUsuario.nombre_sucursal || '-' }}
+        </p>
+        <p><span class="font-medium text-sky-700">Rol:</span> {{ infoUsuario.rol || '-' }}</p>
+        <p>
+          <span class="font-medium text-sky-700">Creación:</span>
+          {{ infoUsuario.fecha_creacion }}
+        </p>
+        <p>
+          <span class="font-medium text-sky-700">Actualización:</span>
+          {{ infoUsuario.fecha_actualizacion }}
+        </p>
+      </div>
+    </BaseModal>
   </section>
 </template>
 

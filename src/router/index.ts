@@ -8,7 +8,6 @@ import PedidosRecibidosPage from '../apps/pedidos/pages/PedidosRecibidosPage.vue
 import ProductosPage from '../apps/productos/pages/ProductosPage.vue'
 import ProveedoresPage from '../apps/proveedores/pages/ProveedoresPage.vue'
 import SucursalesPage from '../apps/sucursales/pages/SucursalesPage.vue'
-import UsuariosAdminPage from '../apps/usuarios/pages/UsuariosAdminPage.vue'
 import UsuariosPage from '../apps/usuarios/pages/UsuariosPage.vue'
 
 const router = createRouter({
@@ -67,19 +66,19 @@ const router = createRouter({
     {
       path: '/usuarios',
       name: 'usuarios',
-      component: UsuariosAdminPage,
+      component: UsuariosPage,
       meta: { requiresAuth: true, requiresGeneralAdmin: true },
     },
     {
       path: '/usuarios/gestion',
       name: 'usuarios-gestion',
-      component: UsuariosPage,
+      redirect: { name: 'usuarios' },
       meta: { requiresAuth: true, requiresGeneralAdmin: true },
     },
     {
       path: '/usuarios/crear',
       name: 'usuarios-crear',
-      component: UsuariosPage,
+      redirect: { name: 'usuarios' },
       meta: { requiresAuth: true, requiresGeneralAdmin: true },
     },
   ],
