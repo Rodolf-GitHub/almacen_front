@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeft, Pencil, Plus, Trash2 } from 'lucide-vue-next'
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-vue-next'
 import {
   pedidoApiActualizarProductoPedido,
   pedidoApiCrearProductoPedido,
@@ -10,9 +10,11 @@ import {
 } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import type { PedidoDetalle, PedidoDetalleCreate, PedidoDetalleUpdate } from '../../../api/schemas'
+import CreateButton from '../../../components/CreateButton.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
 import SearchBar from '../../../components/SearchBar.vue'
 import TableLayout from '../../../components/TableLayout.vue'
+import TitleCard from '../../../components/TitleCard.vue'
 import PedidoDetalleModal from '../components/PedidoDetalleModal.vue'
 
 const route = useRoute()
@@ -153,28 +155,21 @@ onMounted(async () => {
 
 <template>
   <section class="space-y-4">
-    <header class="flex items-center justify-between gap-2">
-      <div>
-        <h1 class="text-2xl font-bold text-[var(--text-100)]">Productos del pedido</h1>
-        <p class="text-sm text-[var(--text-200)]">Pedido #{{ pedidoId }} · {{ proveedorNombre }}</p>
-      </div>
-      <div class="flex items-center gap-2">
+    <header class="space-y-3">
+      <TitleCard
+        title="Productos del pedido"
+        :description="`Pedido #${pedidoId} · ${proveedorNombre}`"
+      />
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
         <button
           type="button"
-          class="inline-flex items-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-700 hover:bg-sky-50"
+          class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-700 hover:bg-sky-50 sm:w-auto"
           @click="router.back()"
         >
           <ArrowLeft :size="16" />
           Volver
         </button>
-        <button
-          type="button"
-          class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
-          @click="openCreate"
-        >
-          <Plus :size="16" />
-          Agregar producto
-        </button>
+        <CreateButton label="Agregar producto" @click="openCreate" />
       </div>
     </header>
 

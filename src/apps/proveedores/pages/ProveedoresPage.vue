@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Info, MessageCircle, Package, Pencil, Plus, Trash2 } from 'lucide-vue-next'
+import { Info, MessageCircle, Package, Pencil, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 import {
   proveedorApiActualizarProveedor,
@@ -15,7 +15,9 @@ import CreateProveedorModal from '../components/CreateProveedorModal.vue'
 import SearchBar from '../../../components/SearchBar.vue'
 import TableLayout from '../../../components/TableLayout.vue'
 import BaseModal from '../../../components/BaseModal.vue'
+import CreateButton from '../../../components/CreateButton.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
+import TitleCard from '../../../components/TitleCard.vue'
 
 const openCreateModal = ref(false)
 const proveedores = ref<Proveedor[]>([])
@@ -179,18 +181,9 @@ onMounted(async () => {
 
 <template>
   <section class="space-y-4">
-    <header class="flex items-center justify-between gap-2">
-      <div>
-        <h1 class="text-2xl font-bold text-[var(--text-100)]">Proveedores</h1>
-        <p class="text-sm text-[var(--text-200)]">Controla los proveedores del almacén.</p>
-      </div>
-      <button
-        class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
-        @click="openCreate"
-      >
-        <Plus :size="16" />
-        Crear proveedor
-      </button>
+    <header class="space-y-3">
+      <TitleCard title="Proveedores" description="Controla los proveedores del almacén." />
+      <CreateButton label="Crear proveedor" @click="openCreate" />
     </header>
 
     <div class="w-full">

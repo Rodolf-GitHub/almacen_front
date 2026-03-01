@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { usuarioApiListarSucursales } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import type { Usuario } from '../../../api/schemas'
+import TitleCard from '../../../components/TitleCard.vue'
 import SearchBar from '../../../components/SearchBar.vue'
 import TableLayout from '../../../components/TableLayout.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
@@ -63,11 +64,8 @@ onMounted(async () => {
 
 <template>
   <section class="space-y-4">
-    <header class="flex items-center justify-between gap-2">
-      <div>
-        <h1 class="text-2xl font-bold text-[var(--text-100)]">Sucursales</h1>
-        <p class="text-sm text-[var(--text-200)]">Listado de sucursales asociadas a usuarios.</p>
-      </div>
+    <header>
+      <TitleCard title="Sucursales" description="Listado de sucursales asociadas a usuarios." />
     </header>
 
     <div class="w-full">

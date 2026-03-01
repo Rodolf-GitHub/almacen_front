@@ -23,6 +23,7 @@ import { PedidoCambiarEstadoEstado } from '../../../api/schemas'
 import type { Pedido, PedidoCopiaResumen } from '../../../api/schemas'
 import SearchBar from '../../../components/SearchBar.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
+import TitleCard from '../../../components/TitleCard.vue'
 
 const pedidos = ref<Pedido[]>([])
 const isLoading = ref(false)
@@ -360,11 +361,11 @@ onMounted(async () => {
 
 <template>
   <section class="space-y-6">
-    <header class="flex items-center justify-between gap-2">
-      <div>
-        <h1 class="text-2xl font-bold text-[var(--text-100)]">Pedidos recibidos</h1>
-        <p class="text-sm text-[var(--text-200)]">Consulta los pedidos que recibes como destino.</p>
-      </div>
+    <header>
+      <TitleCard
+        title="Pedidos recibidos"
+        description="Consulta los pedidos que recibes como destino."
+      />
     </header>
 
     <div

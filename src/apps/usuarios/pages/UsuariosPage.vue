@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Info, Pencil, Plus, Trash2 } from 'lucide-vue-next'
+import { Info, Pencil, Trash2 } from 'lucide-vue-next'
 import {
   usuarioApiActualizarUsuario,
   usuarioApiCrearUsuario,
@@ -11,6 +11,8 @@ import {
 import { buildRequestOptions } from '../../../api/requestOptions'
 import type { Usuario, UsuarioCreate, UsuarioUpdate } from '../../../api/schemas'
 import BaseModal from '../../../components/BaseModal.vue'
+import CreateButton from '../../../components/CreateButton.vue'
+import TitleCard from '../../../components/TitleCard.vue'
 import CreateUsuarioModal from '../components/CreateUsuarioModal.vue'
 
 const openCreateModal = ref(false)
@@ -124,18 +126,9 @@ onMounted(async () => {
 
 <template>
   <section class="space-y-4">
-    <header class="flex items-center justify-between gap-2">
-      <div>
-        <h1 class="text-2xl font-bold text-[var(--text-100)]">Usuarios</h1>
-        <p class="text-sm text-[var(--text-200)]">Gestiona cuentas y permisos del sistema.</p>
-      </div>
-      <button
-        class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
-        @click="openCreate"
-      >
-        <Plus :size="16" />
-        Crear usuario
-      </button>
+    <header class="space-y-3">
+      <TitleCard title="Usuarios" description="Gestiona cuentas y permisos del sistema." />
+      <CreateButton label="Crear usuario" @click="openCreate" />
     </header>
 
     <div class="overflow-hidden rounded-xl border border-sky-200 bg-white shadow-sm">

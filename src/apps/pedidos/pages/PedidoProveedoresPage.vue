@@ -11,6 +11,7 @@ import type { PedidoCopiaResumen, PedidoProveedorResumen } from '../../../api/sc
 import PaginationBar from '../../../components/PaginationBar.vue'
 import SearchBar from '../../../components/SearchBar.vue'
 import TableLayout from '../../../components/TableLayout.vue'
+import TitleCard from '../../../components/TitleCard.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -203,14 +204,11 @@ onMounted(async () => {
 
 <template>
   <section class="space-y-4">
-    <header class="flex items-center justify-between gap-2">
-      <div>
-        <h1 class="text-2xl font-bold text-[var(--text-100)]">Proveedores del pedido</h1>
-        <p class="text-sm text-[var(--text-200)]">Pedido #{{ pedidoId }}</p>
-      </div>
+    <header class="space-y-3">
+      <TitleCard title="Proveedores del pedido" :description="`Pedido #${pedidoId}`" />
       <button
         type="button"
-        class="inline-flex items-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-700 hover:bg-sky-50"
+        class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-700 hover:bg-sky-50 sm:w-auto"
         @click="router.back()"
       >
         <ArrowLeft :size="16" />

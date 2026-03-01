@@ -22,9 +22,11 @@ import {
 import { buildRequestOptions } from '../../../api/requestOptions'
 import { PedidoCambiarEstadoEstado } from '../../../api/schemas'
 import type { Pedido, PedidoCopiaResumen, PedidoCreate } from '../../../api/schemas'
+import CreateButton from '../../../components/CreateButton.vue'
 import CreatePedidoModal from '../components/CreatePedidoModal.vue'
 import SearchBar from '../../../components/SearchBar.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
+import TitleCard from '../../../components/TitleCard.vue'
 
 const openCreateModal = ref(false)
 const pedidos = ref<Pedido[]>([])
@@ -377,17 +379,9 @@ onMounted(async () => {
 
 <template>
   <section class="space-y-6">
-    <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        <h1 class="text-2xl font-bold text-[var(--text-100)]">Pedidos realizados</h1>
-        <p class="text-sm text-[var(--text-200)]">Gestiona los pedidos que has creado.</p>
-      </div>
-      <button
-        class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
-        @click="openCreateModal = true"
-      >
-        Crear pedido
-      </button>
+    <header class="space-y-3">
+      <TitleCard title="Pedidos realizados" description="Gestiona los pedidos que has creado." />
+      <CreateButton label="Crear pedido" @click="openCreateModal = true" />
     </header>
 
     <div

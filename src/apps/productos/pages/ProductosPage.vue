@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { Apple, Filter, Info, Pencil, Plus, Trash2, Image as ImageIcon } from 'lucide-vue-next'
+import { Apple, Filter, Info, Pencil, Trash2, Image as ImageIcon } from 'lucide-vue-next'
 import {
   productoApiActualizarProducto,
   productoApiCrearProducto,
@@ -21,8 +21,10 @@ import type {
 } from '../../../api/schemas'
 import CreateProductoModal from '../components/CreateProductoModal.vue'
 import BaseModal from '../../../components/BaseModal.vue'
+import CreateButton from '../../../components/CreateButton.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
 import SearchBar from '../../../components/SearchBar.vue'
+import TitleCard from '../../../components/TitleCard.vue'
 
 const openCreateModal = ref(false)
 const productos = ref<ProductoList[]>([])
@@ -271,18 +273,9 @@ watch(
 
 <template>
   <section class="space-y-6">
-    <header class="flex items-center justify-between gap-2">
-      <div>
-        <h1 class="text-3xl font-bold text-[var(--text-100)]">Productos</h1>
-        <p class="mt-1 text-sm text-[var(--text-200)]">Gestiona los productos disponibles</p>
-      </div>
-      <button
-        class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
-        @click="openCreate"
-      >
-        <Plus :size="16" />
-        Crear producto
-      </button>
+    <header class="space-y-3">
+      <TitleCard title="Productos" description="Gestiona los productos disponibles" />
+      <CreateButton label="Crear producto" @click="openCreate" />
     </header>
 
     <div
@@ -332,14 +325,9 @@ watch(
       <Apple :size="48" class="mx-auto mb-4 text-[var(--text-200)]" :stroke-width="1.5" />
       <h3 class="mb-2 text-lg font-medium text-[var(--text-100)]">No hay productos registrados</h3>
       <p class="mb-4 text-sm text-[var(--text-200)]">Comienza creando tu primer producto</p>
-      <button
-        type="button"
-        class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
-        @click="openCreate"
-      >
-        <Plus :size="16" />
-        Crear producto
-      </button>
+      <div class="flex justify-center">
+        <CreateButton label="Crear producto" :mobile-full="false" @click="openCreate" />
+      </div>
     </div>
 
     <div v-else class="space-y-3">
