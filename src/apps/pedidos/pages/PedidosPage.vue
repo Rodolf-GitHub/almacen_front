@@ -6,7 +6,6 @@ import {
   Calendar,
   CheckCircle2,
   Copy,
-  Filter,
   Package,
   RotateCcw,
   Store,
@@ -402,11 +401,6 @@ onMounted(async () => {
           Recuerda completar los pedidos cuando termines para que el proceso avance.
         </div>
       </div>
-    </div>
-
-    <div class="flex items-center gap-2 rounded-lg border border-sky-200 bg-sky-50 p-2">
-      <Filter :size="16" class="text-sky-700" />
-      <p class="text-sm text-sky-800">Listado paginado de pedidos realizados</p>
     </div>
 
     <div class="w-full">

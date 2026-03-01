@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Filter, Info, MessageCircle, Package, Pencil, Plus, Trash2 } from 'lucide-vue-next'
+import { Info, MessageCircle, Package, Pencil, Plus, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 import {
   proveedorApiActualizarProveedor,
@@ -192,11 +192,6 @@ onMounted(async () => {
         Crear proveedor
       </button>
     </header>
-
-    <div class="flex items-center gap-2 rounded-lg border border-sky-200 bg-sky-50 p-2">
-      <Filter :size="16" class="text-sky-700" />
-      <p class="text-sm text-sky-800">Listado paginado de proveedores</p>
-    </div>
 
     <div class="w-full">
       <SearchBar

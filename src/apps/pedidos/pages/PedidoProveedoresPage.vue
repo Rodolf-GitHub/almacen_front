@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeft, Building2, Copy, Filter, Package } from 'lucide-vue-next'
+import { ArrowLeft, Building2, Copy, Package } from 'lucide-vue-next'
 import {
   pedidoApiCopiarPedidoPorProveedor,
   pedidoApiListarProveedoresResumenPorPedido,
@@ -226,11 +226,6 @@ onMounted(async () => {
     </div>
 
     <p v-else-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
-
-    <div class="flex items-center gap-2 rounded-lg border border-sky-200 bg-sky-50 p-2">
-      <Filter :size="16" class="text-sky-700" />
-      <p class="text-sm text-sky-800">Listado paginado de proveedores asociados al pedido</p>
-    </div>
 
     <div class="w-full">
       <SearchBar

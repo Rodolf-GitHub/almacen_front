@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Filter } from 'lucide-vue-next'
 import { usuarioApiListarSucursales } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import type { Usuario } from '../../../api/schemas'
@@ -70,11 +69,6 @@ onMounted(async () => {
         <p class="text-sm text-[var(--text-200)]">Listado de sucursales asociadas a usuarios.</p>
       </div>
     </header>
-
-    <div class="flex items-center gap-2 rounded-lg border border-sky-200 bg-sky-50 p-2">
-      <Filter :size="16" class="text-sky-700" />
-      <p class="text-sm text-sky-800">Listado paginado de sucursales</p>
-    </div>
 
     <div class="w-full">
       <SearchBar

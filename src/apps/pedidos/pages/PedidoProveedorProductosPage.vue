@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeft, Filter, Pencil, Plus, Trash2 } from 'lucide-vue-next'
+import { ArrowLeft, Pencil, Plus, Trash2 } from 'lucide-vue-next'
 import {
   pedidoApiActualizarProductoPedido,
   pedidoApiCrearProductoPedido,
@@ -177,11 +177,6 @@ onMounted(async () => {
         </button>
       </div>
     </header>
-
-    <div class="flex items-center gap-2 rounded-lg border border-sky-200 bg-sky-50 p-2">
-      <Filter :size="16" class="text-sky-700" />
-      <p class="text-sm text-sky-800">Listado paginado de productos del pedido por proveedor</p>
-    </div>
 
     <div class="w-full">
       <SearchBar
