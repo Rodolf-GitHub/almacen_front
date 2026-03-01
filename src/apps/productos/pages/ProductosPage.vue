@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { Filter, Info, Pencil, Plus, Trash2, Image as ImageIcon } from 'lucide-vue-next'
+import {
+  Apple,
+  Filter,
+  Info,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+  Image as ImageIcon,
+} from 'lucide-vue-next'
 import {
   productoApiActualizarProducto,
   productoApiCrearProducto,
@@ -19,8 +28,6 @@ import type {
   Proveedor,
 } from '../../../api/schemas'
 import CreateProductoModal from '../components/CreateProductoModal.vue'
-import SearchBar from '../../../components/SearchBar.vue'
-import TableLayout from '../../../components/TableLayout.vue'
 import BaseModal from '../../../components/BaseModal.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
 
@@ -136,6 +143,11 @@ const handleSearch = async () => {
   await loadProductos()
 }
 
+const handleSearchInput = async () => {
+  currentPage.value = 1
+  await loadProductos()
+}
+
 const goPreviousPage = async () => {
   if (currentPage.value <= 1) return
   currentPage.value -= 1
@@ -229,6 +241,34 @@ const handleUpdated = async (payload: { id: number; body: ProductoApiActualizarP
   }
 }
 
+const formatCurrency = (value?: string | null) => {
+  if (!value) return '—'
+
+  const parsed = Number(value)
+  if (Number.isNaN(parsed)) return value
+
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 2,
+  }).format(parsed)
+}
+
+const formatFecha = (fecha?: string | null) => {
+  if (!fecha) return '—'
+  return new Date(fecha).toLocaleDateString('es-AR')
+}
+
+const formatHora = (fecha?: string | null) => {
+  if (!fecha) return '—'
+  return new Date(fecha).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+}
+
+const formatFechaHora = (fecha?: string | null) => {
+  if (!fecha) return '—'
+  return `${formatFecha(fecha)} • ${formatHora(fecha)}`
+}
+
 onMounted(async () => {
   applyProveedorFromQuery()
   await loadProveedores()
@@ -250,11 +290,11 @@ watch(
 </script>
 
 <template>
-  <section class="space-y-4">
+  <section class="space-y-6">
     <header class="flex items-center justify-between gap-2">
       <div>
-        <h1 class="text-2xl font-bold text-[var(--text-100)]">Productos</h1>
-        <p class="text-sm text-[var(--text-200)]">Administra catálogo, precio y stock.</p>
+        <h1 class="text-3xl font-bold text-[var(--text-100)]">Productos</h1>
+        <p class="mt-1 text-sm text-[var(--text-200)]">Gestiona los productos disponibles</p>
       </div>
       <button
         class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
@@ -283,78 +323,123 @@ watch(
       </select>
     </div>
 
-    <div class="w-full">
-      <SearchBar
-        v-model="busqueda"
-        class="w-full"
-        placeholder="Buscar producto por nombre..."
-        :show-actions="false"
-        :auto-search-delay="1000"
-        @search="handleSearch"
-      />
+    <div>
+      <div class="relative">
+        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <Search :size="18" class="text-[var(--text-200)]" />
+        </div>
+        <input
+          v-model="busqueda"
+          @input="handleSearchInput"
+          type="text"
+          placeholder="Buscar productos..."
+          class="block w-full rounded-lg border border-[var(--bg-300)] bg-white py-2.5 pl-10 pr-3 text-[var(--text-100)] placeholder-[var(--text-200)] focus:border-[var(--primary-100)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-100)] sm:text-sm"
+        />
+      </div>
     </div>
 
-    <TableLayout
-      :headers="['Nombre', 'Acciones']"
-      :loading="isLoading"
-      loading-text="Cargando productos..."
-      :empty="productos.length === 0"
-      empty-text="Sin productos cargados."
+    <div v-if="isLoading && productos.length === 0" class="py-12 text-center">
+      <div
+        class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[var(--accent-100)] border-r-transparent"
+      ></div>
+      <p class="mt-2 text-sm text-[var(--text-200)]">Cargando productos...</p>
+    </div>
+
+    <div
+      v-else-if="!isLoading && productos.length === 0"
+      class="rounded-lg border border-[var(--bg-300)] bg-white py-12 text-center"
     >
-      <tr
+      <Apple :size="48" class="mx-auto mb-4 text-[var(--text-200)]" :stroke-width="1.5" />
+      <h3 class="mb-2 text-lg font-medium text-[var(--text-100)]">No hay productos registrados</h3>
+      <p class="mb-4 text-sm text-[var(--text-200)]">Comienza creando tu primer producto</p>
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-md bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-medium text-white"
+        @click="openCreate"
+      >
+        <Plus :size="16" />
+        Crear producto
+      </button>
+    </div>
+
+    <div v-else class="space-y-3">
+      <div
         v-for="producto in productos"
         :key="producto.id ?? producto.nombre"
-        class="odd:bg-white even:bg-sky-50/35 hover:bg-sky-100/40"
+        class="group rounded-lg border border-blue-100 bg-blue-50/50 p-4 shadow-sm transition-all hover:border-blue-200 hover:shadow-md"
       >
-        <td class="min-w-0 px-2 py-2 sm:px-3">
-          <div class="flex min-w-0 items-center gap-2">
-            <img
-              v-if="resolveImageUrl(producto.imagen)"
-              :src="resolveImageUrl(producto.imagen) || ''"
-              :alt="producto.nombre"
-              class="h-11 w-11 shrink-0 rounded-md border border-sky-200 object-cover"
-            />
-            <div
-              v-else
-              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-sky-200 bg-white"
-            >
-              <ImageIcon :size="16" class="text-sky-400" />
+        <div class="flex flex-col gap-3">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex min-w-0 items-center gap-3">
+              <div
+                class="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border border-[var(--bg-300)] bg-gradient-to-br from-[var(--bg-200)] to-[var(--bg-100)]"
+              >
+                <img
+                  v-if="resolveImageUrl(producto.imagen)"
+                  :src="resolveImageUrl(producto.imagen) || ''"
+                  :alt="producto.nombre"
+                  class="h-full w-full object-cover"
+                />
+                <div
+                  v-else
+                  class="flex h-full w-full items-center justify-center text-[var(--text-200)]"
+                >
+                  <ImageIcon :size="20" :stroke-width="1.5" />
+                </div>
+              </div>
+
+              <div class="min-w-0">
+                <h3 class="line-clamp-1 font-semibold text-[var(--text-100)]">
+                  {{ producto.nombre }}
+                </h3>
+                <p class="text-xs text-[var(--text-200)]">
+                  Proveedor: {{ producto.proveedor_nombre || `#${producto.proveedor}` }}
+                </p>
+                <p class="text-xs text-[var(--text-200)]">
+                  Actualizado: {{ formatFechaHora(producto.fecha_actualizacion) }}
+                </p>
+              </div>
             </div>
-            <p class="min-w-0 truncate text-sm font-semibold text-sky-900 sm:text-base">
-              {{ producto.nombre }}
-            </p>
+
+            <div class="flex flex-shrink-0 gap-2">
+              <button
+                type="button"
+                class="rounded-md border border-sky-200 bg-white p-2 text-sky-700 hover:bg-sky-100"
+                title="Información"
+                @click="openInfo(producto)"
+              >
+                <Info :size="16" />
+              </button>
+              <button
+                type="button"
+                class="rounded-md border border-sky-200 bg-white p-2 text-sky-700 hover:bg-sky-100"
+                title="Editar"
+                @click="openEdit(producto)"
+              >
+                <Pencil :size="16" />
+              </button>
+              <button
+                type="button"
+                class="rounded-md border border-red-200 bg-red-50 p-2 text-red-600 hover:bg-red-100"
+                title="Eliminar"
+                @click="handleDelete(producto)"
+              >
+                <Trash2 :size="16" />
+              </button>
+            </div>
           </div>
-        </td>
-        <td class="px-2 py-2 sm:px-3">
-          <div class="flex flex-wrap items-center justify-start gap-1 sm:gap-1.5">
-            <button
-              type="button"
-              class="rounded-md border border-sky-200 bg-white p-1.5 text-sky-700 hover:bg-sky-100 sm:p-2"
-              title="Información"
-              @click="openInfo(producto)"
-            >
-              <Info :size="16" />
-            </button>
-            <button
-              type="button"
-              class="rounded-md border border-sky-200 bg-white p-1.5 text-sky-700 hover:bg-sky-100 sm:p-2"
-              title="Editar"
-              @click="openEdit(producto)"
-            >
-              <Pencil :size="16" />
-            </button>
-            <button
-              type="button"
-              class="rounded-md border border-red-200 bg-red-50 p-1.5 text-red-600 hover:bg-red-100 sm:p-2"
-              title="Eliminar"
-              @click="handleDelete(producto)"
-            >
-              <Trash2 :size="16" />
-            </button>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+              Compra: {{ formatCurrency(producto.precio_compra) }}
+            </span>
+            <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+              Venta: {{ formatCurrency(producto.precio_venta) }}
+            </span>
           </div>
-        </td>
-      </tr>
-    </TableLayout>
+        </div>
+      </div>
+    </div>
 
     <PaginationBar
       :current-page="currentPage"
@@ -419,11 +504,12 @@ watch(
           {{ infoProducto.precio_venta || '-' }}
         </p>
         <p>
-          <span class="font-medium text-sky-700">Creación:</span> {{ infoProducto.fecha_creacion }}
+          <span class="font-medium text-sky-700">Creación:</span>
+          {{ formatFechaHora(infoProducto.fecha_creacion) }}
         </p>
         <p>
           <span class="font-medium text-sky-700">Actualización:</span>
-          {{ infoProducto.fecha_actualizacion }}
+          {{ formatFechaHora(infoProducto.fecha_actualizacion) }}
         </p>
       </div>
     </BaseModal>
