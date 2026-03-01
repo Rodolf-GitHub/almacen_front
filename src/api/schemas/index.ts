@@ -6,9 +6,13 @@
  */
 
 export * from './cambiarMiContrasena';
+export * from './categoriaProductoCreate';
+export * from './categoriaProductoSchema';
+export * from './categoriaProductoUpdate';
 export * from './dashboardEstadisticas';
 export * from './input';
 export * from './loginRequest';
+export * from './pagedCategoriaProductoSchema';
 export * from './pagedPedido';
 export * from './pagedPedidoDetalle';
 export * from './pagedPedidoProveedorResumen';
@@ -33,6 +37,7 @@ export * from './pedidoDetalleUpdate';
 export * from './pedidoProveedorResumen';
 export * from './pedidoUpdate';
 export * from './productoApiActualizarProductoBody';
+export * from './productoApiCategoriasListarCategoriasProductoParams';
 export * from './productoApiCrearProductoBody';
 export * from './productoApiListarProductosPorProveedorParams';
 export * from './productoApiListarProductosTodosParams';

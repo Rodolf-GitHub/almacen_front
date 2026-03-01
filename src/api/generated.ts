@@ -6,8 +6,12 @@
  */
 import type {
   CambiarMiContrasena,
+  CategoriaProductoCreate,
+  CategoriaProductoSchema,
+  CategoriaProductoUpdate,
   DashboardEstadisticas,
   LoginRequest,
+  PagedCategoriaProductoSchema,
   PagedPedido,
   PagedPedidoDetalle,
   PagedPedidoProveedorResumen,
@@ -28,6 +32,7 @@ import type {
   PedidoDetalleUpdate,
   PedidoUpdate,
   ProductoApiActualizarProductoBody,
+  ProductoApiCategoriasListarCategoriasProductoParams,
   ProductoApiCrearProductoBody,
   ProductoApiListarProductosPorProveedorParams,
   ProductoApiListarProductosTodosParams,
@@ -1034,6 +1039,184 @@ export const productoApiEliminarProducto = async (productoId: number, options?: 
   
   const data: productoApiEliminarProductoResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as productoApiEliminarProductoResponse
+}
+  
+
+
+/**
+ * @summary Crear Categoria Producto
+ */
+export type productoApiCategoriasCrearCategoriaProductoResponse200 = {
+  data: CategoriaProductoSchema
+  status: 200
+}
+
+export type productoApiCategoriasCrearCategoriaProductoResponseSuccess = (productoApiCategoriasCrearCategoriaProductoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type productoApiCategoriasCrearCategoriaProductoResponse = (productoApiCategoriasCrearCategoriaProductoResponseSuccess)
+
+export const getProductoApiCategoriasCrearCategoriaProductoUrl = () => {
+
+
+  
+
+  return `/api/productos/categorias/crear`
+}
+
+export const productoApiCategoriasCrearCategoriaProducto = async (categoriaProductoCreate: CategoriaProductoCreate, options?: RequestInit): Promise<productoApiCategoriasCrearCategoriaProductoResponse> => {
+  
+  const res = await fetch(getProductoApiCategoriasCrearCategoriaProductoUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      categoriaProductoCreate,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: productoApiCategoriasCrearCategoriaProductoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as productoApiCategoriasCrearCategoriaProductoResponse
+}
+  
+
+
+/**
+ * @summary Listar Categorias Producto
+ */
+export type productoApiCategoriasListarCategoriasProductoResponse200 = {
+  data: PagedCategoriaProductoSchema
+  status: 200
+}
+
+export type productoApiCategoriasListarCategoriasProductoResponseSuccess = (productoApiCategoriasListarCategoriasProductoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type productoApiCategoriasListarCategoriasProductoResponse = (productoApiCategoriasListarCategoriasProductoResponseSuccess)
+
+export const getProductoApiCategoriasListarCategoriasProductoUrl = (params?: ProductoApiCategoriasListarCategoriasProductoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/productos/categorias/listar_todas?${stringifiedParams}` : `/api/productos/categorias/listar_todas`
+}
+
+export const productoApiCategoriasListarCategoriasProducto = async (params?: ProductoApiCategoriasListarCategoriasProductoParams, options?: RequestInit): Promise<productoApiCategoriasListarCategoriasProductoResponse> => {
+  
+  const res = await fetch(getProductoApiCategoriasListarCategoriasProductoUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: productoApiCategoriasListarCategoriasProductoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as productoApiCategoriasListarCategoriasProductoResponse
+}
+  
+
+
+/**
+ * @summary Actualizar Categoria Producto
+ */
+export type productoApiCategoriasActualizarCategoriaProductoResponse200 = {
+  data: CategoriaProductoSchema
+  status: 200
+}
+
+export type productoApiCategoriasActualizarCategoriaProductoResponseSuccess = (productoApiCategoriasActualizarCategoriaProductoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type productoApiCategoriasActualizarCategoriaProductoResponse = (productoApiCategoriasActualizarCategoriaProductoResponseSuccess)
+
+export const getProductoApiCategoriasActualizarCategoriaProductoUrl = (categoriaId: number,) => {
+
+
+  
+
+  return `/api/productos/categorias/actualizar/${categoriaId}`
+}
+
+export const productoApiCategoriasActualizarCategoriaProducto = async (categoriaId: number,
+    categoriaProductoUpdate: CategoriaProductoUpdate, options?: RequestInit): Promise<productoApiCategoriasActualizarCategoriaProductoResponse> => {
+  
+  const res = await fetch(getProductoApiCategoriasActualizarCategoriaProductoUrl(categoriaId),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      categoriaProductoUpdate,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: productoApiCategoriasActualizarCategoriaProductoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as productoApiCategoriasActualizarCategoriaProductoResponse
+}
+  
+
+
+/**
+ * @summary Eliminar Categoria Producto
+ */
+export type productoApiCategoriasEliminarCategoriaProductoResponse200 = {
+  data: void
+  status: 200
+}
+
+export type productoApiCategoriasEliminarCategoriaProductoResponseSuccess = (productoApiCategoriasEliminarCategoriaProductoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type productoApiCategoriasEliminarCategoriaProductoResponse = (productoApiCategoriasEliminarCategoriaProductoResponseSuccess)
+
+export const getProductoApiCategoriasEliminarCategoriaProductoUrl = (categoriaId: number,) => {
+
+
+  
+
+  return `/api/productos/categorias/eliminar/${categoriaId}`
+}
+
+export const productoApiCategoriasEliminarCategoriaProducto = async (categoriaId: number, options?: RequestInit): Promise<productoApiCategoriasEliminarCategoriaProductoResponse> => {
+  
+  const res = await fetch(getProductoApiCategoriasEliminarCategoriaProductoUrl(categoriaId),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: productoApiCategoriasEliminarCategoriaProductoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as productoApiCategoriasEliminarCategoriaProductoResponse
 }
   
 

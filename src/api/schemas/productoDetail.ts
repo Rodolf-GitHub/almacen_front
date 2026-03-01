@@ -7,6 +7,7 @@
 
 export interface ProductoDetail {
   proveedor_nombre?: string | null;
+  categoria_nombre?: string | null;
   id?: number | null;
   fecha_creacion: string;
   fecha_actualizacion: string;
@@ -17,4 +18,5 @@ export interface ProductoDetail {
   descripcion?: string | null;
   precio_compra?: string | null;
   precio_venta?: string | null;
+  categoria?: number | null;
 }

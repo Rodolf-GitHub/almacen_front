@@ -11,4 +11,5 @@ export interface ProductoUpdate {
   descripcion?: string | null;
   precio_compra?: number | string | null;
   precio_venta?: number | string | null;
+  categoria_id?: number | null;
 }

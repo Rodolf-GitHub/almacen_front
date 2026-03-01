@@ -3,6 +3,7 @@ import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { Apple, Filter, Info, Pencil, Trash2, Image as ImageIcon } from 'lucide-vue-next'
 import {
+  productoApiCategoriasListarCategoriasProducto,
   productoApiActualizarProducto,
   productoApiCrearProducto,
   productoApiEliminarProducto,
@@ -13,6 +14,7 @@ import {
 } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import type {
+  CategoriaProductoSchema,
   ProductoApiActualizarProductoBody,
   ProductoApiCrearProductoBody,
   ProductoDetail,
@@ -29,6 +31,7 @@ import TitleCard from '../../../components/TitleCard.vue'
 const openCreateModal = ref(false)
 const productos = ref<ProductoList[]>([])
 const proveedores = ref<Proveedor[]>([])
+const categorias = ref<CategoriaProductoSchema[]>([])
 const selectedProducto = ref<ProductoDetail | null>(null)
 const infoProducto = ref<ProductoDetail | null>(null)
 const openInfoModal = ref(false)
@@ -82,6 +85,19 @@ const loadProveedores = async () => {
     proveedores.value = sanitizarProveedores(response.data.items ?? [])
   } catch (error) {
     errorMessage.value = 'No se pudieron cargar los proveedores.'
+    console.error(error)
+  }
+}
+
+const loadCategorias = async () => {
+  try {
+    const response = await productoApiCategoriasListarCategoriasProducto(
+      { limit: 1000, offset: 0 },
+      buildRequestOptions(),
+    )
+    categorias.value = response.data.items ?? []
+  } catch (error) {
+    errorMessage.value = 'No se pudieron cargar las categorías de productos.'
     console.error(error)
   }
 }
@@ -253,6 +269,7 @@ const formatFechaHora = (fecha?: string | null) => {
 
 onMounted(async () => {
   applyProveedorFromQuery()
+  await loadCategorias()
   await loadProveedores()
   await loadProductos()
 })
@@ -364,6 +381,13 @@ watch(
                   Proveedor: {{ producto.proveedor_nombre || `#${producto.proveedor}` }}
                 </p>
                 <p class="text-xs text-[var(--text-200)]">
+                  Categoría:
+                  {{
+                    producto.categoria_nombre ||
+                    (producto.categoria ? `#${producto.categoria}` : '-')
+                  }}
+                </p>
+                <p class="text-xs text-[var(--text-200)]">
                   Actualizado: {{ formatFechaHora(producto.fecha_actualizacion) }}
                 </p>
               </div>
@@ -398,6 +422,9 @@ watch(
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
+            <span class="rounded-full bg-violet-100 px-3 py-1 text-xs font-medium text-violet-700">
+              Categoría: {{ producto.categoria_nombre || '-' }}
+            </span>
             <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
               Compra: {{ formatCurrency(producto.precio_compra) }}
             </span>
@@ -423,6 +450,7 @@ watch(
     <CreateProductoModal
       :open="openCreateModal"
       :proveedores="proveedores"
+      :categorias="categorias"
       :producto="selectedProducto"
       @close="openCreateModal = false"
       @created="handleCreated"
@@ -458,6 +486,13 @@ watch(
         <p>
           <span class="font-medium text-sky-700">Proveedor:</span>
           {{ infoProducto.proveedor_nombre || `#${infoProducto.proveedor}` }}
+        </p>
+        <p>
+          <span class="font-medium text-sky-700">Categoría:</span>
+          {{
+            infoProducto.categoria_nombre ||
+            (infoProducto.categoria ? `#${infoProducto.categoria}` : '-')
+          }}
         </p>
         <p>
           <span class="font-medium text-sky-700">Descripción:</span>

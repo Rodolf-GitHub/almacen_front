@@ -5,6 +5,7 @@ import PedidoProveedorProductosPage from '../apps/pedidos/pages/PedidoProveedorP
 import PedidoProveedoresPage from '../apps/pedidos/pages/PedidoProveedoresPage.vue'
 import PedidosPage from '../apps/pedidos/pages/PedidosPage.vue'
 import PedidosRecibidosPage from '../apps/pedidos/pages/PedidosRecibidosPage.vue'
+import CategoriasProductosPage from '../apps/productos/pages/CategoriasProductosPage.vue'
 import ProductosPage from '../apps/productos/pages/ProductosPage.vue'
 import ProveedoresPage from '../apps/proveedores/pages/ProveedoresPage.vue'
 import SucursalesPage from '../apps/sucursales/pages/SucursalesPage.vue'
@@ -49,6 +50,12 @@ const router = createRouter({
       path: '/productos',
       name: 'productos',
       component: ProductosPage,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/productos/categorias',
+      name: 'productos-categorias',
+      component: CategoriasProductosPage,
       meta: { requiresAuth: true },
     },
     {

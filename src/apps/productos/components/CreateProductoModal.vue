@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { Building2, DollarSign, FileText, Image as ImageIcon, Tag } from 'lucide-vue-next'
 import BaseModal from '../../../components/BaseModal.vue'
 import type {
+  CategoriaProductoSchema,
   ProductoApiActualizarProductoBody,
   ProductoApiCrearProductoBody,
   ProductoCreate,
@@ -14,6 +15,7 @@ import type {
 const props = defineProps<{
   open: boolean
   proveedores: Proveedor[]
+  categorias: CategoriaProductoSchema[]
   producto?: ProductoDetail | null
 }>()
 const emit = defineEmits<{
@@ -27,6 +29,7 @@ const proveedorId = ref<number | null>(null)
 const descripcion = ref('')
 const precioCompra = ref<number | null>(null)
 const precioVenta = ref<number | null>(null)
+const categoriaId = ref<number | null>(null)
 const imagen = ref<File | undefined>(undefined)
 const imagenPreview = ref<string | null>(null)
 
@@ -57,6 +60,7 @@ const fillFromProducto = (producto: ProductoDetail) => {
   descripcion.value = producto.descripcion || ''
   precioCompra.value = parsePrice(producto.precio_compra)
   precioVenta.value = parsePrice(producto.precio_venta)
+  categoriaId.value = producto.categoria ?? null
   imagen.value = undefined
   imagenPreview.value = resolveImageUrl(producto.imagen)
 }
@@ -67,6 +71,7 @@ const fillCreateDefaults = () => {
   descripcion.value = ''
   precioCompra.value = null
   precioVenta.value = null
+  categoriaId.value = null
   imagen.value = undefined
   imagenPreview.value = null
 }
@@ -110,6 +115,7 @@ const submit = () => {
       descripcion: descripcion.value || null,
       precio_compra: precioCompra.value,
       precio_venta: precioVenta.value,
+      categoria_id: categoriaId.value,
     }
 
     emit('updated', {
@@ -129,6 +135,7 @@ const submit = () => {
     descripcion: descripcion.value || null,
     precio_compra: precioCompra.value,
     precio_venta: precioVenta.value,
+    categoria_id: categoriaId.value,
   }
 
   emit('created', {
@@ -201,6 +208,23 @@ const submit = () => {
           <option :value="null" disabled>Selecciona un proveedor</option>
           <option v-for="proveedor in props.proveedores" :key="proveedor.id" :value="proveedor.id">
             {{ proveedor.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label class="mb-1 flex items-center gap-2 text-sm text-sky-800">
+          <Tag :size="16" />
+          Categoría
+          <span class="text-xs text-sky-500">(no obligatorio)</span>
+        </label>
+        <select
+          v-model.number="categoriaId"
+          class="w-full rounded-md border border-sky-200 bg-sky-50/40 px-3 py-2 outline-none focus:border-sky-400"
+        >
+          <option :value="null">Sin categoría</option>
+          <option v-for="categoria in props.categorias" :key="categoria.id" :value="categoria.id">
+            {{ categoria.nombre }}
           </option>
         </select>
       </div>

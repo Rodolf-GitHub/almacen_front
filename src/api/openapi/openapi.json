@@ -922,6 +922,158 @@
         ]
       }
     },
+    "/api/productos/categorias/crear": {
+      "post": {
+        "operationId": "producto_api_categorias_crear_categoria_producto",
+        "summary": "Crear Categoria Producto",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoriaProductoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Categorias Producto"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoriaProductoCreate"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/productos/categorias/listar_todas": {
+      "get": {
+        "operationId": "producto_api_categorias_listar_categorias_producto",
+        "summary": "Listar Categorias Producto",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "busqueda",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Busqueda"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedCategoriaProductoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Categorias Producto"]
+      }
+    },
+    "/api/productos/categorias/actualizar/{categoria_id}": {
+      "patch": {
+        "operationId": "producto_api_categorias_actualizar_categoria_producto",
+        "summary": "Actualizar Categoria Producto",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "categoria_id",
+            "schema": {
+              "title": "Categoria Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoriaProductoSchema"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Categorias Producto"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategoriaProductoUpdate"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/productos/categorias/eliminar/{categoria_id}": {
+      "delete": {
+        "operationId": "producto_api_categorias_eliminar_categoria_producto",
+        "summary": "Eliminar Categoria Producto",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "categoria_id",
+            "schema": {
+              "title": "Categoria Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "tags": ["Categorias Producto"]
+      }
+    },
     "/api/pedidos/listar_todos": {
       "get": {
         "operationId": "pedido_api_listar_pedidos",
@@ -2032,6 +2184,17 @@
             ],
             "title": "Proveedor Nombre"
           },
+          "categoria_nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria Nombre"
+          },
           "id": {
             "anyOf": [
               {
@@ -2096,6 +2259,17 @@
               }
             ],
             "title": "Precio Venta"
+          },
+          "categoria": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria"
           }
         },
         "required": ["fecha_creacion", "fecha_actualizacion", "proveedor", "nombre"],
@@ -2114,6 +2288,17 @@
               }
             ],
             "title": "Proveedor Nombre"
+          },
+          "categoria_nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria Nombre"
           },
           "id": {
             "anyOf": [
@@ -2190,6 +2375,17 @@
               }
             ],
             "title": "Precio Venta"
+          },
+          "categoria": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria"
           }
         },
         "required": ["fecha_creacion", "fecha_actualizacion", "proveedor", "nombre"],
@@ -2246,6 +2442,17 @@
               }
             ],
             "title": "Precio Venta"
+          },
+          "categoria_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria Id"
           }
         },
         "required": ["proveedor_id", "nombre"],
@@ -2316,9 +2523,99 @@
               }
             ],
             "title": "Precio Venta"
+          },
+          "categoria_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria Id"
           }
         },
         "title": "ProductoUpdate",
+        "type": "object"
+      },
+      "CategoriaProductoSchema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "ID"
+          },
+          "fecha_creacion": {
+            "format": "date-time",
+            "title": "Fecha Creacion",
+            "type": "string"
+          },
+          "fecha_actualizacion": {
+            "format": "date-time",
+            "title": "Fecha Actualizacion",
+            "type": "string"
+          },
+          "nombre": {
+            "maxLength": 100,
+            "title": "Nombre",
+            "type": "string"
+          }
+        },
+        "required": ["fecha_creacion", "fecha_actualizacion", "nombre"],
+        "title": "CategoriaProductoSchema",
+        "type": "object"
+      },
+      "CategoriaProductoCreate": {
+        "properties": {
+          "nombre": {
+            "title": "Nombre",
+            "type": "string"
+          }
+        },
+        "required": ["nombre"],
+        "title": "CategoriaProductoCreate",
+        "type": "object"
+      },
+      "PagedCategoriaProductoSchema": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CategoriaProductoSchema"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": ["items", "count"],
+        "title": "PagedCategoriaProductoSchema",
+        "type": "object"
+      },
+      "CategoriaProductoUpdate": {
+        "properties": {
+          "nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nombre"
+          }
+        },
+        "title": "CategoriaProductoUpdate",
         "type": "object"
       },
       "PagedPedido": {
