@@ -66,21 +66,21 @@ onBeforeUnmount(() => {
 <template>
   <form class="w-full" @submit.prevent="handleSubmit">
     <div
-      class="flex w-full items-center gap-2 rounded-xl border border-sky-300 bg-gradient-to-r from-white to-sky-50 px-3 py-2 shadow-sm focus-within:border-sky-500"
+      class="flex w-full items-center gap-3 rounded-xl border-2 border-sky-300 bg-gradient-to-r from-white to-sky-50 px-4 py-3 shadow-md focus-within:border-sky-500"
     >
-      <Search :size="18" class="shrink-0 text-sky-600" />
+      <Search :size="20" class="shrink-0 text-sky-600" />
       <input
         :value="modelValue"
         :placeholder="placeholder"
         :disabled="disabled"
-        class="w-full bg-transparent text-sm text-sky-900 outline-none placeholder:text-sky-500 disabled:opacity-70"
+        class="w-full bg-transparent text-base font-medium text-sky-900 outline-none placeholder:text-sky-500 disabled:opacity-70"
         @input="onInput"
       />
       <button
         v-if="showActions"
         type="submit"
         :disabled="disabled"
-        class="rounded-md border border-sky-200 bg-white px-3 py-1.5 text-xs text-sky-700 disabled:opacity-70"
+        class="rounded-md border border-sky-200 bg-white px-3 py-2 text-sm font-medium text-sky-700 disabled:opacity-70"
       >
         {{ buttonLabel }}
       </button>
@@ -88,7 +88,7 @@ onBeforeUnmount(() => {
         v-if="showActions && modelValue"
         type="button"
         :disabled="disabled"
-        class="rounded-md border border-sky-200 bg-white px-3 py-1.5 text-xs text-sky-700 disabled:opacity-70"
+        class="rounded-md border border-sky-200 bg-white px-3 py-2 text-sm font-medium text-sky-700 disabled:opacity-70"
         @click="clear"
       >
         Limpiar

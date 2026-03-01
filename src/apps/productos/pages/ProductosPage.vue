@@ -1,16 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import {
-  Apple,
-  Filter,
-  Info,
-  Pencil,
-  Plus,
-  Search,
-  Trash2,
-  Image as ImageIcon,
-} from 'lucide-vue-next'
+import { Apple, Filter, Info, Pencil, Plus, Trash2, Image as ImageIcon } from 'lucide-vue-next'
 import {
   productoApiActualizarProducto,
   productoApiCrearProducto,
@@ -31,6 +22,7 @@ import type {
 import CreateProductoModal from '../components/CreateProductoModal.vue'
 import BaseModal from '../../../components/BaseModal.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
+import SearchBar from '../../../components/SearchBar.vue'
 
 const openCreateModal = ref(false)
 const productos = ref<ProductoList[]>([])
@@ -132,11 +124,6 @@ const handleProviderChange = async () => {
 }
 
 const handleSearch = async () => {
-  currentPage.value = 1
-  await loadProductos()
-}
-
-const handleSearchInput = async () => {
   currentPage.value = 1
   await loadProductos()
 }
@@ -298,12 +285,17 @@ watch(
       </button>
     </header>
 
-    <div class="flex items-center gap-2 rounded-lg border border-sky-200 bg-sky-50 p-2">
-      <Filter :size="16" class="text-sky-700" />
+    <div
+      class="w-full rounded-xl border-2 border-sky-200 bg-gradient-to-r from-sky-50 to-blue-50 p-4"
+    >
+      <div class="mb-2 flex items-center gap-2 text-sky-800">
+        <Filter :size="20" class="text-sky-700" />
+        <p class="text-sm font-semibold">Filtrar por proveedor</p>
+      </div>
       <select
         v-model.number="proveedorFiltroId"
         @change="handleProviderChange"
-        class="w-52 rounded-md border border-sky-200 bg-white px-3 py-2 text-sm outline-none focus:border-sky-400"
+        class="h-12 w-full rounded-lg border-2 border-sky-300 bg-white px-4 text-base font-medium text-sky-900 outline-none focus:border-sky-500"
       >
         <option :value="null">Todos los proveedores</option>
         <option
@@ -316,20 +308,15 @@ watch(
       </select>
     </div>
 
-    <div>
-      <div class="relative">
-        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-          <Search :size="18" class="text-[var(--text-200)]" />
-        </div>
-        <input
-          v-model="busqueda"
-          @input="handleSearchInput"
-          type="text"
-          placeholder="Buscar productos..."
-          class="block w-full rounded-lg border border-[var(--bg-300)] bg-white py-2.5 pl-10 pr-3 text-[var(--text-100)] placeholder-[var(--text-200)] focus:border-[var(--primary-100)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-100)] sm:text-sm"
-        />
-      </div>
-    </div>
+    <SearchBar
+      v-model="busqueda"
+      class="w-full"
+      placeholder="Buscar productos..."
+      :show-actions="false"
+      :auto-search-delay="500"
+      @search="handleSearch"
+      @clear="handleSearch"
+    />
 
     <div v-if="isLoading && productos.length === 0" class="py-12 text-center">
       <div
