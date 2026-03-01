@@ -16,6 +16,7 @@ import {
   productoApiCrearProducto,
   productoApiEliminarProducto,
   productoApiListarProductosPorProveedor,
+  productoApiListarProductosTodos,
   productoApiObtenerProducto,
   proveedorApiListarProveedores,
 } from '../../../api/generated'
@@ -54,9 +55,7 @@ const parseProveedorQueryId = (value: unknown): number | null => {
 
 const applyProveedorFromQuery = () => {
   const proveedorIdFromQuery = parseProveedorQueryId(route.query.proveedor)
-  if (proveedorIdFromQuery != null) {
-    proveedorFiltroId.value = proveedorIdFromQuery
-  }
+  proveedorFiltroId.value = proveedorIdFromQuery
 }
 
 const sanitizarProveedores = (items: unknown[]): Proveedor[] => {
@@ -87,11 +86,6 @@ const loadProveedores = async () => {
   try {
     const response = await proveedorApiListarProveedores(undefined, buildRequestOptions())
     proveedores.value = sanitizarProveedores(response.data.items ?? [])
-
-    if (!proveedorFiltroId.value) {
-      proveedorFiltroId.value =
-        proveedores.value.find((proveedor) => proveedor.id != null)?.id ?? null
-    }
   } catch (error) {
     errorMessage.value = 'No se pudieron cargar los proveedores.'
     console.error(error)
@@ -99,25 +93,24 @@ const loadProveedores = async () => {
 }
 
 const loadProductos = async () => {
-  if (!proveedorFiltroId.value) {
-    productos.value = []
-    totalItems.value = 0
-    return
-  }
-
   isLoading.value = true
   errorMessage.value = ''
 
   try {
-    const response = await productoApiListarProductosPorProveedor(
-      proveedorFiltroId.value,
-      {
-        busqueda: busqueda.value || undefined,
-        limit: pageSize,
-        offset: (currentPage.value - 1) * pageSize,
-      },
-      buildRequestOptions(),
-    )
+    const params = {
+      busqueda: busqueda.value || undefined,
+      limit: pageSize,
+      offset: (currentPage.value - 1) * pageSize,
+    }
+
+    const response = proveedorFiltroId.value
+      ? await productoApiListarProductosPorProveedor(
+          proveedorFiltroId.value,
+          params,
+          buildRequestOptions(),
+        )
+      : await productoApiListarProductosTodos(params, buildRequestOptions())
+
     productos.value = response.data.items ?? []
     totalItems.value = response.data.count ?? 0
   } catch (error) {
@@ -312,7 +305,7 @@ watch(
         @change="handleProviderChange"
         class="w-52 rounded-md border border-sky-200 bg-white px-3 py-2 text-sm outline-none focus:border-sky-400"
       >
-        <option :value="null" disabled>Proveedor</option>
+        <option :value="null">Todos los proveedores</option>
         <option
           v-for="proveedor in proveedores"
           :key="proveedor.id ?? proveedor.nombre"
