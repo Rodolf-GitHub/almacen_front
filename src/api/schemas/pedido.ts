@@ -8,6 +8,7 @@
 export interface Pedido {
   creado_por_nombre?: string | null;
   usuario_destino_nombre?: string | null;
+  cantidad_productos?: number;
   id?: number | null;
   fecha_creacion: string;
   fecha_actualizacion: string;

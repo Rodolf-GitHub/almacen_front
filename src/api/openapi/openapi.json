@@ -1027,6 +1027,85 @@
         ]
       }
     },
+    "/api/pedidos/copiar_pedido/completo/{pedido_id}": {
+      "get": {
+        "operationId": "pedido_api_copiar_pedido_completo",
+        "summary": "Copiar Pedido Completo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pedido_id",
+            "schema": {
+              "title": "Pedido Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoCopiaResumen"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
+    "/api/pedidos/copiar_pedido/por_proveedor/{pedido_id}/{proveedor_id}": {
+      "get": {
+        "operationId": "pedido_api_copiar_pedido_por_proveedor",
+        "summary": "Copiar Pedido Por Proveedor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pedido_id",
+            "schema": {
+              "title": "Pedido Id",
+              "type": "integer"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "proveedor_id",
+            "schema": {
+              "title": "Proveedor Id",
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoCopiaResumen"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Pedidos"],
+        "security": [
+          {
+            "AuthBearer": []
+          }
+        ]
+      }
+    },
     "/api/pedidos/crear": {
       "post": {
         "operationId": "pedido_api_crear_pedido",
@@ -2127,6 +2206,11 @@
             ],
             "title": "Usuario Destino Nombre"
           },
+          "cantidad_productos": {
+            "default": 0,
+            "title": "Cantidad Productos",
+            "type": "integer"
+          },
           "id": {
             "anyOf": [
               {
@@ -2172,6 +2256,117 @@
         },
         "required": ["fecha_creacion", "fecha_actualizacion", "creado_por"],
         "title": "Pedido",
+        "type": "object"
+      },
+      "PedidoCopiaItem": {
+        "properties": {
+          "producto_id": {
+            "title": "Producto Id",
+            "type": "integer"
+          },
+          "producto_nombre": {
+            "title": "Producto Nombre",
+            "type": "string"
+          },
+          "cantidad": {
+            "title": "Cantidad",
+            "type": "integer"
+          },
+          "fecha_creacion": {
+            "format": "date-time",
+            "title": "Fecha Creacion",
+            "type": "string"
+          }
+        },
+        "required": ["producto_id", "producto_nombre", "cantidad", "fecha_creacion"],
+        "title": "PedidoCopiaItem",
+        "type": "object"
+      },
+      "PedidoCopiaResumen": {
+        "properties": {
+          "pedido_id": {
+            "title": "Pedido Id",
+            "type": "integer"
+          },
+          "estado": {
+            "title": "Estado",
+            "type": "string"
+          },
+          "creado_por_nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creado Por Nombre"
+          },
+          "usuario_destino_nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usuario Destino Nombre"
+          },
+          "proveedor_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proveedor Id"
+          },
+          "proveedor_nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proveedor Nombre"
+          },
+          "fecha_creacion": {
+            "format": "date-time",
+            "title": "Fecha Creacion",
+            "type": "string"
+          },
+          "fecha_actualizacion": {
+            "format": "date-time",
+            "title": "Fecha Actualizacion",
+            "type": "string"
+          },
+          "cantidad_total_productos": {
+            "title": "Cantidad Total Productos",
+            "type": "integer"
+          },
+          "productos": {
+            "items": {
+              "$ref": "#/components/schemas/PedidoCopiaItem"
+            },
+            "title": "Productos",
+            "type": "array"
+          }
+        },
+        "required": [
+          "pedido_id",
+          "estado",
+          "fecha_creacion",
+          "fecha_actualizacion",
+          "cantidad_total_productos",
+          "productos"
+        ],
+        "title": "PedidoCopiaResumen",
         "type": "object"
       },
       "PedidoCreate": {

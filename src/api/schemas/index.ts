@@ -21,6 +21,8 @@ export * from './pedidoApiListarPedidosParams';
 export * from './pedidoApiListarProductosPedidoPorProveedorParams';
 export * from './pedidoCambiarEstado';
 export * from './pedidoCambiarEstadoEstado';
+export * from './pedidoCopiaItem';
+export * from './pedidoCopiaResumen';
 export * from './pedidoCreate';
 export * from './pedidoCreateEstado';
 export * from './pedidoDetalle';

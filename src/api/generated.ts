@@ -19,6 +19,7 @@ import type {
   PedidoApiListarPedidosParams,
   PedidoApiListarProductosPedidoPorProveedorParams,
   PedidoCambiarEstado,
+  PedidoCopiaResumen,
   PedidoCreate,
   PedidoDetalle,
   PedidoDetalleCreate,
@@ -1122,6 +1123,92 @@ export const pedidoApiObtenerPedido = async (pedidoId: number, options?: Request
   
   const data: pedidoApiObtenerPedidoResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as pedidoApiObtenerPedidoResponse
+}
+  
+
+
+/**
+ * @summary Copiar Pedido Completo
+ */
+export type pedidoApiCopiarPedidoCompletoResponse200 = {
+  data: PedidoCopiaResumen
+  status: 200
+}
+
+export type pedidoApiCopiarPedidoCompletoResponseSuccess = (pedidoApiCopiarPedidoCompletoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiCopiarPedidoCompletoResponse = (pedidoApiCopiarPedidoCompletoResponseSuccess)
+
+export const getPedidoApiCopiarPedidoCompletoUrl = (pedidoId: number,) => {
+
+
+  
+
+  return `/api/pedidos/copiar_pedido/completo/${pedidoId}`
+}
+
+export const pedidoApiCopiarPedidoCompleto = async (pedidoId: number, options?: RequestInit): Promise<pedidoApiCopiarPedidoCompletoResponse> => {
+  
+  const res = await fetch(getPedidoApiCopiarPedidoCompletoUrl(pedidoId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiCopiarPedidoCompletoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiCopiarPedidoCompletoResponse
+}
+  
+
+
+/**
+ * @summary Copiar Pedido Por Proveedor
+ */
+export type pedidoApiCopiarPedidoPorProveedorResponse200 = {
+  data: PedidoCopiaResumen
+  status: 200
+}
+
+export type pedidoApiCopiarPedidoPorProveedorResponseSuccess = (pedidoApiCopiarPedidoPorProveedorResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiCopiarPedidoPorProveedorResponse = (pedidoApiCopiarPedidoPorProveedorResponseSuccess)
+
+export const getPedidoApiCopiarPedidoPorProveedorUrl = (pedidoId: number,
+    proveedorId: number,) => {
+
+
+  
+
+  return `/api/pedidos/copiar_pedido/por_proveedor/${pedidoId}/${proveedorId}`
+}
+
+export const pedidoApiCopiarPedidoPorProveedor = async (pedidoId: number,
+    proveedorId: number, options?: RequestInit): Promise<pedidoApiCopiarPedidoPorProveedorResponse> => {
+  
+  const res = await fetch(getPedidoApiCopiarPedidoPorProveedorUrl(pedidoId,proveedorId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiCopiarPedidoPorProveedorResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiCopiarPedidoPorProveedorResponse
 }
   
 
