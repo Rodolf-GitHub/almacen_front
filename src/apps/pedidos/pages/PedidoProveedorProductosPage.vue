@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeft, Pencil, Trash2 } from 'lucide-vue-next'
+import { ArrowLeft, Image as ImageIcon, Pencil, Trash2 } from 'lucide-vue-next'
 import {
   pedidoApiActualizarProductoPedido,
   pedidoApiCrearProductoPedido,
@@ -148,6 +148,19 @@ const goNextPage = async () => {
   await loadDetalles()
 }
 
+const resolveImageUrl = (image?: string | null) => {
+  if (!image) return null
+  if (image.startsWith('http://') || image.startsWith('https://')) return image
+
+  const cleanPath = image.startsWith('/') ? image : `/${image}`
+  const backendBaseUrl =
+    (import.meta.env.VITE_MEDIA_BASE_URL as string | undefined) ||
+    (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
+    'https://almacen.api.rodolfogroero.com'
+
+  return new URL(cleanPath, backendBaseUrl).toString()
+}
+
 onMounted(async () => {
   await loadDetalles()
 })
@@ -197,7 +210,20 @@ onMounted(async () => {
         class="odd:bg-white even:bg-sky-50/35 hover:bg-sky-100/40"
       >
         <td class="px-2 py-2 text-sky-900 sm:px-3">
-          {{ detalle.producto_nombre || `#${detalle.producto}` }}
+          <div class="flex items-center gap-2">
+            <div
+              class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border border-sky-200 bg-white"
+            >
+              <img
+                v-if="resolveImageUrl(detalle.producto_imagen)"
+                :src="resolveImageUrl(detalle.producto_imagen) || ''"
+                :alt="detalle.producto_nombre || `#${detalle.producto}`"
+                class="h-full w-full object-cover"
+              />
+              <ImageIcon v-else :size="16" class="text-sky-400" />
+            </div>
+            <span>{{ detalle.producto_nombre || `#${detalle.producto}` }}</span>
+          </div>
         </td>
         <td class="px-2 py-2 text-sky-900 sm:px-3">{{ detalle.cantidad }}</td>
         <td class="px-2 py-2 sm:px-3">
