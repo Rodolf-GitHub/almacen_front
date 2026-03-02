@@ -1,13 +1,29 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { BarChart3, Calendar, Package, Store, UserCircle2, Warehouse } from 'lucide-vue-next'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import {
+  BarChart3,
+  Calendar,
+  Download,
+  Package,
+  Store,
+  UserCircle2,
+  Warehouse,
+} from 'lucide-vue-next'
 import { dashboardApiObtenerEstadisticas } from '../api/generated'
 import { buildRequestOptions } from '../api/requestOptions'
 import type { DashboardEstadisticas } from '../api/schemas'
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
+}
+
 const estadisticas = ref<DashboardEstadisticas | null>(null)
 const isLoading = ref(false)
 const errorMessage = ref('')
+const deferredPrompt = ref<BeforeInstallPromptEvent | null>(null)
+const canInstallApp = ref(false)
+const installMessage = ref('')
 
 const formatFechaHora = (value?: string | null) => {
   if (!value) return '—'
@@ -108,8 +124,51 @@ const loadDashboard = async () => {
   }
 }
 
+const isRunningStandalone = () => {
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as Navigator & { standalone?: boolean }).standalone === true
+  )
+}
+
+const handleBeforeInstallPrompt = (event: Event) => {
+  const installEvent = event as BeforeInstallPromptEvent
+  installEvent.preventDefault()
+  deferredPrompt.value = installEvent
+  canInstallApp.value = !isRunningStandalone()
+}
+
+const handleAppInstalled = () => {
+  canInstallApp.value = false
+  deferredPrompt.value = null
+  installMessage.value = 'Aplicación instalada correctamente.'
+}
+
+const installApp = async () => {
+  if (!deferredPrompt.value) return
+
+  installMessage.value = ''
+  await deferredPrompt.value.prompt()
+  const choiceResult = await deferredPrompt.value.userChoice
+
+  if (choiceResult.outcome === 'accepted') {
+    installMessage.value = 'Instalación en proceso...'
+  }
+
+  deferredPrompt.value = null
+  canInstallApp.value = false
+}
+
 onMounted(async () => {
+  canInstallApp.value = !isRunningStandalone()
+  window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+  window.addEventListener('appinstalled', handleAppInstalled)
   await loadDashboard()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+  window.removeEventListener('appinstalled', handleAppInstalled)
 })
 </script>
 
@@ -126,6 +185,19 @@ onMounted(async () => {
         Bienvenido {{ estadisticas?.usuario_autenticado_nombre || 'Usuario' }}
       </h1>
       <p class="mt-1 text-sm text-white/90">Panel de control operativo del almacén</p>
+
+      <div class="mt-3 flex flex-wrap items-center gap-2">
+        <button
+          v-if="canInstallApp"
+          type="button"
+          class="inline-flex items-center gap-2 rounded-md border border-white/30 bg-white/15 px-3 py-2 text-sm font-medium text-white hover:bg-white/25"
+          @click="installApp"
+        >
+          <Download :size="16" />
+          Instalar aplicación
+        </button>
+        <p v-if="installMessage" class="text-xs text-white/90">{{ installMessage }}</p>
+      </div>
     </header>
 
     <div v-if="isLoading" class="rounded-lg border border-[var(--bg-300)] bg-white p-4 text-sm">
