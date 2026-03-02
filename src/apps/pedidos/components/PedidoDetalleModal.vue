@@ -94,7 +94,7 @@ const resolveImageUrl = (image?: string | null) => {
   const backendBaseUrl =
     (import.meta.env.VITE_MEDIA_BASE_URL as string | undefined) ||
     (import.meta.env.VITE_API_BASE_URL as string | undefined) ||
-    'http://127.0.0.1:8000'
+    'https://almacen.api.rodolfogroero.com'
 
   return new URL(cleanPath, backendBaseUrl).toString()
 }
