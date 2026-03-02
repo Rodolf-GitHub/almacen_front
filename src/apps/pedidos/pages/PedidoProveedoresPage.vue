@@ -85,6 +85,17 @@ const goToProveedorProductos = async (proveedor: PedidoProveedorResumen) => {
   })
 }
 
+const goToPedidoCompleto = async () => {
+  await router.push({
+    name: 'pedido-proveedor-productos',
+    params: {
+      pedidoId,
+      proveedorId: 0,
+    },
+    query: { modo: 'total', proveedorNombre: 'Pedido completo' },
+  })
+}
+
 const formatFechaHora = (fecha?: string | null) => {
   if (!fecha) return '-'
   const date = new Date(fecha)
@@ -206,14 +217,24 @@ onMounted(async () => {
   <section class="space-y-4">
     <header class="space-y-3">
       <TitleCard title="Proveedores del pedido" :description="`Pedido #${pedidoId}`" />
-      <button
-        type="button"
-        class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-700 hover:bg-sky-50 sm:w-auto"
-        @click="router.back()"
-      >
-        <ArrowLeft :size="16" />
-        Volver
-      </button>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+        <button
+          type="button"
+          class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm text-indigo-700 hover:bg-indigo-100 sm:w-auto"
+          @click="goToPedidoCompleto"
+        >
+          <Package :size="16" />
+          Ver pedido completo
+        </button>
+        <button
+          type="button"
+          class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-700 hover:bg-sky-50 sm:w-auto"
+          @click="router.back()"
+        >
+          <ArrowLeft :size="16" />
+          Volver
+        </button>
+      </div>
     </header>
 
     <div

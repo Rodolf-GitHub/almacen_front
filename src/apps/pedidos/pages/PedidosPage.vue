@@ -94,7 +94,16 @@ const goNextPage = async () => {
   await loadPedidos()
 }
 
-const goToPedidoProveedores = async (pedido: Pedido) => {
+const goToPedidoCompleto = async (pedido: Pedido) => {
+  if (!pedido.id) return
+  await router.push({
+    name: 'pedido-proveedor-productos',
+    params: { pedidoId: pedido.id, proveedorId: 0 },
+    query: { modo: 'total', proveedorNombre: 'Pedido completo' },
+  })
+}
+
+const goToResumenPorProveedor = async (pedido: Pedido) => {
   if (!pedido.id) return
   await router.push({ name: 'pedido-proveedores', params: { pedidoId: pedido.id } })
 }
@@ -504,11 +513,20 @@ onMounted(async () => {
                 <button
                   type="button"
                   class="inline-flex items-center gap-1 rounded-md border border-indigo-200 bg-indigo-50 px-2 py-1.5 text-indigo-700 hover:bg-indigo-100"
-                  title="Ver proveedores"
-                  @click="goToPedidoProveedores(pedido)"
+                  title="Ver pedido"
+                  @click="goToPedidoCompleto(pedido)"
                 >
                   <Package :size="16" />
-                  Ver proveedores
+                  Ver pedido
+                </button>
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-1 rounded-md border border-violet-200 bg-violet-50 px-2 py-1.5 text-violet-700 hover:bg-violet-100"
+                  title="Ver resumen por proveedor"
+                  @click="goToResumenPorProveedor(pedido)"
+                >
+                  <Store :size="16" />
+                  Resumen proveedor
                 </button>
                 <button
                   type="button"

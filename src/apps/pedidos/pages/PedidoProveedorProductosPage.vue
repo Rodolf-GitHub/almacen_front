@@ -6,10 +6,17 @@ import {
   pedidoApiActualizarProductoPedido,
   pedidoApiCrearProductoPedido,
   pedidoApiEliminarProductoPedido,
+  pedidoApiListarProductosPedido,
   pedidoApiListarProductosPedidoPorProveedor,
+  pedidoApiListarProveedoresResumenPorPedido,
 } from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
-import type { PedidoDetalle, PedidoDetalleCreate, PedidoDetalleUpdate } from '../../../api/schemas'
+import type {
+  PedidoDetalle,
+  PedidoDetalleCreate,
+  PedidoDetalleUpdate,
+  PedidoProveedorResumen,
+} from '../../../api/schemas'
 import CreateButton from '../../../components/CreateButton.vue'
 import PaginationBar from '../../../components/PaginationBar.vue'
 import SearchBar from '../../../components/SearchBar.vue'
@@ -21,10 +28,36 @@ const route = useRoute()
 const router = useRouter()
 
 const pedidoId = Number.parseInt(route.params.pedidoId as string, 10)
-const proveedorId = Number.parseInt(route.params.proveedorId as string, 10)
-const proveedorNombre = computed(
-  () => (route.query.proveedorNombre as string | undefined) || `Proveedor #${proveedorId}`,
+const proveedorIdFromRoute = Number.parseInt(route.params.proveedorId as string, 10)
+
+const listMode = ref<'proveedor' | 'total'>(
+  route.query.modo === 'total' ||
+    !Number.isFinite(proveedorIdFromRoute) ||
+    proveedorIdFromRoute <= 0
+    ? 'total'
+    : 'proveedor',
 )
+const selectedProveedorId = ref<number | null>(
+  Number.isFinite(proveedorIdFromRoute) && proveedorIdFromRoute > 0 ? proveedorIdFromRoute : null,
+)
+const proveedoresPedido = ref<PedidoProveedorResumen[]>([])
+
+const proveedorNombre = computed(() => {
+  if (listMode.value === 'total') return 'Pedido completo'
+
+  const proveedor = proveedoresPedido.value.find(
+    (item) => item.proveedor_id === selectedProveedorId.value,
+  )
+
+  if (proveedor?.proveedor_nombre) return proveedor.proveedor_nombre
+
+  const proveedorNombreQuery = route.query.proveedorNombre as string | undefined
+  if (proveedorNombreQuery) return proveedorNombreQuery
+
+  return selectedProveedorId.value
+    ? `Proveedor #${selectedProveedorId.value}`
+    : 'Proveedor no seleccionado'
+})
 
 const detalles = ref<PedidoDetalle[]>([])
 const isLoading = ref(false)
@@ -36,15 +69,45 @@ const pageSize = 100
 
 const openDetalleModal = ref(false)
 const selectedDetalle = ref<PedidoDetalle | null>(null)
+const canAddProduct = computed(() => listMode.value === 'total' || !!selectedProveedorId.value)
+
+const loadProveedoresPedido = async () => {
+  try {
+    const response = await pedidoApiListarProveedoresResumenPorPedido(
+      pedidoId,
+      {
+        limit: 1000,
+        offset: 0,
+      },
+      buildRequestOptions(),
+    )
+    proveedoresPedido.value = response.data.items ?? []
+
+    if (
+      listMode.value === 'proveedor' &&
+      !selectedProveedorId.value &&
+      proveedoresPedido.value.length > 0
+    ) {
+      selectedProveedorId.value = proveedoresPedido.value[0]?.proveedor_id ?? null
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 const loadDetalles = async () => {
+  if (!Number.isFinite(pedidoId) || pedidoId <= 0) {
+    errorMessage.value = 'Pedido inválido.'
+    return
+  }
+
   if (
-    !Number.isFinite(pedidoId) ||
-    pedidoId <= 0 ||
-    !Number.isFinite(proveedorId) ||
-    proveedorId <= 0
+    listMode.value === 'proveedor' &&
+    (!selectedProveedorId.value || selectedProveedorId.value <= 0)
   ) {
-    errorMessage.value = 'Pedido o proveedor inválido.'
+    detalles.value = []
+    totalItems.value = 0
+    errorMessage.value = ''
     return
   }
 
@@ -52,16 +115,22 @@ const loadDetalles = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await pedidoApiListarProductosPedidoPorProveedor(
-      pedidoId,
-      proveedorId,
-      {
-        busqueda: busqueda.value || undefined,
-        limit: pageSize,
-        offset: (currentPage.value - 1) * pageSize,
-      },
-      buildRequestOptions(),
-    )
+    const params = {
+      busqueda: busqueda.value || undefined,
+      limit: pageSize,
+      offset: (currentPage.value - 1) * pageSize,
+    }
+
+    const response =
+      listMode.value === 'total'
+        ? await pedidoApiListarProductosPedido(pedidoId, params, buildRequestOptions())
+        : await pedidoApiListarProductosPedidoPorProveedor(
+            pedidoId,
+            selectedProveedorId.value as number,
+            params,
+            buildRequestOptions(),
+          )
+
     detalles.value = response.data.items ?? []
     totalItems.value = response.data.count ?? 0
   } catch (error) {
@@ -73,6 +142,7 @@ const loadDetalles = async () => {
 }
 
 const openCreate = () => {
+  if (!canAddProduct.value) return
   selectedDetalle.value = null
   openDetalleModal.value = true
 }
@@ -135,6 +205,23 @@ const handleSearch = async () => {
   await loadDetalles()
 }
 
+const handleModeChange = async () => {
+  currentPage.value = 1
+
+  if (listMode.value === 'total') {
+    selectedProveedorId.value = null
+  } else if (!selectedProveedorId.value && proveedoresPedido.value.length > 0) {
+    selectedProveedorId.value = proveedoresPedido.value[0]?.proveedor_id ?? null
+  }
+
+  await loadDetalles()
+}
+
+const handleProveedorFilterChange = async () => {
+  currentPage.value = 1
+  await loadDetalles()
+}
+
 const goPreviousPage = async () => {
   if (currentPage.value <= 1) return
   currentPage.value -= 1
@@ -162,6 +249,7 @@ const resolveImageUrl = (image?: string | null) => {
 }
 
 onMounted(async () => {
+  await loadProveedoresPedido()
   await loadDetalles()
 })
 </script>
@@ -182,9 +270,40 @@ onMounted(async () => {
           <ArrowLeft :size="16" />
           Volver
         </button>
-        <CreateButton label="Agregar producto" @click="openCreate" />
+        <CreateButton label="Agregar producto" :disabled="!canAddProduct" @click="openCreate" />
       </div>
     </header>
+
+    <div class="grid gap-2 sm:grid-cols-2">
+      <div>
+        <label class="mb-1 block text-xs text-sky-700">Mostrar</label>
+        <select
+          v-model="listMode"
+          class="w-full rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-900 outline-none focus:border-sky-400"
+          @change="handleModeChange"
+        >
+          <option value="proveedor">Por proveedor</option>
+          <option value="total">Pedido completo</option>
+        </select>
+      </div>
+
+      <div v-if="listMode === 'proveedor'">
+        <label class="mb-1 block text-xs text-sky-700">Proveedor</label>
+        <select
+          v-model.number="selectedProveedorId"
+          class="w-full rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-900 outline-none focus:border-sky-400"
+          @change="handleProveedorFilterChange"
+        >
+          <option
+            v-for="proveedor in proveedoresPedido"
+            :key="`${proveedor.proveedor_id}-${proveedor.proveedor_nombre}`"
+            :value="proveedor.proveedor_id"
+          >
+            {{ proveedor.proveedor_nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
 
     <div class="w-full">
       <SearchBar
@@ -202,7 +321,11 @@ onMounted(async () => {
       :loading="isLoading"
       loading-text="Cargando productos del pedido..."
       :empty="detalles.length === 0"
-      empty-text="Sin productos registrados para este proveedor en el pedido."
+      :empty-text="
+        listMode === 'total'
+          ? 'Sin productos registrados para este pedido.'
+          : 'Sin productos registrados para este proveedor en el pedido.'
+      "
     >
       <tr
         v-for="detalle in detalles"
@@ -263,7 +386,9 @@ onMounted(async () => {
     <PedidoDetalleModal
       :open="openDetalleModal"
       :pedido-id="pedidoId"
-      :proveedor-id="proveedorId"
+      :proveedor-id="selectedProveedorId"
+      :list-mode="listMode"
+      :pedido-proveedores="proveedoresPedido"
       :detalle="selectedDetalle"
       @close="openDetalleModal = false"
       @created="handleCreated"

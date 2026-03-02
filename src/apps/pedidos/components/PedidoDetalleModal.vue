@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { Building2, Image as ImageIcon, Tag } from 'lucide-vue-next'
-import { productoApiListarProductosPorProveedor } from '../../../api/generated'
+import {
+  productoApiListarProductosPorProveedor,
+  productoApiListarProductosTodos,
+} from '../../../api/generated'
 import { buildRequestOptions } from '../../../api/requestOptions'
 import type {
   PedidoDetalle,
   PedidoDetalleCreate,
   PedidoDetalleUpdate,
+  PedidoProveedorResumen,
   ProductoList,
 } from '../../../api/schemas'
 import BaseModal from '../../../components/BaseModal.vue'
@@ -15,7 +19,9 @@ import SearchBar from '../../../components/SearchBar.vue'
 const props = defineProps<{
   open: boolean
   pedidoId: number
-  proveedorId: number
+  proveedorId: number | null
+  listMode: 'proveedor' | 'total'
+  pedidoProveedores: PedidoProveedorResumen[]
   detalle?: PedidoDetalle | null
 }>()
 
@@ -31,6 +37,7 @@ const cantidad = ref<number>(1)
 const isLoadingProductos = ref(false)
 const errorMessage = ref('')
 const busquedaProducto = ref('')
+const modalProveedorId = ref<number | null>(null)
 
 const isEditMode = computed(() => props.detalle?.id != null)
 
@@ -41,18 +48,33 @@ const loadProductos = async () => {
   errorMessage.value = ''
 
   try {
-    const response = await productoApiListarProductosPorProveedor(
-      props.proveedorId,
-      {
-        busqueda: busquedaProducto.value || undefined,
-        limit: 100,
-        offset: 0,
-      },
-      buildRequestOptions(),
-    )
+    const params = {
+      busqueda: busquedaProducto.value || undefined,
+      limit: 100,
+      offset: 0,
+    }
+
+    const response =
+      props.listMode === 'total'
+        ? modalProveedorId.value
+          ? await productoApiListarProductosPorProveedor(
+              modalProveedorId.value,
+              params,
+              buildRequestOptions(),
+            )
+          : await productoApiListarProductosTodos(params, buildRequestOptions())
+        : await productoApiListarProductosPorProveedor(
+            props.proveedorId as number,
+            params,
+            buildRequestOptions(),
+          )
+
     productos.value = response.data.items ?? []
   } catch (error) {
-    errorMessage.value = 'No se pudieron cargar los productos del proveedor.'
+    errorMessage.value =
+      props.listMode === 'total'
+        ? 'No se pudieron cargar los productos del pedido.'
+        : 'No se pudieron cargar los productos del proveedor.'
     console.error(error)
   } finally {
     isLoadingProductos.value = false
@@ -71,17 +93,24 @@ watch(
       productoId.value = props.detalle.producto
       productos.value = []
       busquedaProducto.value = ''
+      modalProveedorId.value = props.proveedorId
       return
     }
 
     cantidad.value = 1
     productoId.value = null
     busquedaProducto.value = ''
+    modalProveedorId.value = props.listMode === 'proveedor' ? props.proveedorId : null
     await loadProductos()
   },
 )
 
 const handleSearchProductos = async () => {
+  productoId.value = null
+  await loadProductos()
+}
+
+const handleProveedorFilterChange = async () => {
   productoId.value = null
   await loadProductos()
 }
@@ -145,6 +174,24 @@ const submit = () => {
       </div>
 
       <div v-else>
+        <div v-if="listMode === 'total'" class="mb-3">
+          <label class="mb-1 block text-sm text-sky-800">Filtrar por proveedor (opcional)</label>
+          <select
+            v-model="modalProveedorId"
+            class="w-full rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-900 outline-none focus:border-sky-400"
+            @change="handleProveedorFilterChange"
+          >
+            <option :value="null">Todos los proveedores</option>
+            <option
+              v-for="proveedor in pedidoProveedores"
+              :key="`${proveedor.proveedor_id}-${proveedor.proveedor_nombre}`"
+              :value="proveedor.proveedor_id"
+            >
+              {{ proveedor.proveedor_nombre }}
+            </option>
+          </select>
+        </div>
+
         <SearchBar
           v-model="busquedaProducto"
           class="w-full"
