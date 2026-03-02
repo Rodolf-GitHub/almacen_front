@@ -5,6 +5,7 @@ import {
   Calendar,
   Download,
   Package,
+  Share2,
   Store,
   UserCircle2,
   Warehouse,
@@ -164,6 +165,36 @@ const installApp = async () => {
   canInstallApp.value = false
 }
 
+const shareApp = async () => {
+  const shareUrl = window.location.origin
+  const shareData = {
+    title: 'Almacén',
+    text: 'Instala la aplicación de Almacén',
+    url: shareUrl,
+  }
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData)
+      installMessage.value = 'Enlace compartido correctamente.'
+      return
+    }
+
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(shareUrl)
+      installMessage.value = 'Enlace copiado al portapapeles.'
+      return
+    }
+
+    installMessage.value = `Comparte este enlace: ${shareUrl}`
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      return
+    }
+    installMessage.value = 'No se pudo compartir la aplicación.'
+  }
+}
+
 onMounted(async () => {
   canInstallApp.value = !isRunningStandalone()
   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
@@ -209,6 +240,14 @@ onBeforeUnmount(() => {
         >
           <Download :size="16" />
           Preparar instalación
+        </button>
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-md border border-white/30 bg-white/15 px-3 py-2 text-sm font-medium text-white hover:bg-white/25"
+          @click="shareApp"
+        >
+          <Share2 :size="16" />
+          Compartir aplicación
         </button>
         <p v-if="installMessage" class="text-xs text-white/90">{{ installMessage }}</p>
       </div>
