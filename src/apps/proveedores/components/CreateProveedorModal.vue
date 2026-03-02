@@ -13,6 +13,7 @@ const emit = defineEmits<{
 
 const nombre = ref('')
 const telefono = ref('')
+const cuentaBancaria = ref('')
 const isEditMode = computed(() => props.proveedor?.id != null)
 
 watch(
@@ -23,11 +24,13 @@ watch(
     if (props.proveedor) {
       nombre.value = props.proveedor.nombre
       telefono.value = props.proveedor.telefono || ''
+      cuentaBancaria.value = props.proveedor.cuenta_bancaria || ''
       return
     }
 
     nombre.value = ''
     telefono.value = ''
+    cuentaBancaria.value = ''
   },
 )
 
@@ -40,6 +43,7 @@ const submit = () => {
       body: {
         nombre: nombre.value,
         telefono: telefono.value || null,
+        cuenta_bancaria: cuentaBancaria.value || null,
       },
     })
     close()
@@ -49,6 +53,7 @@ const submit = () => {
   emit('created', {
     nombre: nombre.value,
     telefono: telefono.value || null,
+    cuenta_bancaria: cuentaBancaria.value || null,
   })
   close()
 }
@@ -82,6 +87,18 @@ const submit = () => {
         </label>
         <input
           v-model="telefono"
+          class="w-full rounded-md border border-sky-200 bg-sky-50/40 px-3 py-2 outline-none focus:border-sky-400"
+        />
+      </div>
+
+      <div>
+        <label class="mb-1 flex items-center gap-2 text-sm text-sky-800">
+          <Tag :size="16" />
+          Cuenta bancaria
+          <span class="text-xs text-sky-500">(no obligatorio)</span>
+        </label>
+        <input
+          v-model="cuentaBancaria"
           class="w-full rounded-md border border-sky-200 bg-sky-50/40 px-3 py-2 outline-none focus:border-sky-400"
         />
       </div>

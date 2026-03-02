@@ -198,7 +198,7 @@ onMounted(async () => {
     </div>
 
     <TableLayout
-      :headers="['Nombre', 'Teléfono', 'Acciones']"
+      :headers="['Nombre', 'Teléfono', 'Cuenta bancaria', 'Acciones']"
       :loading="isLoading"
       loading-text="Cargando proveedores..."
       :empty="proveedores.length === 0"
@@ -225,6 +225,7 @@ onMounted(async () => {
             </a>
           </div>
         </td>
+        <td class="px-2 py-2 text-sky-900 sm:px-3">{{ proveedor.cuenta_bancaria || '-' }}</td>
         <td class="px-2 py-2 sm:px-3">
           <div class="flex flex-wrap items-center justify-start gap-1.5">
             <button
@@ -295,6 +296,10 @@ onMounted(async () => {
         <p>
           <span class="font-medium text-sky-700">Teléfono:</span>
           {{ infoProveedor.telefono || '-' }}
+        </p>
+        <p>
+          <span class="font-medium text-sky-700">Cuenta bancaria:</span>
+          {{ infoProveedor.cuenta_bancaria || '-' }}
         </p>
         <p>
           <span class="font-medium text-sky-700">Creado por:</span>
