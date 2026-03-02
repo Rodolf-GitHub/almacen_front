@@ -8,7 +8,8 @@ import Toast, { createToastInterface, POSITION } from 'vue-toastification'
 import App from './App.vue'
 import router from './router'
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '')
+const defaultApiBaseUrl = 'https://almacen.api.rodolfogroero.com'
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl).replace(/\/$/, '')
 const nativeFetch = window.fetch.bind(window)
 const toast = createToastInterface({
   position: POSITION.TOP_RIGHT,
