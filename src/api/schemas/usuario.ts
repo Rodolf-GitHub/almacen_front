@@ -9,10 +9,10 @@ export interface Usuario {
   id?: number | null;
   fecha_creacion: string;
   fecha_actualizacion: string;
-  /** @maxLength 15 */
+  /** @maxLength 50 */
   nombre: string;
-  /** @maxLength 100 */
+  /** @maxLength 50 */
   nombre_sucursal: string;
-  /** @maxLength 20 */
+  /** @maxLength 50 */
   rol?: string;
 }

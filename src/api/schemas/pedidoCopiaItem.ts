@@ -7,8 +7,10 @@
 
 export interface PedidoCopiaItem {
   proveedor_id: number;
+  /** @maxLength 50 */
   proveedor_nombre: string;
   producto_id: number;
+  /** @maxLength 50 */
   producto_nombre: string;
   cantidad: number;
   fecha_creacion: string;

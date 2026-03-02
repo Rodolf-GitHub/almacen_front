@@ -6,5 +6,6 @@
  */
 
 export interface CategoriaProductoCreate {
+  /** @maxLength 50 */
   nombre: string;
 }

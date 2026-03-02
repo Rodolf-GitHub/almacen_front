@@ -7,6 +7,7 @@
 import type { Usuario } from './usuario';
 
 export interface TokenResponse {
+  /** @maxLength 50 */
   token: string;
   usuario: Usuario;
 }

@@ -7,6 +7,7 @@
 
 export interface PedidoProveedorResumen {
   proveedor_id: number;
+  /** @maxLength 50 */
   proveedor_nombre: string;
   cantidad_productos_pedidos: number;
 }

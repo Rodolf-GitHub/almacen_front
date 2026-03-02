@@ -14,6 +14,6 @@ export interface Pedido {
   fecha_actualizacion: string;
   creado_por: number;
   usuario_destino?: number | null;
-  /** @maxLength 20 */
+  /** @maxLength 50 */
   estado?: string;
 }

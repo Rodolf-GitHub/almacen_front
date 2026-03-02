@@ -7,8 +7,11 @@
 import type { UsuarioCreateRol } from './usuarioCreateRol';
 
 export interface UsuarioCreate {
+  /** @maxLength 50 */
   nombre: string;
+  /** @maxLength 50 */
   contrasena: string;
+  /** @maxLength 50 */
   nombre_sucursal: string;
   rol?: UsuarioCreateRol;
 }

@@ -9,8 +9,9 @@ export interface Proveedor {
   id?: number | null;
   fecha_creacion: string;
   fecha_actualizacion: string;
-  /** @maxLength 100 */
+  /** @maxLength 50 */
   nombre: string;
   telefono?: string | null;
+  cuenta_bancaria?: string | null;
   creado_por?: number | null;
 }

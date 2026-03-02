@@ -7,7 +7,9 @@
 
 export interface DashboardEstadisticas {
   fecha_hora_actual: string;
+  /** @maxLength 50 */
   usuario_autenticado_nombre: string;
+  /** @maxLength 50 */
   usuario_autenticado_sucursal: string;
   cantidad_proveedores: number;
   cantidad_productos: number;

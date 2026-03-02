@@ -8,4 +8,5 @@
 export interface ProveedorUpdate {
   nombre?: string | null;
   telefono?: string | null;
+  cuenta_bancaria?: string | null;
 }

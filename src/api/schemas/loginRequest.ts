@@ -6,6 +6,8 @@
  */
 
 export interface LoginRequest {
+  /** @maxLength 50 */
   nombre: string;
+  /** @maxLength 50 */
   contrasena: string;
 }

@@ -9,6 +9,6 @@ export interface CategoriaProductoSchema {
   id?: number | null;
   fecha_creacion: string;
   fecha_actualizacion: string;
-  /** @maxLength 100 */
+  /** @maxLength 50 */
   nombre: string;
 }

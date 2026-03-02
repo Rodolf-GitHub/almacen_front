@@ -6,7 +6,10 @@
  */
 
 export interface CambiarMiContrasena {
+  /** @maxLength 50 */
   contrasena_actual: string;
+  /** @maxLength 50 */
   contrasena_nueva: string;
+  /** @maxLength 50 */
   repetir_contrasena_nueva: string;
 }

@@ -6,6 +6,8 @@
  */
 
 export interface ProveedorCreate {
+  /** @maxLength 50 */
   nombre: string;
   telefono?: string | null;
+  cuenta_bancaria?: string | null;
 }

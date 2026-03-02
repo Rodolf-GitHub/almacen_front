@@ -8,6 +8,7 @@ import type { PedidoCopiaItem } from './pedidoCopiaItem';
 
 export interface PedidoCopiaResumen {
   pedido_id: number;
+  /** @maxLength 50 */
   estado: string;
   creado_por_nombre?: string | null;
   usuario_destino_nombre?: string | null;

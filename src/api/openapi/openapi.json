@@ -1828,6 +1828,7 @@
       "TokenResponse": {
         "properties": {
           "token": {
+            "maxLength": 50,
             "title": "Token",
             "type": "string"
           },
@@ -1863,18 +1864,18 @@
             "type": "string"
           },
           "nombre": {
-            "maxLength": 15,
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           },
           "nombre_sucursal": {
-            "maxLength": 100,
+            "maxLength": 50,
             "title": "Nombre Sucursal",
             "type": "string"
           },
           "rol": {
             "default": "admin_sucursal",
-            "maxLength": 20,
+            "maxLength": 50,
             "title": "Rol",
             "type": "string"
           }
@@ -1886,10 +1887,12 @@
       "LoginRequest": {
         "properties": {
           "nombre": {
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           },
           "contrasena": {
+            "maxLength": 50,
             "title": "Contrasena",
             "type": "string"
           }
@@ -1937,14 +1940,17 @@
       "UsuarioCreate": {
         "properties": {
           "nombre": {
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           },
           "contrasena": {
+            "maxLength": 50,
             "title": "Contrasena",
             "type": "string"
           },
           "nombre_sucursal": {
+            "maxLength": 50,
             "title": "Nombre Sucursal",
             "type": "string"
           },
@@ -1964,6 +1970,7 @@
           "nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -1975,6 +1982,7 @@
           "contrasena": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -1986,6 +1994,7 @@
           "nombre_sucursal": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2013,14 +2022,17 @@
       "CambiarMiContrasena": {
         "properties": {
           "contrasena_actual": {
+            "maxLength": 50,
             "title": "Contrasena Actual",
             "type": "string"
           },
           "contrasena_nueva": {
+            "maxLength": 50,
             "title": "Contrasena Nueva",
             "type": "string"
           },
           "repetir_contrasena_nueva": {
+            "maxLength": 50,
             "title": "Repetir Contrasena Nueva",
             "type": "string"
           }
@@ -2071,14 +2083,14 @@
             "type": "string"
           },
           "nombre": {
-            "maxLength": 100,
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           },
           "telefono": {
             "anyOf": [
               {
-                "maxLength": 20,
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2086,6 +2098,18 @@
               }
             ],
             "title": "Telefono"
+          },
+          "cuenta_bancaria": {
+            "anyOf": [
+              {
+                "maxLength": 50,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cuenta Bancaria"
           },
           "creado_por": {
             "anyOf": [
@@ -2106,12 +2130,14 @@
       "ProveedorCreate": {
         "properties": {
           "nombre": {
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           },
           "telefono": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2119,6 +2145,18 @@
               }
             ],
             "title": "Telefono"
+          },
+          "cuenta_bancaria": {
+            "anyOf": [
+              {
+                "maxLength": 50,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cuenta Bancaria"
           }
         },
         "required": ["nombre"],
@@ -2130,6 +2168,7 @@
           "nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2141,6 +2180,7 @@
           "telefono": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2148,6 +2188,18 @@
               }
             ],
             "title": "Telefono"
+          },
+          "cuenta_bancaria": {
+            "anyOf": [
+              {
+                "maxLength": 50,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cuenta Bancaria"
           }
         },
         "title": "ProveedorUpdate",
@@ -2176,6 +2228,7 @@
           "proveedor_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2187,6 +2240,7 @@
           "categoria_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2221,7 +2275,7 @@
             "type": "integer"
           },
           "nombre": {
-            "maxLength": 100,
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           },
@@ -2281,6 +2335,7 @@
           "proveedor_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2292,6 +2347,7 @@
           "categoria_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2326,7 +2382,7 @@
             "type": "integer"
           },
           "nombre": {
-            "maxLength": 100,
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           },
@@ -2344,6 +2400,7 @@
           "descripcion": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2399,12 +2456,14 @@
             "type": "integer"
           },
           "nombre": {
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           },
           "descripcion": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2475,6 +2534,7 @@
           "nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2486,6 +2546,7 @@
           "descripcion": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2563,7 +2624,7 @@
             "type": "string"
           },
           "nombre": {
-            "maxLength": 100,
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           }
@@ -2575,6 +2636,7 @@
       "CategoriaProductoCreate": {
         "properties": {
           "nombre": {
+            "maxLength": 50,
             "title": "Nombre",
             "type": "string"
           }
@@ -2606,6 +2668,7 @@
           "nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2641,6 +2704,7 @@
           "creado_por_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2652,6 +2716,7 @@
           "usuario_destino_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2703,7 +2768,7 @@
           },
           "estado": {
             "default": "pendiente",
-            "maxLength": 20,
+            "maxLength": 50,
             "title": "Estado",
             "type": "string"
           }
@@ -2719,6 +2784,7 @@
             "type": "integer"
           },
           "proveedor_nombre": {
+            "maxLength": 50,
             "title": "Proveedor Nombre",
             "type": "string"
           },
@@ -2727,6 +2793,7 @@
             "type": "integer"
           },
           "producto_nombre": {
+            "maxLength": 50,
             "title": "Producto Nombre",
             "type": "string"
           },
@@ -2758,12 +2825,14 @@
             "type": "integer"
           },
           "estado": {
+            "maxLength": 50,
             "title": "Estado",
             "type": "string"
           },
           "creado_por_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2775,6 +2844,7 @@
           "usuario_destino_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2797,6 +2867,7 @@
           "proveedor_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2913,6 +2984,7 @@
           "producto_nombre": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2924,6 +2996,7 @@
           "producto_imagen": {
             "anyOf": [
               {
+                "maxLength": 50,
                 "type": "string"
               },
               {
@@ -2995,6 +3068,7 @@
             "type": "integer"
           },
           "proveedor_nombre": {
+            "maxLength": 50,
             "title": "Proveedor Nombre",
             "type": "string"
           },
@@ -3051,10 +3125,12 @@
             "type": "string"
           },
           "usuario_autenticado_nombre": {
+            "maxLength": 50,
             "title": "Usuario Autenticado Nombre",
             "type": "string"
           },
           "usuario_autenticado_sucursal": {
+            "maxLength": 50,
             "title": "Usuario Autenticado Sucursal",
             "type": "string"
           },

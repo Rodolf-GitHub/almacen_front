@@ -12,7 +12,7 @@ export interface ProductoList {
   fecha_creacion: string;
   fecha_actualizacion: string;
   proveedor: number;
-  /** @maxLength 100 */
+  /** @maxLength 50 */
   nombre: string;
   imagen?: string | null;
   precio_compra?: string | null;

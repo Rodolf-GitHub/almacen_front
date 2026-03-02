@@ -7,6 +7,7 @@
 
 export interface ProductoCreate {
   proveedor_id: number;
+  /** @maxLength 50 */
   nombre: string;
   descripcion?: string | null;
   precio_compra?: number | string | null;
