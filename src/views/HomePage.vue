@@ -144,6 +144,11 @@ const handleAppInstalled = () => {
   installMessage.value = 'Aplicación instalada correctamente.'
 }
 
+const refreshForInstall = () => {
+  installMessage.value = 'Recargando para habilitar instalación...'
+  window.location.reload()
+}
+
 const installApp = async () => {
   if (!deferredPrompt.value) return
 
@@ -188,13 +193,22 @@ onBeforeUnmount(() => {
 
       <div class="mt-3 flex flex-wrap items-center gap-2">
         <button
-          v-if="canInstallApp"
+          v-if="canInstallApp && deferredPrompt"
           type="button"
           class="inline-flex items-center gap-2 rounded-md border border-white/30 bg-white/15 px-3 py-2 text-sm font-medium text-white hover:bg-white/25"
           @click="installApp"
         >
           <Download :size="16" />
           Instalar aplicación
+        </button>
+        <button
+          v-else-if="canInstallApp"
+          type="button"
+          class="inline-flex items-center gap-2 rounded-md border border-white/30 bg-white/15 px-3 py-2 text-sm font-medium text-white hover:bg-white/25"
+          @click="refreshForInstall"
+        >
+          <Download :size="16" />
+          Preparar instalación
         </button>
         <p v-if="installMessage" class="text-xs text-white/90">{{ installMessage }}</p>
       </div>
