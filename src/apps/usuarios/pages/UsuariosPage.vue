@@ -131,14 +131,14 @@ onMounted(async () => {
       <CreateButton label="Crear usuario" @click="openCreate" />
     </header>
 
-    <div class="overflow-hidden rounded-xl border border-sky-200 bg-white shadow-sm">
-      <table class="min-w-full text-left text-sm">
+    <div class="overflow-x-auto rounded-xl border border-sky-200 bg-white shadow-sm">
+      <table class="min-w-[640px] text-left text-sm sm:min-w-full">
         <thead class="bg-sky-50 text-sky-800">
           <tr>
             <th class="px-4 py-3 font-medium">Usuario</th>
             <th class="px-4 py-3 font-medium">Sucursal</th>
             <th class="px-4 py-3 font-medium">Rol</th>
-            <th class="px-4 py-3 font-medium">Acciones</th>
+            <th class="px-4 py-3 font-medium whitespace-nowrap">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -156,8 +156,8 @@ onMounted(async () => {
             <td class="px-4 py-3 text-[var(--text-100)]">{{ usuario.nombre }}</td>
             <td class="px-4 py-3 text-[var(--text-100)]">{{ usuario.nombre_sucursal || '-' }}</td>
             <td class="px-4 py-3 text-[var(--text-100)]">{{ usuario.rol || '-' }}</td>
-            <td class="px-4 py-3">
-              <div class="flex flex-wrap items-center gap-1.5">
+            <td class="px-4 py-3 whitespace-nowrap">
+              <div class="flex items-center gap-1.5">
                 <button
                   type="button"
                   class="rounded-md border border-sky-200 bg-white p-2 text-sky-700 hover:bg-sky-100"

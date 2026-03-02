@@ -6,9 +6,11 @@ withDefaults(
     open: boolean
     title: string
     maxWidthClass?: string
+    bodyScrollable?: boolean
   }>(),
   {
     maxWidthClass: 'max-w-2xl',
+    bodyScrollable: true,
   },
 )
 
@@ -40,7 +42,7 @@ const close = () => emit('close')
         </button>
       </div>
 
-      <div class="max-h-[72vh] overflow-y-auto pr-1">
+      <div :class="[bodyScrollable ? 'max-h-[72vh] overflow-y-auto pr-1' : 'overflow-visible']">
         <slot />
       </div>
     </div>

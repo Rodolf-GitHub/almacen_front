@@ -32,6 +32,7 @@ const emit = defineEmits<{
 }>()
 
 const productos = ref<ProductoList[]>([])
+const productosScrollRef = ref<HTMLElement | null>(null)
 const productoId = ref<number | null>(null)
 const cantidad = ref<number>(1)
 const isLoadingProductos = ref(false)
@@ -115,6 +116,13 @@ const handleProveedorFilterChange = async () => {
   await loadProductos()
 }
 
+const handleProductosWheel = (event: WheelEvent) => {
+  const container = productosScrollRef.value
+  if (!container) return
+
+  container.scrollTop += event.deltaY
+}
+
 const resolveImageUrl = (image?: string | null) => {
   if (!image) return null
   if (image.startsWith('http://') || image.startsWith('https://')) return image
@@ -161,6 +169,7 @@ const submit = () => {
     :open="open"
     :title="isEditMode ? 'Editar producto del pedido' : 'Agregar producto al pedido'"
     max-width-class="max-w-lg"
+    :body-scrollable="false"
     @close="close"
   >
     <form class="space-y-3" @submit.prevent="submit">
@@ -203,7 +212,9 @@ const submit = () => {
 
         <label class="mb-1 block text-sm text-sky-800">Producto</label>
         <div
+          ref="productosScrollRef"
           class="h-64 space-y-2 overflow-y-auto overscroll-contain rounded-lg border border-sky-200 bg-sky-50/40 p-2"
+          @wheel.prevent="handleProductosWheel"
         >
           <p v-if="isLoadingProductos" class="px-2 py-2 text-sm text-sky-700">
             Cargando productos...
