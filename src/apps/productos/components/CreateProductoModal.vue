@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { Building2, DollarSign, FileText, Image as ImageIcon, Tag } from 'lucide-vue-next'
+import { Building2, Camera, DollarSign, FileText, Image as ImageIcon, Tag } from 'lucide-vue-next'
 import BaseModal from '../../../components/BaseModal.vue'
 import type {
   CategoriaProductoSchema,
@@ -32,6 +32,8 @@ const precioVenta = ref<number | null>(null)
 const categoriaId = ref<number | null>(null)
 const imagen = ref<File | undefined>(undefined)
 const imagenPreview = ref<string | null>(null)
+const galleryInputRef = ref<HTMLInputElement | null>(null)
+const cameraInputRef = ref<HTMLInputElement | null>(null)
 
 const isEditMode = computed(() => props.producto?.id != null)
 
@@ -101,6 +103,14 @@ const onImageSelected = (event: Event) => {
 
   imagen.value = file
   imagenPreview.value = URL.createObjectURL(file)
+}
+
+const openGalleryPicker = () => {
+  galleryInputRef.value?.click()
+}
+
+const openCameraPicker = () => {
+  cameraInputRef.value?.click()
 }
 
 const submit = () => {
@@ -243,10 +253,37 @@ const submit = () => {
           Imagen
           <span class="text-xs text-sky-500">(no obligatorio)</span>
         </label>
+        <div class="flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="inline-flex items-center gap-2 rounded-md border border-sky-200 bg-white px-3 py-2 text-sm text-sky-700 hover:bg-sky-50"
+            @click="openGalleryPicker"
+          >
+            <ImageIcon :size="16" />
+            Elegir de galería
+          </button>
+          <button
+            type="button"
+            class="inline-flex items-center gap-2 rounded-md border border-cyan-200 bg-cyan-50 px-3 py-2 text-sm text-cyan-700 hover:bg-cyan-100"
+            @click="openCameraPicker"
+          >
+            <Camera :size="16" />
+            Tomar foto
+          </button>
+        </div>
         <input
+          ref="galleryInputRef"
           type="file"
           accept="image/*"
-          class="w-full rounded-md border border-sky-200 bg-sky-50/40 px-3 py-2 text-sm outline-none focus:border-sky-400"
+          class="hidden"
+          @change="onImageSelected"
+        />
+        <input
+          ref="cameraInputRef"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          class="hidden"
           @change="onImageSelected"
         />
         <div class="mt-2 flex items-center gap-3 rounded-md border border-sky-100 bg-sky-50 p-2">
