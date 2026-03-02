@@ -206,7 +206,11 @@ const submit = () => {
           class="w-full rounded-md border border-sky-200 bg-sky-50/40 px-3 py-2 outline-none focus:border-sky-400"
         >
           <option :value="null" disabled>Selecciona un proveedor</option>
-          <option v-for="proveedor in props.proveedores" :key="proveedor.id" :value="proveedor.id">
+          <option
+            v-for="proveedor in props.proveedores"
+            :key="proveedor.id ?? proveedor.nombre"
+            :value="proveedor.id"
+          >
             {{ proveedor.nombre }}
           </option>
         </select>
@@ -223,7 +227,11 @@ const submit = () => {
           class="w-full rounded-md border border-sky-200 bg-sky-50/40 px-3 py-2 outline-none focus:border-sky-400"
         >
           <option :value="null">Sin categoría</option>
-          <option v-for="categoria in props.categorias" :key="categoria.id" :value="categoria.id">
+          <option
+            v-for="categoria in props.categorias"
+            :key="categoria.id ?? categoria.nombre"
+            :value="categoria.id"
+          >
             {{ categoria.nombre }}
           </option>
         </select>
