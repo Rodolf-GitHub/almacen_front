@@ -22,6 +22,7 @@ import type {
   PedidoApiListarMisPedidosHechosParams,
   PedidoApiListarMisPedidosRecibidosParams,
   PedidoApiListarPedidosParams,
+  PedidoApiListarProductosPedidoParams,
   PedidoApiListarProductosPedidoPorProveedorParams,
   PedidoApiListarProveedoresResumenPorPedidoParams,
   PedidoCambiarEstado,
@@ -1719,6 +1720,57 @@ export const pedidoApiListarProductosPedidoPorProveedor = async (pedidoId: numbe
   
   const data: pedidoApiListarProductosPedidoPorProveedorResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as pedidoApiListarProductosPedidoPorProveedorResponse
+}
+  
+
+
+/**
+ * @summary Listar Productos Pedido
+ */
+export type pedidoApiListarProductosPedidoResponse200 = {
+  data: PagedPedidoDetalle
+  status: 200
+}
+
+export type pedidoApiListarProductosPedidoResponseSuccess = (pedidoApiListarProductosPedidoResponse200) & {
+  headers: Headers;
+};
+;
+
+export type pedidoApiListarProductosPedidoResponse = (pedidoApiListarProductosPedidoResponseSuccess)
+
+export const getPedidoApiListarProductosPedidoUrl = (pedidoId: number,
+    params?: PedidoApiListarProductosPedidoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/pedidos/productos_pedido/por_pedido/${pedidoId}?${stringifiedParams}` : `/api/pedidos/productos_pedido/por_pedido/${pedidoId}`
+}
+
+export const pedidoApiListarProductosPedido = async (pedidoId: number,
+    params?: PedidoApiListarProductosPedidoParams, options?: RequestInit): Promise<pedidoApiListarProductosPedidoResponse> => {
+  
+  const res = await fetch(getPedidoApiListarProductosPedidoUrl(pedidoId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+  
+  const data: pedidoApiListarProductosPedidoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as pedidoApiListarProductosPedidoResponse
 }
   
 

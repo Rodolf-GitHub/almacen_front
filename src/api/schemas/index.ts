@@ -23,6 +23,7 @@ export * from './pedido';
 export * from './pedidoApiListarMisPedidosHechosParams';
 export * from './pedidoApiListarMisPedidosRecibidosParams';
 export * from './pedidoApiListarPedidosParams';
+export * from './pedidoApiListarProductosPedidoParams';
 export * from './pedidoApiListarProductosPedidoPorProveedorParams';
 export * from './pedidoApiListarProveedoresResumenPorPedidoParams';
 export * from './pedidoCambiarEstado';
